@@ -95,9 +95,9 @@ reporte_cnoc/
 uvicorn app.main:app --reload
 ---
 
+## 1 MIGRACIONES 
+## 2 MODULO DE USUARIOS DE DJANGO 
+## 3 (login)
+## TOKEN CRFS
 ## 
-##
-##
-##
-##
 ##
