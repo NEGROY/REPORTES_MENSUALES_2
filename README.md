@@ -101,3 +101,11 @@ uvicorn app.main:app --reload
 ## TOKEN CRFS
 ## 
 ##
+
+***EMPEZAR A REALIZAZR TODO 10/03/2026***
+λ python --version
+Python 3.13.0
+λ pip --version
+pip 25.3 from C:\laragon\bin\python\python-3.13\Lib\site-packages\pip (python 3.13)
+
+
