@@ -99,8 +99,7 @@ uvicorn app.main:app --reload
 ## 2 MODULO DE USUARIOS DE DJANGO 
 ## 3 (login)
 ## TOKEN CRFS
-## 
-##
+
 
 ***EMPEZAR A REALIZAZR TODO 10/03/2026***
 λ python --version
@@ -108,4 +107,29 @@ Python 3.13.0
 λ pip --version
 pip 25.3 from C:\laragon\bin\python\python-3.13\Lib\site-packages\pip (python 3.13)
 
+*SE CREO EL PROYECTO*
+venv\Scripts\activate
+python -m django startproject config .
 
+*Instalar driver MySQL para Django*
+[X] pip install mysqlclient
+[X] pip install PyMySQL
+[X] -- CREA BASE DE DATOS EN LOCAL -- bd_mensual_cnoc
+[X] python manage.py migrate
+
+*CREAMO UN USUARIO*
+[X] python manage.py createsuperuser
+    nery.diaz - Cnoc2026
+
+**CORRER EL SERVICIO**
+python manage.py runserver
+
+*CREAMOS MODELO DE DJANGO*
+ {{Django solo genera migraciones dentro de una APP registrada, no dentro de cualquier carpeta.}}
+ {{python manage.py sqlmigrate app 0001 || para ver qué cambios hará Django en la base de datos }}
+
+*COMANDOS PARA LAS MIGRACIO0NES*
+[ ] python manage.py makemigrations
+[ ] python manage.py migrate
+
+**validar**

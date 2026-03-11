@@ -1,4 +1,3 @@
- 
 /* ********************************************************************* */
         -- "user": os.getenv("ORACLE_DB_USER", "SYS"),
         "password": os.getenv("ORACLE_DB_PASSWORD", "claro2022"),
@@ -7,16 +6,18 @@
 /* ************************** ============================= ******************************************* */
 
 
-
 // =============================
 // TABLA: empresas_catalogo
 // =============================
 Table empresas_catalogo {
   COD int [pk]
+  razon_social varchar
+  tt_sitioa int
   pais varchar
   STATUS int  // 0 = inactivo, 1 = activo
-  ORDEN int
-  id_indice int //TIPO DE REPORTE MENSUAL ()
+  ORDEN int // COMO SE ENVIA EL CORREO
+  donde text // WHERE DE LA CONSULTA
+  tipo varchar // CONEXION CON EL INDICE_REPORTE
 }
 
 // ==============================
@@ -35,39 +36,24 @@ Table parque_cnoc {
 }
 
 // ==============================
-// TIPOS DE REPORTE // PAGINAS DE REPORTES 
+// REPORTE ESTA TABLA CONTIENE EL ORDEN DE LAS TABLAS
 Table pag_reporte{
   id  int
-  titulo varchar
-  categoria varchar
+  id_cliente int
+  cliente varchar
+  paginas text // JSON [1,...23]
   estado bool
 }
 
 // ==============================
-// TIPOS DE REPORTE // PAGINAS DE REPORTES 
+// listado de las paginas de los reportes 
 Table INDICE_REPORTE{
   id  int
-  tipos varchar
-  p1 int
-  p2 int
-  p3 int
-  p4 int
-  p5 int
-  p6 int
-  p7 int
-  p8 int
-  p9 int
-  p10 int
-  p11 int
-  p12 int
-  p13 int
-  p14 int
-  p16 int
-  p17 int
-  p18 int
-  p19 int
-  p20 int
-  p21 int
+  titulo varchar
+  MENSUALES BOOL 
+  XT BOOL  // 
+  banrural bool
+  CNAM bool
 }
 
 // ==============================
@@ -97,23 +83,10 @@ Table hi_de_indicadores {
 
 Ref: parque_cnoc.id_cliente > empresas_catalogo.COD
 Ref: hi_de_indicadores.id_cliente > empresas_catalogo.COD
-
-Ref: "empresas_catalogo"."id_indice" < "INDICE_REPORTE"."id"
-
+ 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+  
 
 /* ************************** ============================= ******************************************* */
