@@ -15,8 +15,16 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+## {{AGREGAMOS EL ESTATICS PARA LA carpeta de statics se puede eliminar  }}
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('app.urls')),  # todas las URLs de la app
 ]
+
+## YA NO SE USA 
+##if settings.DEBUG:
+##    urlpatterns += static(settings.STATIC_URL, document_root=BASE_DIR / 'static')

@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="container mt-5">
+<h3>Información del Cliente</h3>
+<table class="table table-bordered">
+
+<tr>
+<td><b>COD</b></td>
+<td>{{ empresa.COD }}</td>
+</tr>
+
+<tr>
+<td><b>Razón Social</b></td>
+<td>{{ empresa.razon_social }}</td>
+</tr>
+
+<tr>
+<td><b>Total Enlaces</b></td>
+<td>{{ empresa.tt_sitioa }}</td>
+</tr>
+
+<tr>
+<td><b>País</b></td>
+<td>{{ empresa.pais }}</td>
+</tr>
+
+<tr>
+<td><b>Status</b></td>
+<td>{{ empresa.STATUS }}</td>
+</tr>
+
+<tr>
+<td><b>Orden</b></td>
+<td>{{ empresa.ORDEN }}</td>
+</tr>
+
+<tr>
+<td><b>Donde (Query)</b></td>
+<td>{{ empresa.donde }}</td>
+</tr>
+
+<tr>
+<td><b>Tipo</b></td>
+<td>{{ empresa.tipo }}</td>
+</tr>
+
+</table>
+
+</div>
+
+{% endblock %}

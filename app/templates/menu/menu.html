@@ -1,0 +1,104 @@
+ {% extends "layout.html" %}
+{% load static %}
+{% block title %}{{ data.titulo }}{% endblock %}
+{% block body %}
+
+
+<body style="background:#f4f4f4;">
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-danger text-white text-center">
+                    <h4>Generador de Reportes</h4>
+                </div>
+
+                <div class="card-body">
+
+                    <form method="GET"  action="{% url 'infoCliente' %}">
+
+                        <!-- SELECT -->
+                        <div class="mb-3">
+                            <label class="form-label">Seleccionar opción</label>
+                        <select class="form-select" name="empresa" id="empresa_select">
+                            {% for e in empresas %}
+                                <option value="{{ e.COD }}" data-enlaces="{{ e.tt_sitioa }}">
+                                    {{ e.razon_social }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        </div>
+
+                        <!-- MES -->
+                        <div class="mb-3">
+                            <label class="form-label">Mes</label>
+                            <input type="text" class="form-control" name="mes" placeholder="MES ACTUAL" value="{{ mes_actual }}">
+                        </div>
+
+                        <!-- AÑO -->
+                        <div class="mb-3">
+                            <label class="form-label">Año</label>
+                            <input type="number" class="form-control" name="anio" placeholder="2026" value="{{ anio_actual }}">
+                        </div>
+
+                        <!-- TOTAL ENLACES -->
+                        <div class="mb-3">
+                            <label class="form-label">Total de Enlaces</label>
+                            <input type="number" class="form-control" name="total_enlaces" placeholder="125" id="total_enlaces" >
+                        </div>
+
+                        <!-- BOTON -->
+                        <div class="d-grid">
+                            <button class="btn btn-danger">
+                                Vista
+                            </button>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+
+    const selectEmpresa = document.getElementById("empresa_select");
+    const totalInput = document.getElementById("total_enlaces");
+
+    function actualizarTotal() {
+
+        const opcion = selectEmpresa.options[selectEmpresa.selectedIndex];
+        const total = opcion.getAttribute("data-enlaces");
+
+        totalInput.value = total;
+
+    }
+
+    // actualizar al cambiar empresa
+    selectEmpresa.addEventListener("change", actualizarTotal);
+
+    // cargar valor inicial
+    actualizarTotal();
+
+});
+
+</script>
+
+
+{% endblock %}

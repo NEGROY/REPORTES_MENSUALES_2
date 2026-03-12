@@ -1,0 +1,43 @@
+{% load static %}
+
+<!-- PAGINA 1 -->
+<div class="container-fluid" style="background-color: #ecece7; height: 1000px;">
+    <div class="row">
+        <div class="col-12 div_">
+            <img class="img-fluid" src="{% static 'img/pag2.png' %}">
+        </div>
+    </div>
+
+    <div class="row" style="background-color: #ecece7;">
+        <div class="col-12 abs-center">
+            <h1><b>Reporte Monitoreo Proactivo</b></h1>
+        </div>
+        <div class="col-12 abs-center">
+            <h1><b>WALMART CENTROAMERICA</b></h1>
+        </div>
+    </div>
+
+    <div class="espacio">-</div>
+
+    <div class="footer_pagina" style="margin-bottom: 50px;">
+        <div class="col-12 abs-left">
+            <img src="{% static 'img/logo_claro.png' %}" alt="" style="width: 155px;">
+        </div>
+    </div>
+
+    <p></p>
+
+    <div class="row linea_negra footer_pagina">
+        <div class="col-5">
+            <h4>Dirección de Ingeniería y Operaciones</h4>
+        </div>
+        <div class="col-5 ">
+            <h4>Gerencia Corporativo O&M</h4>
+        </div>
+        <div class="col-2 text-center">
+            <h4>  {{data.mes|upper  }}  {{data.anio}}   </h4>
+        </div>
+    </div>
+
+</div>
+<!-- fin hoja  1 -->

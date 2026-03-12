@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% load static %}
+{% block title %}{{ data.titulo }}{% endblock %}
+{% block body %}
+
+
+<!-- aqui SE IMPRIMA TODO COMPLETO  -->
+{% for t in templates_paginas %}
+    {% include t %}
+{% endfor %}
+
+
+
+{% endblock %}
