@@ -5,6 +5,9 @@ from .views.template_reporte.presentacion_view import presentacion_original
     # IMPORT CORRECTO
 from .views.menu.menu_views import menu
 from .views.menu.infoCliente import infoCliente
+    # IMPORT DE LAS  PRUEBAS 
+from app.views.template_reporte.prueba import reporte_prueba
+
 
 urlpatterns = [
     path('reporteXcliente/', reporteXcliente, name='prueba_template'),
@@ -13,4 +16,7 @@ urlpatterns = [
         # MENU PRINCIPAL
     path('', menu, name='menu'),
     path('infoCliente/', infoCliente, name='infoCliente'),
+    # para mis pruebas LOCAS
+    path('reporte-prueba/', reporte_prueba, name='reporte_prueba'),
+
 ]

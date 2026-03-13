@@ -132,4 +132,15 @@ python manage.py runserver
 [ ] python manage.py makemigrations
 [ ] python manage.py migrate
 
-**validar**
+**MAS ADELANTE**
+    {{pip install python-dotenv}}   # Cargar variables del .env
+    {{pip install oracledb}}        # Driver de Oracle para Python
+
+
+
+
+
+
+
+
+

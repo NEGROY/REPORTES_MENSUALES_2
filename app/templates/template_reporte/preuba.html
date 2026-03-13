@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Reporte</title>
+
+    <style>
+        table{
+            border-collapse: collapse;
+            width:100%;
+        }
+
+        th,td{
+            border:1px solid #ccc;
+            padding:6px;
+        }
+
+        th{
+            background:#f2f2f2;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h2>Resultado del reporte</h2>
+
+<table>
+
+<thead>
+<tr>
+
+{% if data %}
+    {% for col in data.0.keys %}
+        <th>{{ col }}</th>
+    {% endfor %}
+{% endif %}
+
+</tr>
+</thead>
+
+<tbody>
+
+{% for row in data %}
+<tr>
+
+    {% for value in row.values %}
+        <td>{{ value }}</td>
+    {% endfor %}
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+
+<select class="form-select">
+    <option value="">Seleccione empresa</option>
+
+    {% for empresa in empresas %}
+        <option value="{{ empresa.COD }}">
+            {{ empresa.razon_social }}
+        </option>
+    {% endfor %}
+
+</select>
+
+</body>
+</html>
