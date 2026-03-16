@@ -1,18 +1,18 @@
 
-def sql_base(date_ini='01012026', date_end='31012026', where_tk=" probsummarym1.company LIKE '%BANCO DE DESARROLLO RURAL%' ",pais='CENAM'):
+# CONSULTA BASE POR LO BENERAL  LA QUE VIENE DE PRIMERO 
+def sql_base(date_ini='01012026', date_end='31012026', where_tk=" probsummarym1.company LIKE '%BANCO DE DESARROLLO RURAL%' ",pais='CENAM', paiscomplete= 'GUATEMALA'):
     
     # IF SI PAIS SE = CENAM NO PONER WHERE PAIS, SI ES LO CONTRARIO PONER EL PAIS
     filtro_pais = ""
-
     if pais != 'CENAM':
-       filtro_pais = f" AND TK.PAIS = '{pais}' "
+       filtro_pais = f" WHERE TK.PAIS = '{paiscomplete}' "
     
     query =f""" with
         VARIABLES AS (
             SELECT 1 COD,
             TO_DATE('{date_ini}','DDMMYYYY') F_INI,
             TO_DATE('{date_end}','DDMMYYYY') F_FIN,
-            'GUATEMALA' PAIS
+            '{paiscomplete}' PAIS
             FROM DUAL
             ),
         tickets_enlaces as ( 
@@ -284,6 +284,7 @@ def sql_base(date_ini='01012026', date_end='31012026', where_tk=" probsummarym1.
     return query 
     # --  SELECT * FROM TICKETS_2
 
+# CONSULTA PARA LOS Histórico de Indicadores (PAG 6) 
 def historico_de_indicadores(parque_where=""" WHERE CLIENTE LIKE '%BANCO DE DESARROLLO RURAL%'  AND PAIS='GT' """):
     
     query = sql_base()+ f""" 
@@ -359,7 +360,6 @@ def historico_de_indicadores(parque_where=""" WHERE CLIENTE LIKE '%BANCO DE DESA
     #     --OR tk.tg_enlace_destino LIKE '%BANCO DE DESARROLLO RURAL%'
     #     OR tg_enlace LIKE '%CC\\_BANRURAL\\_GT%' ESCAPE '\\'
 
-
 ## FUNCION QUE REALIZA LA CONVERSION SACA LOS ULTIMOS 6 MESES 
 def map_fechas():
     SQL = """
@@ -410,8 +410,7 @@ FROM VARIABLES
 """
     return SQL
 
-
-## PRUEBAS DE HORAS 
+## PRUEBAS DE HORAS  ELIMINAR 
 def map_fechas_pruebas():
     SQL = """
 SELECT 
@@ -420,3 +419,44 @@ SELECT
 FROM DUAL
 """
     return SQL
+
+
+
+# ************************************************************
+## CONSULTA COPIADA DE LA CONSULTA DE TICKTES DE TYT
+def pagina_5(date_ini,date_end, where_tk,pais, paiscomplete):
+ 
+   #  CONSULTA COMPLETA  
+   sql = sql_base(date_ini,date_end, where_tk, pais, paiscomplete) + f""" TK AS (
+        SELECT * FROM TICKETS_2 WHERE  "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES) AND (SELECT  to_date(F_FIN) +1 FROM VARIABLES)
+        )  
+        , a as ( select "ATRIBUIBLE A",COUNT(*) CONTAR from tk group by "ATRIBUIBLE A")
+        , b as (
+        SELECT
+        CASE 
+            WHEN "ATRIBUIBLE A" ='CLARO' THEN CONTAR
+            ELSE 0
+            END CLARO,
+        CASE 
+            WHEN "ATRIBUIBLE A" ='CLIENTE' THEN CONTAR
+            ELSE 0
+            END CLIENTE
+         FROM a)
+        , c as (
+         SELECT  COLUMNA,VALOR
+        FROM (
+          SELECT CLARO, CLIENTE
+          FROM b
+        )
+        UNPIVOT (
+          VALOR FOR COLUMNA IN (CLARO, CLIENTE)
+        )
+
+        )
+        SELECT COLUMNA,SUM(VALOR) VALOR,SUM("%") "%",TT FROM (
+        select c.*, round((VALOR/(SELECT SUM(CONTAR) FROM a))*100,2) "%",(SELECT SUM(CONTAR) FROM a)TT  from c
+        )A GROUP BY COLUMNA,TT 
+         """
+   
+   return sql
+

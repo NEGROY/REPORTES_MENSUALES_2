@@ -14,7 +14,7 @@ urlpatterns = [
     # path('reporteXcliente/<int:id_cliente>/', reporteXcliente, name='prueba_template'), 
     path('reporteDEMO/', presentacion_original, name='DEMOS' ),
         # MENU PRINCIPAL
-    path('', menu, name='menu'),
+    path("menu/<str:pais>/", menu, name="menu_pais"),  #path('', menu, name='menu'), #/<str:pais>/
     path('infoCliente/', infoCliente, name='infoCliente'),
     # para mis pruebas LOCAS
     path('reporte-prueba/', reporte_prueba, name='reporte_prueba'),

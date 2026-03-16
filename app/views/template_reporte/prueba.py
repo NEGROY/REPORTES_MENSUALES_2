@@ -1,23 +1,63 @@
 from django.shortcuts import render
+from datetime import datetime
+
 from app.service.conexion import obtener_conexion
 from app.service.reportes_sql import historico_de_indicadores
 from app.service.funciones import ultimos_6_meses
+from app.service.PAG_func import get_pag5
+
 from app.models.empresas_catalogo import EmpresasCatalogo
+
 
 # http://127.0.0.1:8000/reporte-prueba/?empresa=3&mes=03&anio=2026&total_enlaces=55
 def reporte_prueba(request):
 
-    # PARAMETROS
+     # FECHA ACTUAL ***********************************
+    hoy = datetime.now()
+    mes_actual = hoy.strftime("%m")
+    anio_actual = hoy.strftime("%Y")
+
+    # PARAMETROS    ***********************************
     id_empresa = request.GET.get("empresa")
     mes = request.GET.get("mes")        # MARZO, ENERO, FEBREO
     anio = request.GET.get("anio")
     total_enlaces = request.GET.get("total_enlaces")
+    # -----------------------------
+    # VALIDACIONES
+    # -----------------------------
 
+    # EMPRESA || SI ESTA VACIA QUE SEA 3 (PRUEBAS POR DEFAULT )
+    if not id_empresa:
+        id_empresa = 3
+    else:
+        id_empresa = int(id_empresa)
+
+    # MES ||  si esta vacio tomma el mes actual 
+    if not mes or not mes.isdigit() or len(mes) > 2 or int(mes) < 1 or int(mes) > 12:
+        mes = mes_actual
+    else:
+        mes = mes.zfill(2)
+
+    # AÑO ||  si esta vacio tomma el AÑO actual 
+    if not anio or not anio.isdigit():
+        anio = anio_actual
+    
+    # TOTAL ENLACES
+    if not total_enlaces or not total_enlaces.isdigit():
+        total_enlaces = 1
+    else:
+        total_enlaces = int(total_enlaces)
+
+    # -----------------------------
+    # FECHA FORMATO 01012026
+    # -----------------------------
+    fechaINI = "01" + mes + anio
     # convertir 2026-01-01 -> 01012026 fechaINI = fechaINI.replace("-", "")
-
+    
+    # -----------------------------
+    # OBTIENE LOS DATOS DE LA EMPRESA 
+    # -----------------------------
     empresa = None
-    fechaINI = '0102' + anio
-
     if id_empresa:
         empresa = EmpresasCatalogo.objects.get(COD=id_empresa)
 
@@ -49,17 +89,42 @@ def reporte_prueba(request):
     cursor.close() 
     conn.close()
 
+    # FUNCION PARA CALCULAR LOS ULTIMOS 6 MESES 
     meses = ultimos_6_meses(int(mes), int(anio))
 
+    # CASE DE PAIS ABREVISATURAS 
+    pais_abrev = {
+        "GT": "GUATEMALA",
+        "SV": "EL SALVADOR",
+        "HN": "HONDURAS",
+        "NI": "NICARAGUA",
+        "CR": "COSTA RICA",
+        "CENAM": "CENAM"
+    }
+    paisComplete = pais_abrev.get(empresa.pais, empresa.pais)
+
+    # EMPEZAMOS A CREAR LOS DATOS PARA LAS PAGINAS 
+    # ==========================
+    # DATOS PARA PAGINA 5
+    # ==========================
+    datosp5 = {
+        "date_ini": meses["FECHA_INI"],
+        "date_end": meses["FECHA_FIN"],
+        "where_tk": empresa.donde,
+        "pais": empresa.pais,
+        "paiscomplete": paisComplete,
+        "companya": empresa.razon_social,
+    }
+    pag5 = get_pag5(datosp5)
 
     return render(
         request,
         "template_reporte/preuba.html",
         {
+            "id": pag5 ,
             "data": resultados,
             "meses": meses,
             "sql": sql,
-            "id": id_empresa,
             "empresa": empresa,
             "mes": mes,
             "anio": anio

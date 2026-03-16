@@ -36,3 +36,6 @@ def ultimos_6_meses(mes, anio):
     data["ANO_2"] = anio
 
     return data
+
+## INDICE DE PAISES 
+# TIKCKTE SNOMBRE NCOMPLETO  # PARQUE VA ABREVIADO

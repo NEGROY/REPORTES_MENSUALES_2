@@ -2,7 +2,7 @@ from django.shortcuts import render
 from datetime import datetime
 from app.models.empresas_catalogo import EmpresasCatalogo
 
-def menu(request):
+def menu(request, pais=None):
     # FECHA ACTUAL
     hoy = datetime.now()
     meses = { 
@@ -13,15 +13,17 @@ def menu(request):
     }
     mes = meses[hoy.month]
     anio = hoy.year
+    #
+
     # EMPRESAS ACTIVAS
-    empresas = EmpresasCatalogo.objects.filter(STATUS=1).order_by("ORDEN")
-    # TOTAL DE SITIOS REGISTRADOS
-    # tt_sitioa  = 
+    empresas = EmpresasCatalogo.objects.filter(STATUS=1,pais=pais).order_by("ORDEN")
+    # TOTAL DE SITIOS REGISTRADOS     # tt_sitioa
     
     data = {
         "mes_actual": mes,
         "anio_actual": anio,
-        "empresas": empresas
+        "empresas": empresas,
+        "pais": pais
     }
 
     return render(request, "menu/menu.html", data)

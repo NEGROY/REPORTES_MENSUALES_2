@@ -137,7 +137,28 @@ python manage.py runserver
     {{pip install oracledb}}        # Driver de Oracle para Python
 
 
-
+***ESTRUCTURA GENERAL PAGINAS***
+VIEW
+ │
+ │ 1 prepara datos
+ ▼
+datosp5 = {
+   date_ini
+   date_end
+   where_tk
+   pais
+}
+ │
+ ▼
+SERVICE
+get_pag5(datosp5)
+ │
+ ▼
+SQL
+ticktes(...)
+ │
+ ▼
+resultado → template
 
 
 
