@@ -712,6 +712,31 @@ def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
     """
     return sql
 # ==============================
+# Atribución de Tickets Proactivos || PAG 15 
+def pag_15(date_ini,date_end, where_tk,pais, paiscomplete ):
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PRO AS(
+        SELECT A.*, COUNT(*) CONTAR FROM (
+        SELECT "ATRIBUIBLE A", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
+        FROM TK WHERE "TIPO MONITOREO"='MONITOREO PROACTIVO')A GROUP BY "ATRIBUIBLE A",MES,ANIO ORDER BY MES )
+        SELECT * FROM (
+        SELECT "ATRIBUIBLE A", MES,CONTAR FROM PRO)
+        PIVOT (
+          AVG(CONTAR) 
+          FOR MES IN ("""+str(cadena_mes)+""")
+        )ORDER BY  "ATRIBUIBLE A"
+    """
+    return sql
+
+# ==============================
+
+
+# ==============================
+
+
+# ==============================
+
+
+# ==============================
 
 
 # ==============================
