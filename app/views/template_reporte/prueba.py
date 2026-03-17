@@ -4,7 +4,7 @@ from datetime import datetime
 from app.service.conexion import obtener_conexion
 from app.service.reportes_sql import historico_de_indicadores
 from app.service.funciones import ultimos_6_meses
-from app.service.PAG_func import get_pag5, get_pag8, get_pag9, get_pag10
+from app.service.PAG_func import get_pag_General, get_pag_MesActual
 
 from app.models.empresas_catalogo import EmpresasCatalogo
 
@@ -114,26 +114,24 @@ def reporte_prueba(request):
         "mes": mes,
         "anio": anio, 
         "date_ini_5": meses["FECHA_INI_5"],
-        #"date_end"  : meses["FECHA_INI_5"],
     }
 
     # pagina de cadena_mes
     cadena_mes = ",".join(meses[f"MESN_{i}"] for i in range(5, 0, -1)) + "," + meses["MESN"]
-
-
-    # ==========================
-    # DATOS PARA PAGINA 5
-    # pag5 = get_pag5(datosp5)
-
+    # func_sql VARIABLES PARA MI FUNCION GENERAL DE  get_pag_General
+    func_sql =  "pag_14"
     # ==========================
     # DATOS PARA PAGINA 7
-    pag8 = get_pag10(datosPag, cadena_mes)
+    # pag11 = get_pag_General(datosPag, cadena_mes, func_sql)
+    pag11 = get_pag_MesActual(datosPag, func_sql)
+
+    # ========================== EJEMPLO    # DATOS PARA PAGINA 5    # pag5 = get_pag5(datosp5)
 
     return render(
         request,
         "template_reporte/preuba.html",
         {
-            "id": pag8 ,
+            "id": pag11 ,
             "data": resultados,
             "meses": meses,
             "sql": sql,

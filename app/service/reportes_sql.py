@@ -597,6 +597,121 @@ def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
 # ==============================
 # Causas Monitoreo Reactivo Atribuibles al Cliente PAG 11
+def pag_11(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+    
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
+        SELECT * FROM TICKETS_2 
+        WHERE "TIPO MONITOREO"='MONITOREO REACTIVO' and "ATRIBUIBLE A"='CLIENTE'  
+          AND "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
+        AND (SELECT (F_FIN +1) FROM VARIABLES  )
+        ), AGRUPACION AS(
+        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tk
+        GROUP BY FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM'))
+        )
+        SELECT * FROM(
+        SELECT FALLA,SUBFALLA,"CODIGO DE CIERRE", MES,CONTAR FROM AGRUPACION
+        )
+        PIVOT(
+          AVG(CONTAR) 
+          FOR MES IN ({cadena_mes})
+        )
+    """
+
+    return sql 
+
+# ==============================
+# Principales Causas Tickets Reactivos Atribuibles a Claro || PAG 12 
+def pag_12(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
+        SELECT * FROM TICKETS_2 
+        WHERE "TIPO MONITOREO"='MONITOREO REACTIVO' and "ATRIBUIBLE A"='CLARO' 
+        AND "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
+        AND (SELECT  (F_FIN +1) FROM VARIABLES  )
+        ), AGRUPACION AS(
+        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tk
+        GROUP BY FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM'))
+        )
+        SELECT * FROM(
+        SELECT FALLA,SUBFALLA,"CODIGO DE CIERRE", MES,CONTAR FROM AGRUPACION
+        )
+        PIVOT(
+          AVG(CONTAR) 
+          FOR MES IN ({cadena_mes})
+        )
+    """
+
+    return sql 
+
+# ==============================
+# Tiempos de solución Tickets Reactivos atribuibles a Claro PAG 13
+def pag_13(date_ini,date_end, where_tk,pais, paiscomplete ):
+
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" tk AS (
+            SELECT *
+            FROM tickets_2
+            WHERE
+                "TIPO MONITOREO" = 'MONITOREO REACTIVO'
+                AND "ATRIBUIBLE A" = 'CLARO'
+                AND "FECHA DE CIERRE" BETWEEN (
+                    SELECT F_INI
+                    FROM   variables
+                ) AND (
+                    SELECT  TO_DATE(f_fin + 1)
+                    FROM    variables
+                )
+        ), agrupacion AS (
+            SELECT
+               "ATRIBUIBLE A",
+                "RANGO SOLUCION",
+                TO_NUMBER(to_char("FECHA DE CIERRE", 'MM')) mes,
+                COUNT(*) contar
+            FROM
+                tickets_2
+            GROUP BY
+                "ATRIBUIBLE A",
+                "RANGO SOLUCION",
+                TO_NUMBER(to_char("FECHA DE CIERRE", 'MM'))
+        )
+        SELECT A.*,
+        CASE 
+            WHEN "RANGO SOLUCION"='RANGO DE 0 A 0.5 HORAS' THEN 1
+            WHEN "RANGO SOLUCION"='RANGO DE 0.5 A 1 HORAS' THEN 2
+            WHEN "RANGO SOLUCION"='RANGO DE 1 A 2 HORAS' THEN 3
+            WHEN "RANGO SOLUCION"='RANGO DE 2 A 4 HORAS' THEN 4
+            WHEN "RANGO SOLUCION"='RANGO DE 4 A 8 HORAS' THEN 5
+            WHEN "RANGO SOLUCION"='RANGO DE 8 A 12 HORAS' THEN 6
+            WHEN "RANGO SOLUCION"='RANGO MAS DE 12 HORAS' THEN 7
+            END ORDEN
+            FROM (
+        SELECT * FROM(
+        SELECT "ATRIBUIBLE A", "RANGO SOLUCION", MES,CONTAR FROM AGRUPACION
+        )
+        PIVOT(
+          AVG(CONTAR) 
+          FOR MES IN ({cadena_mes})
+        ))A ORDER BY ORDEN ASC
+    """
+
+    return sql
+
+# ==============================
+# Top 10 enlaces – Tickets atribuibles a Claro  Monitoreo Reactivo y Proactivo || PAG 14
+def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PROCESO AS(
+        select * from(
+        select ENLACE,UBICACION,"TIPO MONITOREO" from tickets_2 where "ATRIBUIBLE A" = 'CLARO' 
+        )
+        pivot (
+            COUNT("TIPO MONITOREO")
+          FOR "TIPO MONITOREO" IN ('MONITOREO PROACTIVO', 'MONITOREO REACTIVO')
+        ))
+        SELECT * FROM (
+        SELECT ENLACE, UBICACION,"'MONITOREO PROACTIVO'" PROACTIVO,"'MONITOREO REACTIVO'" REACTIVO,"'MONITOREO PROACTIVO'"+"'MONITOREO REACTIVO'" TT FROM PROCESO
+        )A WHERE ROWNUM <= 10 ORDER BY TT DESC
+    """
+    return sql
+# ==============================
 
 
 # ==============================

@@ -4,14 +4,22 @@ import oracledb
 from datetime import datetime
 
 from app.service.conexion import obtener_conexion
-from app.service.reportes_sql import pagina_5, pagina_7, pag_8, pag_9, pag_10
+# TRAE TODO  # from app.service.reportes_sql import ( pagina_5, pagina_7, pag_8, pag_9, pag_10, pag_11)
+from app.service.reportes_sql import *
 
 # VAMOS A EMPEZAR A REALIZAR las FUNCIONES DE LAS  PAGINAS 
+FUNCIONES_SQL = {
+    "pag_9": pag_9,     # 5 meses 
+    "pag_10": pag_10,   # 5 meses 
+    "pag_11": pag_11,   # 5 meses 
+    "pag_12": pag_12,   # 5 meses 
+    "pag_13": pag_13,   # 5 meses 
+    "pag_14": pag_14,   # MES ACTUAL 
+}
 
-# ==============================
 # PAGINA 5
 # ==============================
-def get_pag5(datosp5):
+def get_pag5(datosp5):  
 
     date_ini = datosp5["date_ini"]
     date_end = datosp5["date_end"]
@@ -42,7 +50,6 @@ def get_pag5(datosp5):
     conn.close()
 
     return datos
- 
 # ==============================
 # PAGINA 7 
 def get_pag7(datosPag):
@@ -62,7 +69,6 @@ def get_pag7(datosPag):
     print(sql)
 
     return sql
-
 # ==============================
 # Distribución de Incidentes pagina 8 
 def get_pag8(datosPag):
@@ -95,7 +101,6 @@ def get_pag8(datosPag):
     conn.close()
 
     return datos
-
 # ==============================
 # Comportamiento Tickets Reactivos y Proactivos pagina 9 
 # pag mierda ya tiene graficos solo enviamos datos de consultas 
@@ -129,7 +134,6 @@ def get_pag9(datosPag, cadena_mes):
     conn.close()
 
     return datos
-
 # ==============================
 # Atribución de Tickets Reactivos pag 10
 def get_pag10(datosPag, cadena_mes):
@@ -139,7 +143,40 @@ def get_pag10(datosPag, cadena_mes):
     pais = datosPag["pais"]
     paiscomplete = datosPag["paiscomplete"]
     
-    sql = pag_10(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes )
+    sql = pag_10(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes ) # print(sql)
+
+    conn = obtener_conexion()
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    columnas = [col[0] for col in cursor.description]
+
+    datos = []
+    for fila in cursor:
+        fila_dict = {}
+        for col, val in zip(columnas, fila):
+            if isinstance(val, oracledb.LOB):
+                fila_dict[col] = val.read()
+            elif isinstance(val, datetime):
+                fila_dict[col] = val.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                fila_dict[col] = val
+        datos.append(fila_dict)
+
+    cursor.close()
+    conn.close()
+
+    return datos
+# ==============================
+# Causas Monitoreo Reactivo Atribuibles al Cliente PAG 11
+def get_pag11(datosPag, cadena_mes):
+
+    date_ini = datosPag["date_ini_5"]
+    date_end = datosPag["date_end"]
+    where_tk = datosPag["where_tk"]
+    pais = datosPag["pais"]
+    paiscomplete = datosPag["paiscomplete"]
+    
+    sql = pag_11(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes )
     print(sql)
 
     conn = obtener_conexion()
@@ -163,7 +200,73 @@ def get_pag10(datosPag, cadena_mes):
     conn.close()
 
     return datos
+ 
+# **********************************************************
+# EVENTUALMENTE ELIMINAREMOS TODO LO ANTERIORIOR
+# **********************************************************
 
+# ==============================
+# DEBIDO A QUE LAS ULTIMAS 3 FUNCIONES SON IDENTICAS VAMOS A CREAR UNA GENERAL 
+# ESTA FUNCION SOLO SIRVE CUANDO INICIO ES HACE 5 MESES Y FIN ES EL MES ACTUAL 
+def get_pag_General(datosPag, cadena_mes, func_sql):
+    # 🔥 convertir string a función
+    if isinstance(func_sql, str):
+        func_sql = FUNCIONES_SQL.get(func_sql)
+
+        if not func_sql:
+            raise ValueError(f"Función SQL no válida: {func_sql}")
+        
+    # OBTENMOS LOS DATOS 
+    date_ini = datosPag["date_ini_5"]
+    date_end = datosPag["date_end"]
+    where_tk = datosPag["where_tk"]
+    pais = datosPag["pais"]
+    paiscomplete = datosPag["paiscomplete"]
+
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes)
+    print(sql)
+
+    with obtener_conexion() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+
+            columnas = [col[0] for col in cursor.description]
+            datos = []
+
+            for fila in cursor:
+                fila_dict = {}
+                for col, val in zip(columnas, fila):
+                    if isinstance(val, oracledb.LOB):
+                        fila_dict[col] = val.read()
+                    elif isinstance(val, datetime):
+                        fila_dict[col] = val.strftime("%Y-%m-%d %H:%M:%S")
+                    else:
+                        fila_dict[col] = val
+                datos.append(fila_dict)
+
+    return datos      
+
+# ==============================
+# DEBIDO A QUE LAS ULTIMAS 3 FUNCIONES SON IDENTICAS VAMOS A CREAR UNA GENERAL 
+# FUNCION PARA CONSULTAS DEL MES SELECCIONADO, 
+def get_pag_MesActual(datosPag,   func_sql):
+    date_ini = datosPag["date_ini"]
+    date_end = datosPag["date_end"]
+    where_tk = datosPag["where_tk"]
+    pais = datosPag["pais"]
+    paiscomplete = datosPag["paiscomplete"]
+    
+    #  convertir string a función
+    if isinstance(func_sql, str):
+        func_sql = FUNCIONES_SQL.get(func_sql)
+
+        if not func_sql:
+            raise ValueError(f"Función SQL no válida: {func_sql}")
+    #CONSULTA CONTATENADA 
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete  )
+    print(sql)
+
+    return sql
 # ==============================
 
 
