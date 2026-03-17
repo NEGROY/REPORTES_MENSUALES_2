@@ -553,3 +553,50 @@ def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
     """
     
     return sql
+
+
+# ************************************************************
+# PAGI 9 Comportamiento Tickets Reactivos y Proactivos
+def pag_9(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+
+    
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
+        SELECT * FROM TICKETS_2 WHERE  "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
+        AND (SELECT TO_DATE(F_FIN)+1 FROM VARIABLES  )
+        ), PRO AS(
+
+        SELECT A.*, COUNT(*) CONTAR FROM (
+        SELECT "TIPO MONITOREO", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
+        FROM TK)A GROUP BY "TIPO MONITOREO",MES,ANIO ORDER BY MES )
+        SELECT * FROM (
+        SELECT "TIPO MONITOREO", MES,CONTAR FROM PRO)
+        PIVOT (
+          AVG(CONTAR) 
+          FOR MES IN ({cadena_mes})
+        )ORDER BY  "TIPO MONITOREO" """
+
+    return sql
+
+# ************************************************************
+# Atribución de Tickets Reactivos pag 10
+def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
+        SELECT * FROM TICKETS_2 WHERE   "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
+        AND (SELECT (F_FIN +1) FROM VARIABLES  )
+        ), PRO AS(
+
+        SELECT A.*, COUNT(*) CONTAR FROM (
+        SELECT "ATRIBUIBLE A", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
+        FROM TK WHERE "TIPO MONITOREO"='MONITOREO REACTIVO')A GROUP BY "ATRIBUIBLE A",MES,ANIO ORDER BY MES )
+        SELECT * FROM ( SELECT "ATRIBUIBLE A", MES,CONTAR FROM PRO)
+        PIVOT (  AVG(CONTAR)   FOR MES IN ({cadena_mes})  )ORDER BY  "ATRIBUIBLE A" 
+    """
+
+    return sql 
+
+# ==============================
+# Causas Monitoreo Reactivo Atribuibles al Cliente PAG 11
+
+
+# ==============================

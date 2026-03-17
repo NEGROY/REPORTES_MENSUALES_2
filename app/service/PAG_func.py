@@ -4,7 +4,7 @@ import oracledb
 from datetime import datetime
 
 from app.service.conexion import obtener_conexion
-from app.service.reportes_sql import pagina_5, pagina_7, pag_8
+from app.service.reportes_sql import pagina_5, pagina_7, pag_8, pag_9, pag_10
 
 # VAMOS A EMPEZAR A REALIZAR las FUNCIONES DE LAS  PAGINAS 
 
@@ -19,9 +19,8 @@ def get_pag5(datosp5):
     pais = datosp5["pais"]
     paiscomplete = datosp5["paiscomplete"]
  
-    sql = pagina_5(date_ini, date_end, where_tk, pais, paiscomplete)
-    #  print(sql)
-    #  print("================================")
+    sql = pagina_5(date_ini, date_end, where_tk, pais, paiscomplete)     #  print(sql)
+    
     conn = obtener_conexion()
     cursor = conn.cursor()
     cursor.execute(sql)
@@ -73,7 +72,74 @@ def get_pag8(datosPag):
     pais = datosPag["pais"]
     paiscomplete = datosPag["paiscomplete"]
 
-    sql = pag_8(date_ini, date_end, where_tk, pais, paiscomplete )
+    sql = pag_8(date_ini, date_end, where_tk, pais, paiscomplete )    # print(sql)
+
+    conn = obtener_conexion()
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    columnas = [col[0] for col in cursor.description]
+
+    datos = []
+    for fila in cursor:
+        fila_dict = {}
+        for col, val in zip(columnas, fila):
+            if isinstance(val, oracledb.LOB):
+                fila_dict[col] = val.read()
+            elif isinstance(val, datetime):
+                fila_dict[col] = val.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                fila_dict[col] = val
+        datos.append(fila_dict)
+
+    cursor.close()
+    conn.close()
+
+    return datos
+
+# ==============================
+# Comportamiento Tickets Reactivos y Proactivos pagina 9 
+# pag mierda ya tiene graficos solo enviamos datos de consultas 
+def get_pag9(datosPag, cadena_mes):
+    date_ini = datosPag["date_ini_5"]
+    date_end = datosPag["date_end"]
+    where_tk = datosPag["where_tk"]
+    pais = datosPag["pais"]
+    paiscomplete = datosPag["paiscomplete"]
+
+    sql = pag_9(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes ) # print(sql)
+
+    conn = obtener_conexion()
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    columnas = [col[0] for col in cursor.description]
+
+    datos = []
+    for fila in cursor:
+        fila_dict = {}
+        for col, val in zip(columnas, fila):
+            if isinstance(val, oracledb.LOB):
+                fila_dict[col] = val.read()
+            elif isinstance(val, datetime):
+                fila_dict[col] = val.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                fila_dict[col] = val
+        datos.append(fila_dict)
+
+    cursor.close()
+    conn.close()
+
+    return datos
+
+# ==============================
+# Atribución de Tickets Reactivos pag 10
+def get_pag10(datosPag, cadena_mes):
+    date_ini = datosPag["date_ini_5"]
+    date_end = datosPag["date_end"]
+    where_tk = datosPag["where_tk"]
+    pais = datosPag["pais"]
+    paiscomplete = datosPag["paiscomplete"]
+    
+    sql = pag_10(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes )
     print(sql)
 
     conn = obtener_conexion()
@@ -97,3 +163,9 @@ def get_pag8(datosPag):
     conn.close()
 
     return datos
+
+# ==============================
+
+
+
+# ==============================
