@@ -22,6 +22,9 @@ def ultimos_6_meses(mes, anio):
 
         mes_num = f"{m:02d}"
         ultimo_dia = calendar.monthrange(y, m)[1]
+        # HORAS POR MES
+        horas_mes = ultimo_dia * 24
+
         fecha_ini = f"01{mes_num}{y}"
         fecha_fin = f"{ultimo_dia:02d}{mes_num}{y}"
         nombre_mes = f"{meses_es[m-1]}-{str(y)[2:]}"
@@ -32,8 +35,13 @@ def ultimos_6_meses(mes, anio):
         data[f"FECHA_INI{suf}"] = fecha_ini
         data[f"FECHA_FIN{suf}"] = fecha_fin
 
+        # 🔹 NUEVO CAMPO
+        data[f"HRSxMES{suf}"] = horas_mes
+
     data["ANO_1"] = anio if mes > 5 else anio - 1
     data["ANO_2"] = anio
+
+    # ENTRE CADA MES TAMBIEN OBTENER EL TOTAL DE LOS DIAS Y MULTIPLICAR POR 24 PARA QUE DEVUELVA EL TOTAL DE HRSxMES
 
     return data
 

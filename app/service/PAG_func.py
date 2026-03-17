@@ -9,12 +9,23 @@ from app.service.reportes_sql import *
 
 # VAMOS A EMPEZAR A REALIZAR las FUNCIONES DE LAS  PAGINAS 
 FUNCIONES_SQL = {
+    "pag_5": pag_5,   # MES ACTUAL 
+    "pag_7": pag_7,   # MES ACTUAL 
+    "pag_8": pag_8,   # MES ACTUAL 
+
     "pag_9": pag_9,     # 5 meses 
     "pag_10": pag_10,   # 5 meses 
     "pag_11": pag_11,   # 5 meses 
     "pag_12": pag_12,   # 5 meses 
     "pag_13": pag_13,   # 5 meses 
     "pag_14": pag_14,   # MES ACTUAL 
+    "pag_15": pag_15,   # 5 meses 
+    "pag_16": pag_16,   # 5 meses 
+    "pag_17": pag_17,   # MES ACTUAL 
+    "pag_18": pag_18,   # MES ACTUAL  
+    "pag_19": pag_19,   # 5 meses 
+    "pag_20": pag_20,   # MES ACTUAL  
+           
 }
 
 # PAGINA 5
@@ -223,8 +234,7 @@ def get_pag_General(datosPag, cadena_mes, func_sql):
     pais = datosPag["pais"]
     paiscomplete = datosPag["paiscomplete"]
 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes)
-    print(sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes) #    print(sql)
 
     with obtener_conexion() as conn:
         with conn.cursor() as cursor:
@@ -247,7 +257,7 @@ def get_pag_General(datosPag, cadena_mes, func_sql):
     return datos      
 
 # ==============================
-# DEBIDO A QUE LAS ULTIMAS 3 FUNCIONES SON IDENTICAS VAMOS A CREAR UNA GENERAL 
+# FUNCION GENERAL PARA EL MES ACTUAL 
 # FUNCION PARA CONSULTAS DEL MES SELECCIONADO, 
 def get_pag_MesActual(datosPag,   func_sql):
     date_ini = datosPag["date_ini"]
@@ -263,10 +273,29 @@ def get_pag_MesActual(datosPag,   func_sql):
         if not func_sql:
             raise ValueError(f"Función SQL no válida: {func_sql}")
     #CONSULTA CONTATENADA 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete  )
-    print(sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete ) #    print(sql)
 
-    return sql
+    conn = obtener_conexion()
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    columnas = [col[0] for col in cursor.description]
+
+    datos = []
+    for fila in cursor:
+        fila_dict = {}
+        for col, val in zip(columnas, fila):
+            if isinstance(val, oracledb.LOB):
+                fila_dict[col] = val.read()
+            elif isinstance(val, datetime):
+                fila_dict[col] = val.strftime("%Y-%m-%d %H:%M:%S")
+            else:
+                fila_dict[col] = val
+        datos.append(fila_dict)
+
+    cursor.close()
+    conn.close()
+
+    return datos
 # ==============================
 
 

@@ -114,12 +114,14 @@ def reporte_prueba(request):
         "mes": mes,
         "anio": anio, 
         "date_ini_5": meses["FECHA_INI_5"],
+        "HRSxMES" : meses["HRSxMES"],
     }
 
     # pagina de cadena_mes
     cadena_mes = ",".join(meses[f"MESN_{i}"] for i in range(5, 0, -1)) + "," + meses["MESN"]
     # func_sql VARIABLES PARA MI FUNCION GENERAL DE  get_pag_General
-    func_sql =  "pag_14"
+    func_sql =  "pag_20"
+
     # ==========================
     # DATOS PARA PAGINA 7
     # pag11 = get_pag_General(datosPag, cadena_mes, func_sql)

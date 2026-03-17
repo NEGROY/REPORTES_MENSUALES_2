@@ -423,7 +423,7 @@ FROM DUAL
 
 # ************************************************************
 ## PAGINA 5 Indicadores  || Resp. Incidentes %
-def pagina_5(date_ini,date_end, where_tk,pais, paiscomplete):
+def pag_5(date_ini,date_end, where_tk,pais, paiscomplete):
  
    #  CONSULTA COMPLETA  
    sql = sql_base(date_ini,date_end, where_tk, pais, paiscomplete) + f""" TK AS (
@@ -461,7 +461,7 @@ def pagina_5(date_ini,date_end, where_tk,pais, paiscomplete):
 
 # ************************************************************
 # PAGI 7 Comportamiento de la Red del Cliente
-def pagina_7(date_ini,date_end, where_tk,pais, paiscomplete, mes,anio):
+def pag_7(date_ini,date_end, where_tk,pais, paiscomplete, mes,anio):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" select  mes,ano from hi_de_indicadores where mes = {mes} and ano= {anio} """
 
@@ -713,7 +713,7 @@ def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
     return sql
 # ==============================
 # Atribución de Tickets Proactivos || PAG 15 
-def pag_15(date_ini,date_end, where_tk,pais, paiscomplete ):
+def pag_15(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PRO AS(
         SELECT A.*, COUNT(*) CONTAR FROM (
         SELECT "ATRIBUIBLE A", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
@@ -722,21 +722,134 @@ def pag_15(date_ini,date_end, where_tk,pais, paiscomplete ):
         SELECT "ATRIBUIBLE A", MES,CONTAR FROM PRO)
         PIVOT (
           AVG(CONTAR) 
-          FOR MES IN ("""+str(cadena_mes)+""")
+          FOR MES IN ({cadena_mes})
         )ORDER BY  "ATRIBUIBLE A"
     """
+    return sql
+
+# ==============================
+# Causas Monitoreo Proactivo Atribuibles al Cliente
+def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" AGRUPACION AS(
+        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tickets_2
+        GROUP BY FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM'))
+        )
+        SELECT * FROM(
+        SELECT FALLA,SUBFALLA,"CODIGO DE CIERRE", MES,CONTAR FROM AGRUPACION
+        )
+        PIVOT(
+          AVG(CONTAR) 
+          FOR MES IN ({cadena_mes})
+        )
+    """
+
+    return sql
+
+# ==============================
+# Tiempos de Restauración Fallas de Energía en Sitios del Cliente || PAG 17
+def pag_17(date_ini,date_end, where_tk,pais, paiscomplete ):
+
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PROCESO AS(
+        select * from(
+        select  "RANGO SOLUCION" from TICKETS_2 where "CODIGO DE CIERRE" = 'SERVICIO_ENERGIA COMERCIAL' 
+        and "ATRIBUIBLE A"='CLIENTE'
+        ))
+
+        select "RANGO SOLUCION","Total",ROUND("% del Total",2),ROUND("% del Rango",2),
+        CASE 
+            WHEN "RANGO SOLUCION"='RANGO DE 0 A 0.5 HORAS' THEN 1
+            WHEN "RANGO SOLUCION"='RANGO DE 0.5 A 1 HORAS' THEN 2
+            WHEN "RANGO SOLUCION"='RANGO DE 1 A 2 HORAS' THEN 3
+            WHEN "RANGO SOLUCION"='RANGO DE 2 A 4 HORAS' THEN 4
+            WHEN "RANGO SOLUCION"='RANGO DE 4 A 8 HORAS' THEN 5
+            WHEN "RANGO SOLUCION"='RANGO DE 8 A 12 HORAS' THEN 6
+            WHEN "RANGO SOLUCION"='RANGO MAS DE 12 HORAS' THEN 7
+            END ORDEN
+        from (
+        SELECT 
+          "RANGO SOLUCION",
+          COUNT(*) AS "Total",
+          COUNT(*) * 100 / SUM(COUNT(*)) OVER() AS "% del Total",
+          COUNT(*) * 100 / SUM(COUNT(*)) OVER(PARTITION BY "RANGO SOLUCION") AS "% del Rango"
+        FROM PROCESO
+        GROUP BY "RANGO SOLUCION")A ORDER BY ORDEN ASC
+    """
+    
+    return sql
+
+# ==============================
+#  Top 20 de Sitios Reincidentes por Energía || PAG 18
+def pag_18(date_ini,date_end, where_tk,pais, paiscomplete ):
+
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PROCESO AS(
+        select * from(
+        select  ENLACE,UBICACION,"DURACION TICKET (horas)" 
+            from TICKETS_2 where "CODIGO DE CIERRE" = 'SERVICIO_ENERGIA COMERCIAL'  ))
+        SELECT * FROM (
+        SELECT ENLACE,UBICACION,COUNT(ENLACE) TT , ROUND(AVG("DURACION TICKET (horas)"),2) TT_T 
+            FROM PROCESO  GROUP BY ENLACE,UBICACION)A WHERE ROWNUM <=20 ORDER BY TT DESC
+    """
+
+    return sql
+
+# ==============================
+# Tiempos de diagnóstico, escalación y solución de Tickets Proactivos atribuibles a Claro || pag 20
+def pag_19(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" 
+        agrupacion AS (
+            SELECT "ATRIBUIBLE A", "RANGO SOLUCION",
+                TO_NUMBER(to_char("FECHA DE CIERRE", 'MM')) mes,
+                COUNT(*) contar
+            FROM
+                TICKETS_2
+            WHERE
+                "TIPO MONITOREO" = 'MONITOREO PROACTIVO'
+                AND "ATRIBUIBLE A" = 'CLARO'   
+            GROUP BY
+                "ATRIBUIBLE A", "RANGO SOLUCION",
+                TO_NUMBER(to_char("FECHA DE CIERRE", 'MM'))
+        )
+        SELECT A.*,
+        CASE 
+            WHEN "RANGO SOLUCION"='RANGO DE 0 A 0.5 HORAS' THEN 1
+            WHEN "RANGO SOLUCION"='RANGO DE 0.5 A 1 HORAS' THEN 2
+            WHEN "RANGO SOLUCION"='RANGO DE 1 A 2 HORAS' THEN 3
+            WHEN "RANGO SOLUCION"='RANGO DE 2 A 4 HORAS' THEN 4
+            WHEN "RANGO SOLUCION"='RANGO DE 4 A 8 HORAS' THEN 5
+            WHEN "RANGO SOLUCION"='RANGO DE 8 A 12 HORAS' THEN 6
+            WHEN "RANGO SOLUCION"='RANGO MAS DE 12 HORAS' THEN 7
+            END ORDEN
+            FROM (
+        SELECT * FROM(
+        SELECT "ATRIBUIBLE A", "RANGO SOLUCION", MES,CONTAR FROM AGRUPACION
+        )
+        PIVOT(
+          AVG(CONTAR) 
+          FOR MES IN ({cadena_mes})
+        ))A ORDER BY ORDEN ASC 
+    """ 
+
     return sql
 
 # ==============================
 
 
 # ==============================
+# CONSULTA GENERAL 
+def pag_20(date_ini,date_end, where_tk,pais, paiscomplete  ):
 
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  PROCESO AS(
+        select * from(
+        select  ENLACE,UBICACION,PAIS,"T TICKET ACTIVO (horas)","FECHA DE CIERRE" from tk where "ATRIBUIBLE A" = 'CLARO' AND problem_type = 'CAIDA TOTAL'
+            ))
+        SELECT * FROM (
+        SELECT ENLACE,UBICACION,TT_T, ROUND(( 1 - ( TT_T / TT_H ) )*100,3) "DISPONIBILIDAD MENSUAL", PAIS FROM (
+        SELECT ENLACE,UBICACION,PAIS,MAX("FECHA DE CIERRE"), sum("T TICKET ACTIVO (horas)") TT_T, 
+        ( 1 + trunc(last_day(MAX("FECHA DE CIERRE"))) - trunc(MAX("FECHA DE CIERRE"), 'MM') ) * 24 TT_H
+        FROM PROCESO  GROUP BY ENLACE,UBICACION, PAIS)A  ORDER BY TT_T DESC)C WHERE "DISPONIBILIDAD MENSUAL" >= 95 
 
-# ==============================
+    """
 
-
-# ==============================
-
-
-# ==============================
+    return sql 
