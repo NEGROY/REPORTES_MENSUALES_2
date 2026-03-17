@@ -4,7 +4,7 @@ from datetime import datetime
 from app.service.conexion import obtener_conexion
 from app.service.reportes_sql import historico_de_indicadores
 from app.service.funciones import ultimos_6_meses
-from app.service.PAG_func import get_pag5
+from app.service.PAG_func import get_pag5, get_pag8
 
 from app.models.empresas_catalogo import EmpresasCatalogo
 
@@ -104,24 +104,29 @@ def reporte_prueba(request):
     paisComplete = pais_abrev.get(empresa.pais, empresa.pais)
 
     # EMPEZAMOS A CREAR LOS DATOS PARA LAS PAGINAS 
-    # ==========================
-    # DATOS PARA PAGINA 5
-    # ==========================
-    datosp5 = {
+    datosPag= {
         "date_ini": meses["FECHA_INI"],
         "date_end": meses["FECHA_FIN"],
         "where_tk": empresa.donde,
         "pais": empresa.pais,
         "paiscomplete": paisComplete,
         "companya": empresa.razon_social,
+        "mes": mes,
+        "anio": anio, 
     }
-    pag5 = get_pag5(datosp5)
+    # ==========================
+    # DATOS PARA PAGINA 5
+    # pag5 = get_pag5(datosp5)
+
+    # ==========================
+    # DATOS PARA PAGINA 7
+    pag8 = get_pag8(datosPag)
 
     return render(
         request,
         "template_reporte/preuba.html",
         {
-            "id": pag5 ,
+            "id": pag8 ,
             "data": resultados,
             "meses": meses,
             "sql": sql,

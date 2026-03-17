@@ -421,9 +421,8 @@ FROM DUAL
     return SQL
 
 
-
 # ************************************************************
-## CONSULTA COPIADA DE LA CONSULTA DE TICKTES DE TYT
+## PAGINA 5 Indicadores  || Resp. Incidentes %
 def pagina_5(date_ini,date_end, where_tk,pais, paiscomplete):
  
    #  CONSULTA COMPLETA  
@@ -460,3 +459,97 @@ def pagina_5(date_ini,date_end, where_tk,pais, paiscomplete):
    
    return sql
 
+# ************************************************************
+# PAGI 7 Comportamiento de la Red del Cliente
+def pagina_7(date_ini,date_end, where_tk,pais, paiscomplete, mes,anio):
+
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" select  mes,ano from hi_de_indicadores where mes = {mes} and ano= {anio} """
+
+    return sql
+
+# ************************************************************
+# PAGI 8 Distribución de Incidentes
+def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
+
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" ALL_COMBINATIONS AS (
+        SELECT DISTINCT "ATRIBUIBLE A", SERVICE_NAME AS SERVICIO
+        FROM (
+            SELECT 'CLARO' AS "ATRIBUIBLE A" FROM DUAL UNION ALL
+            SELECT 'CLIENTE' AS "ATRIBUIBLE A" FROM DUAL
+        ), (
+            SELECT 'INTERNET' AS SERVICE_NAME FROM DUAL UNION ALL
+            SELECT 'DATOS' AS SERVICE_NAME FROM DUAL UNION ALL
+            SELECT 'AE' AS SERVICE_NAME FROM DUAL
+        )
+    ),
+    TK2 AS (
+        SELECT
+            "ATRIBUIBLE A",
+            SERVICIO,
+            CASE
+                WHEN SERVICIO = 7 THEN 'INTERNET'
+                WHEN SERVICIO = 8 THEN 'DATOS'
+                WHEN SERVICIO = 9 THEN 'AE'
+                ELSE
+                    CASE
+                        WHEN "ATRIBUIBLE A" = 'CLARO' THEN 'DATOS_CLARO'
+                        WHEN "ATRIBUIBLE A" = 'CLIENTE' THEN 'DATOS_CLIENTE'
+                    END
+            END A,
+            NVL(COUNT(*), 0) CONTAR
+        FROM tickets_2
+        WHERE
+           "FECHA DE CIERRE" >= (SELECT F_INI FROM VARIABLES)
+            AND "FECHA DE CIERRE" < (SELECT (F_FIN + 1) FROM VARIABLES)
+        GROUP BY "ATRIBUIBLE A", SERVICIO
+    ),
+    TK_LIST AS (
+        SELECT
+            "ATRIBUIBLE A",
+            CASE
+                WHEN BB = 'DATOS_CLIENTE' THEN 'DATOS'
+                WHEN BB = 'DATOS_CLARO' THEN 'DATOS'
+                ELSE BB
+            END SERVICIO,
+            CONTAR
+        FROM (
+            SELECT BB, "ATRIBUIBLE A", SUM(CONTAR) CONTAR
+            FROM (
+                SELECT A, CONTAR, "ATRIBUIBLE A",
+                CASE
+                    WHEN A = 'DATOS' AND "ATRIBUIBLE A" = 'CLARO' THEN 'DATOS_CLARO'
+                    WHEN A = 'DATOS_CLARO' AND "ATRIBUIBLE A" = 'CLARO' THEN 'DATOS_CLARO'
+                    WHEN A = 'DATOS_CLIENTE' AND "ATRIBUIBLE A" = 'CLIENTE' THEN 'DATOS_CLIENTE'
+                    WHEN A = 'DATOS' AND "ATRIBUIBLE A" = 'CLIENTE' THEN 'DATOS_CLIENTE'
+                    ELSE A
+                END BB
+                FROM TK2
+            ) A
+            GROUP BY BB, "ATRIBUIBLE A"
+        ) B
+    ),
+    FINAL_RESULT AS (
+        SELECT
+            AC."ATRIBUIBLE A",
+            AC.SERVICIO,
+            NVL(TL.CONTAR, 0) CONTAR
+        FROM
+            ALL_COMBINATIONS AC
+            LEFT JOIN TK_LIST TL ON AC."ATRIBUIBLE A" = TL."ATRIBUIBLE A" AND AC.SERVICIO = TL.SERVICIO )
+
+    SELECT "ATRIBUIBLE A", NVL(DATOS, 0) DATOS, NVL(INTERNET, 0) INTERNET, NVL(AE, 0) AE
+    FROM (
+        SELECT * FROM FINAL_RESULT
+        PIVOT (
+            SUM(CONTAR)
+            FOR SERVICIO IN ('DATOS' DATOS, 'INTERNET' INTERNET, 'AE' AE)
+        )
+    ) A
+    ORDER BY
+        CASE
+            WHEN "ATRIBUIBLE A" = 'CLIENTE' THEN 1
+            WHEN "ATRIBUIBLE A" = 'CLARO' THEN 2
+        END     
+    """
+    
+    return sql
