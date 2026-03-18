@@ -49,12 +49,12 @@
 
                     <tr>
                         <td>Sitios Monitoreados</td>
-                        <td></td>
+                        <td>{{data.sitios}}</td>
                     </tr>
 
                     <tr>
                         <td>Período de Reporte</td>
-                        <td></td>
+                        <td>{{data.mes}} {{data.anio}}</td>
                     </tr>
 
                 </table>
@@ -70,43 +70,42 @@
 
                 <table class="table table-sm table-striped">
 
-                    <thead>
-                        <tr>
+    <thead>
+        <tr>
+            <td class="rojo text-center" style="background-color:#ff0000;width:15%;">
+                <b>Resp.</b>
+            </td>
 
-                            <td class="rojo text-center" style="background-color:#ff0000;width:15%;">
-                                <b>Resp.</b>
-                            </td>
+            <td class="rojo text-center" style="background-color:#ff0000;width:20%;">
+                <b>Incidentes</b>
+            </td>
 
-                            <td class="rojo text-center" style="background-color:#ff0000;width:20%;">
-                                <b>Incidentes</b>
-                            </td>
+            <td class="rojo text-center" style="background-color:#ff0000;width:20%;">
+                <b>%</b>
+            </td>
+        </tr>
+    </thead>
 
-                            <td class="rojo text-center" style="background-color:#ff0000;width:20%;">
-                                <b>%</b>
-                            </td>
+    <tbody>
+        {% for fila in paginas_data.pag_5 %}
+        <tr class="text-center">
+            <td>{{ fila.COLUMNA }}</td>
+            <td>{{ fila.VALOR }}</td>
+            <td>{{ fila.PORCENTAJE  }} %</td>
+        </tr>
+        {% endfor %}
 
-                        </tr>
-                    </thead>
+        <!-- TOTAL -->
+        <tr class="text-center">
+            <td><b>Total</b></td>
+            <td>
+                {{ paginas_data.pag_5.0.TT }}
+            </td>
+            <td>100%</td>
+        </tr>
+    </tbody>
 
-                    <tr class="text-center">
-                        <td>Total</td>
-                        <td></td>
-                        <td>100%</td>
-                    </tr>
-
-                    <tr class="text-center">
-                        <td></td>
-                        <td></td>
-                        <td>%</td>
-                    </tr>
-
-                    <tr class="text-center">
-                        <td></td>
-                        <td></td>
-                        <td>%</td>
-                    </tr>
-
-                </table>
+</table>
 
             </div>
 

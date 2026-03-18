@@ -15,6 +15,7 @@
             <div class="col-3"></div>
             <div class="col-6">
                 <br><br><br><br><br>
+
                 <table class="table table-sm table-striped">
                     <thead>
                         <tr>
@@ -38,26 +39,35 @@
                     </thead>
 
                     <tbody>
-                        <tr>
-                            <td>CLARO</td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                        </tr>
 
+                        {% for fila in paginas_data.pag_8 %}
                         <tr>
-                            <td></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
+                            <td>
+                                {% if fila.RESPONSABLE == "CLIENTE" %}
+                                    {{ data.nombre }}
+                                {% else %}
+                                    {{ fila.RESPONSABLE }}
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{ fila.DATOS }}</td>
+                            <td class="text-center">{{ fila.INTERNET }}</td>
+                            <td class="text-center">{{ fila.AE }}</td>
                         </tr>
+                        {% endfor %}
 
+                        <!-- TOTAL -->
                         <tr>
                             <td><b>Total de Incidentes</b></td>
-                            <td colspan="3" class="text-center"><b></b></td>
+                            <td colspan="3" class="text-center">
+                                <b>
+                                    {{ paginas_data.pag_8.0.TOTAL|add:paginas_data.pag_8.1.TOTAL }}
+                                </b>
+                            </td>
                         </tr>
+
                     </tbody>
                 </table>
+                
             </div>
             <div class="col-3"></div>
         </div>

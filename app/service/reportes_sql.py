@@ -147,7 +147,7 @@ def sql_base(date_ini='01012026', date_end='31012026', where_tk=" probsummarym1.
               select F_INI
                 from variables
            ) and (
-              select F_FIN
+              select  (F_FIN + 1) 
                 from variables
            ) 
         ) 
@@ -426,10 +426,7 @@ FROM DUAL
 def pag_5(date_ini,date_end, where_tk,pais, paiscomplete):
  
    #  CONSULTA COMPLETA  
-   sql = sql_base(date_ini,date_end, where_tk, pais, paiscomplete) + f""" TK AS (
-        SELECT * FROM TICKETS_2 WHERE  "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES) AND (SELECT  to_date(F_FIN) +1 FROM VARIABLES)
-        )  
-        , a as ( select "ATRIBUIBLE A",COUNT(*) CONTAR from tk group by "ATRIBUIBLE A")
+   sql = sql_base(date_ini,date_end, where_tk, pais, paiscomplete) + f"""  a as ( select "ATRIBUIBLE A",COUNT(*) CONTAR from tk group by "ATRIBUIBLE A")
         , b as (
         SELECT
         CASE 
@@ -452,20 +449,21 @@ def pag_5(date_ini,date_end, where_tk,pais, paiscomplete):
         )
 
         )
-        SELECT COLUMNA,SUM(VALOR) VALOR,SUM("%") "%",TT FROM (
+        SELECT COLUMNA,SUM(VALOR) VALOR,SUM("%") "PORCENTAJE",TT FROM (
         select c.*, round((VALOR/(SELECT SUM(CONTAR) FROM a))*100,2) "%",(SELECT SUM(CONTAR) FROM a)TT  from c
         )A GROUP BY COLUMNA,TT 
-         """
+    """
    
    return sql
 
 # ************************************************************
 # PAGI 7 Comportamiento de la Red del Cliente
-def pag_7(date_ini,date_end, where_tk,pais, paiscomplete, mes,anio):
+def pag_7(date_ini,date_end, where_tk,pais, paiscomplete ):
 
-    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" select  mes,ano from hi_de_indicadores where mes = {mes} and ano= {anio} """
+    # sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""
+    # """
 
-    return sql
+    return 
 
 # ************************************************************
 # PAGI 8 Distribución de Incidentes
@@ -530,14 +528,18 @@ def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
     ),
     FINAL_RESULT AS (
         SELECT
-            AC."ATRIBUIBLE A",
+            AC."ATRIBUIBLE A", 
             AC.SERVICIO,
             NVL(TL.CONTAR, 0) CONTAR
         FROM
             ALL_COMBINATIONS AC
             LEFT JOIN TK_LIST TL ON AC."ATRIBUIBLE A" = TL."ATRIBUIBLE A" AND AC.SERVICIO = TL.SERVICIO )
 
-    SELECT "ATRIBUIBLE A", NVL(DATOS, 0) DATOS, NVL(INTERNET, 0) INTERNET, NVL(AE, 0) AE
+    SELECT "ATRIBUIBLE A" as RESPONSABLE, 
+        NVL(DATOS, 0) DATOS, 
+        NVL(INTERNET, 0) INTERNET, 
+        NVL(AE, 0) AE,
+         NVL(DATOS, 0) + NVL(INTERNET, 0) + NVL(AE, 0) AS TOTAL
     FROM (
         SELECT * FROM FINAL_RESULT
         PIVOT (
@@ -554,7 +556,6 @@ def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
     
     return sql
 
-
 # ************************************************************
 # PAGI 9 Comportamiento Tickets Reactivos y Proactivos
 def pag_9(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
@@ -566,14 +567,14 @@ def pag_9(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
         ), PRO AS(
 
         SELECT A.*, COUNT(*) CONTAR FROM (
-        SELECT "TIPO MONITOREO", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
-        FROM TK)A GROUP BY "TIPO MONITOREO",MES,ANIO ORDER BY MES )
+        SELECT "TIPO MONITOREO"  , TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
+        FROM TK)A GROUP BY "TIPO MONITOREO"   ,MES,ANIO ORDER BY MES )
         SELECT * FROM (
-        SELECT "TIPO MONITOREO", MES,CONTAR FROM PRO)
+        SELECT "TIPO MONITOREO" AS MONITOREO, MES,CONTAR FROM PRO)
         PIVOT (
           AVG(CONTAR) 
           FOR MES IN ({cadena_mes})
-        )ORDER BY  "TIPO MONITOREO" """
+        )ORDER BY  MONITOREO """
 
     return sql
 
@@ -834,9 +835,6 @@ def pag_19(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     return sql
 
 # ==============================
-
-
-# ==============================
 # CONSULTA GENERAL 
 def pag_20(date_ini,date_end, where_tk,pais, paiscomplete  ):
 
@@ -853,3 +851,12 @@ def pag_20(date_ini,date_end, where_tk,pais, paiscomplete  ):
     """
 
     return sql 
+
+# ==============================
+
+
+# ==============================
+
+
+# ==============================
+

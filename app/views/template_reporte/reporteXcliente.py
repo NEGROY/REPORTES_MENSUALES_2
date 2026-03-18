@@ -19,3 +19,4 @@ def reporteXcliente(request):
     }
 
     return render(request, "template_reporte/reporteXcliente.html", context)
+

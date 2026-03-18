@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>{% block title %}Reporte{% endblock %}</title>
     {% load static %}  {# Carga de static para CSS/JS #}
+
+    <script src="{% static  'js/chart.js'%}">  </script>
     <link rel="stylesheet" href="{% static  'css/bootstrap.min.css'%}"  media="all">
     <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
 </head>

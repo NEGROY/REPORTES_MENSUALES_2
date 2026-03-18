@@ -66,28 +66,91 @@
 
 </div>
 
+<!-- PRUEBA DE GRAFIAS-->
+         <div style="width: 900px; margin: 0 auto;">
+            <canvas id="container"></canvas>
+         </div> 
+
 </body>
 </html>
 
-<script>
 
+
+<script>
+// EJEMPLO DE CARTH 
+
+    // 2. Configuración de Chart.js
+    const ctxLine = document.getElementById('container').getContext('2d');
+    
+     //  Chart.register(ChartDataLabels);
+
+    new Chart(ctxLine, {
+        type: 'line', 
+        data: {
+            labels: [
+                '1','2','3',
+                '12','11','13'
+            ],
+            datasets: [
+                {
+                    label: 'hol mundo ',
+                    data: [1,2,3,4,5,6],
+                    borderColor: 'red',
+                    backgroundColor: 'red',
+                    tension: 0.1, // Línea recta o leve curvatura
+                    fill: false
+                },
+                {
+                    label: 'cleinte',
+                    data: [1,2,3,4,5,6],
+                    borderColor: 'orange',
+                    backgroundColor: 'orange',
+                    tension: 0.1,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2, // Controla el tamaño (ancho / alto)
+            animation: false, // Mejor para PDF
+            plugins: {
+                datalabels: {
+                    display: true,
+                    align: 'top', // Número arriba del punto
+                    anchor: 'end',
+                    font: { weight: 'bold', size: 10 },
+                    color: (context) => context.dataset.borderColor // Color igual a la línea
+                },
+                title: {
+                    display: true,
+                    text: 'COMPARATIVO CANTIDAD DE TICKETS POR MES'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Tickets' }
+                }
+            }
+        }
+    });
+
+// # BTON
 document.addEventListener("DOMContentLoaded", function() {
 
     const selectEmpresa = document.getElementById("empresa_select");
     const totalInput = document.getElementById("total_enlaces");
 
     function actualizarTotal() {
-
         const opcion = selectEmpresa.options[selectEmpresa.selectedIndex];
         const total = opcion.getAttribute("data-enlaces");
-
         totalInput.value = total;
-
     }
 
     // actualizar al cambiar empresa
     selectEmpresa.addEventListener("change", actualizarTotal);
-
     // cargar valor inicial
     actualizarTotal();
 
