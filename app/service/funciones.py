@@ -16,8 +16,8 @@ from app.models import HiDeIndicadores
 PAGINAS_CONFIG = {
     "pag_5": "actual",
     "pag_7": "actual",
-    "pag_8": "actual",
-    "pag_9": "5meses",
+    "pag_8": "5meses",
+    "pag_9":  "actual",
     "pag_10": "5meses",
     "pag_11": "5meses",
     "pag_12": "5meses",
@@ -258,7 +258,7 @@ def insertar_indicadores(data, empresa):
     empresa_id = empresa.get("empresa")
     mes = empresa.get("mes")
     ano = empresa.get("anio")
-    # 🔥 Traer existentes (evita duplicados)
+    #   Traer existentes (evita duplicados)
     existentes = set(
         HiDeIndicadores.objects.filter(id_cliente_id=empresa_id)
         .values_list('mes', 'ano')
@@ -271,18 +271,18 @@ def insertar_indicadores(data, empresa):
                     id_cliente_id=empresa_id,  #   FIX FK
                     mes=mes,
                     ano=ano,
-                    # 🔥 MAPEO DESDE TU DATA
+                    #   MAPEO DESDE TU DATA || los valores vacios estna default 0 en la BD 
                     inci_menor_o_8=item.get('INDICE_MENOR_8'),
                     inci_mayor_a_8=item.get('INDICE_MAYOR_8'),
                     productividad=item.get('PROACTIVIDAD'),
                     sitios_reincidentes=item.get('SITIOS_REINCIDENTES'),
                     indice_de_reincidencia=item.get('INDICE_REINCIDENCIA'),
                     mttr_promedio=item.get('MTR'),
-                        # 🔥 CAMPOS EXTRA (si luego los usas)
+                        #   CAMPOS EXTRA (si luego los usas)
                     disponibilidad=0,
                 )
             )
-    # 🔥 INSERT MASIVO
+    #   INSERT MASIVO
     if objetos:
         HiDeIndicadores.objects.bulk_create(objetos, ignore_conflicts=True)
 

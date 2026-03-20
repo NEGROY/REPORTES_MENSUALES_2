@@ -473,9 +473,13 @@ def pag_7(date_ini,date_end, where_tk,pais, paiscomplete ):
 
     return  
 
+# pag 8 Comportamiento de la Red del Cliente
+def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
+    return
+
 # ************************************************************
 # PAGI 8 Distribución de Incidentes
-def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
+def pag_9(date_ini,date_end, where_tk,pais, paiscomplete ):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" ALL_COMBINATIONS AS (
         SELECT DISTINCT "ATRIBUIBLE A", SERVICE_NAME AS SERVICIO
@@ -565,8 +569,8 @@ def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
     return sql
 
 # ************************************************************
-# PAGI 9 Comportamiento Tickets Reactivos y Proactivos
-def pag_9(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+# PAGI 10 Comportamiento Tickets Reactivos y Proactivos
+def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
     
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
@@ -587,8 +591,8 @@ def pag_9(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     return sql
 
 # ************************************************************
-# Atribución de Tickets Reactivos pag 10
-def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+# Atribución de Tickets Reactivos pag 11
+def pag_11(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
         SELECT * FROM TICKETS_2 WHERE   "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
@@ -605,8 +609,8 @@ def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     return sql 
 
 # ==============================
-# Causas Monitoreo Reactivo Atribuibles al Cliente PAG 11
-def pag_11(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+# Causas Monitoreo Reactivo Atribuibles al Cliente PAG 12
+def pag_12(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
         SELECT * FROM TICKETS_2 
@@ -629,8 +633,8 @@ def pag_11(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     return sql 
 
 # ==============================
-# Principales Causas Tickets Reactivos Atribuibles a Claro || PAG 12 
-def pag_12(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+# Principales Causas Tickets Reactivos Atribuibles a Claro || PAG 13
+def pag_13(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
         SELECT * FROM TICKETS_2 
@@ -653,8 +657,8 @@ def pag_12(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     return sql 
 
 # ==============================
-# Tiempos de solución Tickets Reactivos atribuibles a Claro PAG 13
-def pag_13(date_ini,date_end, where_tk,pais, paiscomplete ):
+# Tiempos de solución Tickets Reactivos atribuibles a Claro PAG 14
+def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
 
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" tk AS (
             SELECT *
@@ -705,8 +709,8 @@ def pag_13(date_ini,date_end, where_tk,pais, paiscomplete ):
     return sql
 
 # ==============================
-# Top 10 enlaces – Tickets atribuibles a Claro  Monitoreo Reactivo y Proactivo || PAG 14
-def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
+# Top 10 enlaces – Tickets atribuibles a Claro  Monitoreo Reactivo y Proactivo || PAG 15
+def pag_15(date_ini,date_end, where_tk,pais, paiscomplete ):
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PROCESO AS(
         select * from(
         select ENLACE,UBICACION,"TIPO MONITOREO" from tickets_2 where "ATRIBUIBLE A" = 'CLARO' 
@@ -721,8 +725,8 @@ def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
     """
     return sql
 # ==============================
-# Atribución de Tickets Proactivos || PAG 15 
-def pag_15(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+# Atribución de Tickets Proactivos || PAG 16
+def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PRO AS(
         SELECT A.*, COUNT(*) CONTAR FROM (
         SELECT "ATRIBUIBLE A", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
@@ -738,7 +742,7 @@ def pag_15(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
 # ==============================
 # Causas Monitoreo Proactivo Atribuibles al Cliente
-def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_17(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" AGRUPACION AS(
         select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tickets_2
@@ -756,8 +760,8 @@ def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     return sql
 
 # ==============================
-# Tiempos de Restauración Fallas de Energía en Sitios del Cliente || PAG 17
-def pag_17(date_ini,date_end, where_tk,pais, paiscomplete ):
+# Tiempos de Restauración Fallas de Energía en Sitios del Cliente || PAG 18
+def pag_18(date_ini,date_end, where_tk,pais, paiscomplete ):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PROCESO AS(
         select * from(
@@ -788,8 +792,8 @@ def pag_17(date_ini,date_end, where_tk,pais, paiscomplete ):
     return sql
 
 # ==============================
-#  Top 20 de Sitios Reincidentes por Energía || PAG 18
-def pag_18(date_ini,date_end, where_tk,pais, paiscomplete ):
+#  Top 20 de Sitios Reincidentes por Energía || PAG 19
+def pag_19(date_ini,date_end, where_tk,pais, paiscomplete ):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PROCESO AS(
         select * from(
@@ -804,7 +808,7 @@ def pag_18(date_ini,date_end, where_tk,pais, paiscomplete ):
 
 # ==============================
 # Tiempos de diagnóstico, escalación y solución de Tickets Proactivos atribuibles a Claro || pag 20
-def pag_19(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_20(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" 
         agrupacion AS (
@@ -843,7 +847,7 @@ def pag_19(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
     return sql
 
 # ==============================
-# CONSULTA GENERAL 
+# CONSULTA GENERAL 21
 def pag_20(date_ini,date_end, where_tk,pais, paiscomplete  ):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  PROCESO AS(

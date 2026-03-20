@@ -1,146 +1,64 @@
-
-<!-- HOJA 9-->
+<!-- HOJA 8 -->
 <div class="hoja col-12">
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-1"> </div>
-            <div class="col-10 p-3 text-center text-white fondo_rojo espaciotitulo">
-                <h1><b>Comportamiento Tickets Reactivos y Proactivos</b></h1>
-            </div>
-            <div class="col-1"> </div>
-        </div>
-        <div class="row">
-            <div class="col-2"></div>
-            <div class="col-8">
-
-                <br><br><br>
-                <table class="table table-condensed table-stripedes">
-                    <thead>
-                        <tr style="background-color: #ff0000; " >
-                            <td class="rojo text-center" style="width: 42%;"><b>TIPO DE MONITOREO</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_5}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_4}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_3}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_2}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_1}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES}}</b></td>
-                        </tr>
-
-                    </thead>
-                    
-                    <tr class="text-center"> 
-                        {% for fila in paginas_data.pag_9.rows.0  %}
-                            <td>{{ fila }} </td>
-                        {% endfor %}
-                    </tr>
-
-                    <tr class="text-center"> 
-                        {% for fila in paginas_data.pag_9.rows.1  %}
-                            <td>{{ fila }} </td>
-                        {% endfor %}
-                    </tr>
-
-                    <tr class="text-center">
-                        <td><b>TOTAL</b></td>
-                        <td><b>{{ paginas_data.pag_9.rows.0.1|add:paginas_data.pag_9.rows.1.1 }}</b></td>
-                        <td><b>{{ paginas_data.pag_9.rows.0.2|add:paginas_data.pag_9.rows.1.2 }}</b></td>
-                        <td><b>{{ paginas_data.pag_9.rows.0.3|add:paginas_data.pag_9.rows.1.3 }}</b></td>
-                        <td><b>{{ paginas_data.pag_9.rows.0.4|add:paginas_data.pag_9.rows.1.4 }}</b></td>
-                        <td><b>{{ paginas_data.pag_9.rows.0.5|add:paginas_data.pag_9.rows.1.5 }}</b></td>
-                        <td><b>{{ paginas_data.pag_9.rows.0.6|add:paginas_data.pag_9.rows.1.6 }}</b></td>
-                    </tr>
-
-                </table>
-
-            </div>
-            <div class="col-2"></div>
-        </div>
+        <!-- TITULO -->
         <div class="row">
             <div class="col-1"></div>
-            <div class="col-10">
-         <div style="width: 900px; margin: 0 auto;">
-                     <canvas id="container"></canvas>
-                </div> 
+            <div class="col-10 p-3 text-center text-white fondo_rojo espaciotitulo">
+                <h1><b>Distribución de Incidentes</b></h1>
             </div>
+            <div class="col-1"></div>
         </div>
-    </div>
-</div> 
 
+        <!-- TABLA -->
+        <div class="row">
+            <div class="col-3"></div>
+            <div class="col-6">
+                <br><br><br><br><br>
 
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <td class="rojo text-center" style="background-color:#ff0000;width:40%;"> <b>Responsable</b> </td>
+                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;"> <b>Datos</b> </td>
+                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;"> <b>Internet</b> </td>
+                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;"> <b>AE</b> </td>
+                        </tr>
+                    </thead>
 
-<script type="text/javascript">
-    // 1. Datos (Manteniendo tu estructura Jinja2)
-const data_num = [
-    '{{ paginas_data.pag_9.rows.0.1 }}','{{ paginas_data.pag_9.rows.0.2 }}','{{ paginas_data.pag_9.rows.0.3 }}',
-    '{{ paginas_data.pag_9.rows.0.4 }}','{{ paginas_data.pag_9.rows.0.5 }}','{{ paginas_data.pag_9.rows.0.6 }}'
-];
+                    <tbody>
+                        <pre>
+                            {% for fila in  paginas_data.pag_9.rows %}
+                                <tr> <td>    
+                                {% if fila.0 == "CLIENTE" %}
+                                    {{ data.nombre }}
+                                    {% else %}
+                                    {{ fila.0 }}
+                                {% endif %}
+                                </td>
+                                <td class="text-center">{{ fila.1 }}</td>
+                                <td class="text-center">{{ fila.2 }}</td>
+                                <td class="text-center">{{ fila.3 }}</td>
+                                </tr> 
+                            {% endfor %}         
+                        </pre>
 
-const data_nume = [
-    '{{ paginas_data.pag_9.rows.1.1 }}','{{ paginas_data.pag_9.rows.1.2 }}','{{ paginas_data.pag_9.rows.1.3 }}',
-    '{{ paginas_data.pag_9.rows.1.4 }}','{{ paginas_data.pag_9.rows.1.5 }}','{{ paginas_data.pag_9.rows.1.6 }}'
-];
+                        <!-- TOTAL -->
+                        <tr>
+                            <td><b>Total de Incidentes</b></td>
+                            <td colspan="3" class="text-center">
+                                <b>
+                                    {{ paginas_data.pag_9.rows.0.4|add:paginas_data.pag_9.rows.1.4 }}
+                                </b>
+                            </td>
+                        </tr>
 
-    const numerosEnteros = data_num.map(n => parseInt(n) || 0);
-    const numerosEnteross = data_nume.map(n => parseInt(n) || 0);
-
-    // 2. Configuración de Chart.js
-    const ctxLine = document.getElementById('container').getContext('2d');
-    
-    // Registrar el plugin para ver los números
-    Chart.register(ChartDataLabels);
-
-    new Chart(ctxLine, {
-        type: 'line', 
-        data: {
-            labels: [
-                '{{meses.MES_5}}','{{meses.MES_4}}','{{meses.MES_3}}',
-                '{{meses.MES_2}}','{{meses.MES_1}}','{{meses.MES}}'
-            ],
-            datasets: [
-                {
-                    label: '{{paginas_data.pag_9.rows.0.0}}',
-                    data: numerosEnteros,
-                    borderColor: 'red',
-                    backgroundColor: 'red',
-                    tension: 0.1, // Línea recta o leve curvatura
-                    fill: false
-                },
-                {
-                    label: '{{paginas_data.pag_9.rows.1.0}}',
-                    data: numerosEnteross,
-                    borderColor: 'orange',
-                    backgroundColor: 'orange',
-                    tension: 0.1,
-                    fill: false
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 2, // Controla el tamaño (ancho / alto)
-            animation: false, // Mejor para PDF
-            plugins: {
-                datalabels: {
-                    display: true,
-                    align: 'top', // Número arriba del punto
-                    anchor: 'end',
-                    font: { weight: 'bold', size: 10 },
-                    color: (context) => context.dataset.borderColor // Color igual a la línea
-                },
-                title: {
-                    display: true,
-                    text: 'COMPARATIVO CANTIDAD DE TICKETS POR MES'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: { display: true, text: 'Tickets' }
-                }
-            }
-        }
-    });
-</script>
-
-<!-- FIN HOJA 9-->
+                    </tbody>
+                </table>
+                
+            </div>
+            <div class="col-3"></div>
+        </div>
+      </div>
+</div>
+<!-- FIN HOJA 8 -->

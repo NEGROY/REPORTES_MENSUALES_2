@@ -1,23 +1,23 @@
-<!--PAGINA 11-->
-<div class="container-fluid hoja">
-    <div class="row abs-center">
-        <div class="col-1"></div>
-        <div class="col-10 p-3 text-center text-white" style="background-color: #ff0000;">
-            <h1>Atribución de Tickets Reactivos</h1>
+
+<!-- HOJA 9-->
+<div class="hoja col-12">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1"> </div>
+            <div class="col-10 p-3 text-center text-white fondo_rojo espaciotitulo">
+                <h1><b>Comportamiento Tickets Reactivos y Proactivos</b></h1>
+            </div>
+            <div class="col-1"> </div>
         </div>
-        <div class="col-1" style="background-color: #ffffff;"> </div>
-    </div>
-    <div class="contenido_hoja">
-        
-        
         <div class="row">
             <div class="col-2"></div>
             <div class="col-8">
+
                 <br><br><br>
-                <table class="table table-condensed table-stripedes"> 
+                <table class="table table-condensed table-stripedes">
                     <thead>
                         <tr style="background-color: #ff0000; " >
-                            <td class="rojo text-center" style="width: 42%;"><b>ATRIBUCION</b></td>
+                            <td class="rojo text-center" style="width: 42%;"><b>TIPO DE MONITOREO</b></td>
                             <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_5}}</b></td>
                             <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_4}}</b></td>
                             <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_3}}</b></td>
@@ -25,118 +25,120 @@
                             <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_1}}</b></td>
                             <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES}}</b></td>
                         </tr>
-                   
-                </thead>
-               
-                <tr class="text-center">
-                    <td>{{data.tabla_pag11[0][0]}}</td>
-                    <td>{{data.tabla_pag11[0][1]}}</td>
-                    <td>{{data.tabla_pag11[0][2]}}</td>
-                    <td>{{data.tabla_pag11[0][3]}}</td>
-                    <td>{{data.tabla_pag11[0][4]}}</td>
-                    <td>{{data.tabla_pag11[0][5]}}</td>
-                    <td>{{data.tabla_pag11[0][6]}}</td>
-                </tr>
-                <tr class="text-center">
-                    <td>{{data.tabla_pag11[1][0]}}</td>
-                    <td>{{data.tabla_pag11[1][1]}}</td>
-                    <td>{{data.tabla_pag11[1][2]}}</td>
-                    <td>{{data.tabla_pag11[1][3]}}</td>
-                    <td>{{data.tabla_pag11[1][4]}}</td>
-                    <td>{{data.tabla_pag11[1][5]}}</td>
-                    <td>{{data.tabla_pag11[1][6]}}</td>
-                </tr>
-                <tr class="text-center">
-                    <td><b>TOTAL</b></td>
-                    <td><b>{{data.tabla_pag11[0][1] + data.tabla_pag11[1][1]}}</b></td>
-                    <td><b>{{data.tabla_pag11[0][2] + data.tabla_pag11[1][2]}}</b></td>
-                    <td><b>{{data.tabla_pag11[0][3] + data.tabla_pag11[1][3]}}</b></td>
-                    <td><b>{{data.tabla_pag11[0][4] + data.tabla_pag11[1][4]}}</b></td>
-                    <td><b>{{data.tabla_pag11[0][5] + data.tabla_pag11[1][5]}}</b></td>
-                    <td><b>{{data.tabla_pag11[0][6] + data.tabla_pag11[1][6]}}</b></td>
-                </tr>
-                
+
+                    </thead>
+                    
+                    <tr class="text-center"> 
+                        {% for fila in paginas_data.pag_10.rows.0  %}
+                            <td>{{ fila }} </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr class="text-center"> 
+                        {% for fila in paginas_data.pag_10.rows.1  %}
+                            <td>{{ fila }} </td>
+                        {% endfor %}
+                    </tr>
+
+                    <tr class="text-center">
+                        <td><b>TOTAL</b></td>
+                        <td><b>{{ paginas_data.pag_10.rows.0.1|add:paginas_data.pag_10.rows.1.1 }}</b></td>
+                        <td><b>{{ paginas_data.pag_10.rows.0.2|add:paginas_data.pag_10.rows.1.2 }}</b></td>
+                        <td><b>{{ paginas_data.pag_10.rows.0.3|add:paginas_data.pag_10.rows.1.3 }}</b></td>
+                        <td><b>{{ paginas_data.pag_10.rows.0.4|add:paginas_data.pag_10.rows.1.4 }}</b></td>
+                        <td><b>{{ paginas_data.pag_10.rows.0.5|add:paginas_data.pag_10.rows.1.5 }}</b></td>
+                        <td><b>{{ paginas_data.pag_10.rows.0.6|add:paginas_data.pag_10.rows.1.6 }}</b></td>
+                    </tr>
+
                 </table>
+
             </div>
             <div class="col-2"></div>
         </div>
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
-                <figure class="highcharts-figure">
-                    <div id="container2"></div>
-                    
-                  </figure>
-
+         <div style="width: 900px; margin: 0 auto;">
+                     <canvas id="container"></canvas>
+                </div> 
             </div>
         </div>
     </div>
-</div>
-<script>
-    const  data_numero=[ '{{data.tabla_pag11[0][1]}}','{{data.tabla_pag11[0][2]}}','{{data.tabla_pag11[0][3]}}','{{data.tabla_pag11[0][4]}}','{{data.tabla_pag11[0][5]}}','{{data.tabla_pag11[0][6]}}']
-    const data_numer= ['{{data.tabla_pag11[1][1]}}','{{data.tabla_pag11[1][2]}}','{{data.tabla_pag11[1][3]}}','{{data.tabla_pag11[1][4]}}','{{data.tabla_pag11[1][5]}}','{{data.tabla_pag11[1][6]}}']
-    const numerosEnteros_ = data_numero.map(numero => parseInt(numero));
-    const numerosEnteross_ = data_numer.map(numero => parseInt(numero));
-    Highcharts.chart('container2', {
-  chart: {
-    type: 'column'
-  },
-  title: {
-    text: 'COMPARATIVO MENSUAL - MONITOREO REACTIVO CANTIDAD DE TICKETS POR MES POR TIPO DE ATRIBUCION',
-    align: 'left'
-  },
-  xAxis: {
-    categories: ['{{data.col_mes[5]}}','{{data.col_mes[4]}}','{{data.col_mes[3]}}','{{data.col_mes[2]}}','{{data.col_mes[1]}}','{{data.col_mes[0]}}' ]
-  },
-  yAxis: {
-    min: 0,
-    title: {
-      text: 'Count trophies'
-    },
-    stackLabels: {
-      enabled: true,
-      style: {
-        fontWeight: 'bold',
-        color: ( // theme
-          Highcharts.defaultOptions.title.style &&
-          Highcharts.defaultOptions.title.style.color
-        ) || 'gray',
-        textOutline: 'none'
-      }
-    }
-  },
-  legend: {
-    align: 'left',
-    x: 70,
-    verticalAlign: 'top',
-    y: 70,
-    floating: true,
-    backgroundColor:
-      Highcharts.defaultOptions.legend.backgroundColor || 'white',
-    borderColor: '#CCC',
-    borderWidth: 1,
-    shadow: false
-  },
-  tooltip: {
-    headerFormat: '<b>{point.x}</b><br/>',
-    pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-  },
-  plotOptions: {
-    column: {
-      stacking: 'normal',
-      dataLabels: {
-        enabled: true
-      }
-    }
-  },
-  colors: ['red', 'orange'],
-  series: [{
-    name: '{{data.tabla_pag11[0][0]}}',
-    data: numerosEnteros_
-  }, {
-    name: '{{data.tabla_pag11[1][0]}}',
-    data: numerosEnteross_
-  }]
-});
+</div> 
+
+
+
+<script type="text/javascript">
+    // 1. Datos (Manteniendo tu estructura Jinja2)
+const data_num = [
+    '{{ paginas_data.pag_10.rows.0.1 }}','{{ paginas_data.pag_10.rows.0.2 }}','{{ paginas_data.pag_10.rows.0.3 }}',
+    '{{ paginas_data.pag_10.rows.0.4 }}','{{ paginas_data.pag_10.rows.0.5 }}','{{ paginas_data.pag_10.rows.0.6 }}'
+];
+const data_nume = [
+    '{{ paginas_data.pag_10.rows.1.1 }}','{{ paginas_data.pag_10.rows.1.2 }}','{{ paginas_data.pag_10.rows.1.3 }}',
+    '{{ paginas_data.pag_10.rows.1.4 }}','{{ paginas_data.pag_10.rows.1.5 }}','{{ paginas_data.pag_10.rows.1.6 }}'
+];
+
+    const numerosEnteros = data_num.map(n => parseInt(n) || 0);
+    const numerosEnteross = data_nume.map(n => parseInt(n) || 0);
+    // 2. Configuración de Chart.js
+    const ctxLine = document.getElementById('container').getContext('2d');
+    
+    // Registrar el plugin para ver los números
+    Chart.register(ChartDataLabels);
+
+    new Chart(ctxLine, {
+        type: 'line', 
+        data: {
+            labels: [
+                '{{meses.MES_5}}','{{meses.MES_4}}','{{meses.MES_3}}',
+                '{{meses.MES_2}}','{{meses.MES_1}}','{{meses.MES}}'
+            ],
+            datasets: [
+                {
+                    label: '{{paginas_data.pag_10.rows.0.0}}',
+                    data: numerosEnteros,
+                    borderColor: 'red',
+                    backgroundColor: 'red',
+                    tension: 0.1, // Línea recta o leve curvatura
+                    fill: false
+                },
+                {
+                    label: '{{paginas_data.pag_10.rows.1.0}}',
+                    data: numerosEnteross,
+                    borderColor: 'orange',
+                    backgroundColor: 'orange',
+                    tension: 0.1,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 2, // Controla el tamaño (ancho / alto)
+            animation: false, // Mejor para PDF
+            plugins: {
+                datalabels: {
+                    display: true,
+                    align: 'top', // Número arriba del punto
+                    anchor: 'end',
+                    font: { weight: 'bold', size: 10 },
+                    color: (context) => context.dataset.borderColor // Color igual a la línea
+                },
+                title: {
+                    display: true,
+                    text: 'COMPARATIVO CANTIDAD DE TICKETS POR MES'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Tickets' }
+                }
+            }
+        }
+    });
 </script>
-<!--FIN PAGINA 11-->
+
+<!-- FIN HOJA 9-->
