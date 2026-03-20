@@ -86,6 +86,9 @@ def reporte_prueba(request):
         "CENAM": "CENAM"
     }
     paisComplete = pais_abrev.get(empresa.pais, empresa.pais)
+    # CADENAS DE MESE PARA LAS CONSULTAS DE 5 MESES 
+    cadena_mes  = ",".join(meses[f"MESN_{i}"] for i in range(5, 0, -1)) + "," + meses["MESN"]
+    cadena_anio =  "2025,2026" #",".join([meses["ANO_1"], meses["ANO_2"]])
     # 4)  EMPEZAMOS A CREAR LOS DATOS PARA LAS PAGINAS 
     datosPag= {
         "date_ini": meses["FECHA_INI"],
@@ -100,9 +103,8 @@ def reporte_prueba(request):
         "empresa": id_empresa,
         "date_ini_5": meses["FECHA_INI_5"],
         "HRSxMES" : meses["HRSxMES"],
+        "cadena_anio":cadena_anio
     }
-    # CADENAS DE MESE PARA LAS CONSULTAS DE 5 MESES 
-    cadena_mes = ",".join(meses[f"MESN_{i}"] for i in range(5, 0, -1)) + "," + meses["MESN"]
 
     #DATOS DE LOS HI HISTORICOS INDICADORES 
     hi_indi= obtener_historico_indicadores( conn, datosPag )
@@ -127,6 +129,7 @@ def reporte_prueba(request):
             "anio": anio,
             "paginas": paginas,
             "paginas_data": paginas_data , 
+
         }
     )
 

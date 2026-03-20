@@ -165,7 +165,7 @@ def get_pag11(datosPag, cadena_mes):
 # ==============================
 # DEBIDO A QUE LAS ULTIMAS 3 FUNCIONES SON IDENTICAS VAMOS A CREAR UNA GENERAL 
 # ESTA FUNCION SOLO SIRVE CUANDO INICIO ES HACE 5 MESES Y FIN ES EL MES ACTUAL 
-def get_pag_General(datosPag, cadena_mes, func_sql):
+def get_pag_General(datosPag, cadena_mes, func_sql ):
     #   convertir string a función
     if isinstance(func_sql, str):
         func_sql = FUNCIONES_SQL.get(func_sql)
@@ -179,8 +179,9 @@ def get_pag_General(datosPag, cadena_mes, func_sql):
     where_tk = datosPag["where_tk"]
     pais = datosPag["pais"]
     paiscomplete = datosPag["paiscomplete"]
+    cadena_anio = datosPag["cadena_anio"]
 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes) #    print(sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes, cadena_anio) # print(sql)
 
     with obtener_conexion() as conn:
         with conn.cursor() as cursor:

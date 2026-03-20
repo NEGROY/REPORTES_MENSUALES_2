@@ -205,6 +205,7 @@ def sql_base(date_ini='01012026', date_end='31012026', where_tk=" probsummarym1.
                      (
                         case
                            when tk.category = 'DX - BOLETA MAL ABIERTA' and tk.opened_by = 'tmipuser' then 'CLARO'
+                           when tk.category = 'DX - BOLETA MAL ABIERTA' and tk.res_anal_code = 'TeMIP' then 'CLARO'
                            when tk.res_anal_code = 'CALL CENTER' or tk.res_anal_code = 'TEMIP' then 'CLARO'
                            when ( tk.category = 'DX - CLIENTE'
                                or tk.category = 'DX - BOLETA MAL ABIERTA'
@@ -470,12 +471,45 @@ def pag_7(date_ini,date_end, where_tk,pais, paiscomplete ):
 
     # sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  
     # """
-
     return  
 
 # pag 8 Comportamiento de la Red del Cliente
-def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
-    return
+def pag_8(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes,  cadena_anio ):
+
+   #sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" pivot_T as(
+   #    SELECT id_cliente, mes, ano, indicator_name, indicator_value
+   #    FROM lista 
+   #    UNPIVOT (
+   #        indicator_value
+   #        FOR indicator_name IN (sitios_activos,total_enlaces,internet,ae,tt)
+   #        )
+   #    ), BB AS(
+   #        SELECT *
+   #    FROM (
+   #      SELECT  mes, indicator_name, indicator_value
+   #      FROM pivot_T  WHERE   MES IN ("""+str(cadena_mes)+""") and ano in("""+str(cadena_anio)+""")
+   #    )
+   #    PIVOT (
+   #      MAX(indicator_value)
+   #      FOR mes IN ("""+str(cadena_mes)+""")
+   #    ))
+
+   #    SELECT BB.*, 
+   #    CASE 
+   #        WHEN  indicator_name='TOTAL_ENLACES' THEN 'Total de Enlaces de datos'
+   #        WHEN  indicator_name='INTERNET' THEN 'Internet'
+   #        WHEN  indicator_name='AE' THEN 'AE'
+   #        WHEN  indicator_name='TT' THEN 'Total de TT'
+   #        ELSE 'SITIOS_ACTIVOS' END FF,
+   #        CASE 
+   #        WHEN  indicator_name='TOTAL_ENLACES' THEN 1
+   #        WHEN  indicator_name='INTERNET' THEN 2
+   #        WHEN  indicator_name='AE' THEN 3
+   #        WHEN  indicator_name='TT' THEN 4
+   #        ELSE 5 END ORDENADO
+   #        FROM BB ORDER BY ORDENADO ASC 
+   #    """
+    return  # sql
 
 # ************************************************************
 # PAGI 8 Distribución de Incidentes
@@ -570,7 +604,7 @@ def pag_9(date_ini,date_end, where_tk,pais, paiscomplete ):
 
 # ************************************************************
 # PAGI 10 Comportamiento Tickets Reactivos y Proactivos
-def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
     
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
@@ -592,7 +626,7 @@ def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
 # ************************************************************
 # Atribución de Tickets Reactivos pag 11
-def pag_11(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_11(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
         SELECT * FROM TICKETS_2 WHERE   "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
@@ -610,15 +644,15 @@ def pag_11(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
 # ==============================
 # Causas Monitoreo Reactivo Atribuibles al Cliente PAG 12
-def pag_12(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_12(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
     
-    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (
         SELECT * FROM TICKETS_2 
         WHERE "TIPO MONITOREO"='MONITOREO REACTIVO' and "ATRIBUIBLE A"='CLIENTE'  
           AND "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
         AND (SELECT (F_FIN +1) FROM VARIABLES  )
         ), AGRUPACION AS(
-        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tk
+        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from TK2
         GROUP BY FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM'))
         )
         SELECT * FROM(
@@ -628,21 +662,22 @@ def pag_12(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
           AVG(CONTAR) 
           FOR MES IN ({cadena_mes})
         )
+         order by FALLA
     """
 
     return sql 
 
 # ==============================
 # Principales Causas Tickets Reactivos Atribuibles a Claro || PAG 13
-def pag_13(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_13(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
-    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (
         SELECT * FROM TICKETS_2 
         WHERE "TIPO MONITOREO"='MONITOREO REACTIVO' and "ATRIBUIBLE A"='CLARO' 
         AND "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
         AND (SELECT  (F_FIN +1) FROM VARIABLES  )
         ), AGRUPACION AS(
-        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tk
+        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tk2
         GROUP BY FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM'))
         )
         SELECT * FROM(
@@ -652,6 +687,7 @@ def pag_13(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
           AVG(CONTAR) 
           FOR MES IN ({cadena_mes})
         )
+        order by FALLA
     """
 
     return sql 
@@ -726,7 +762,7 @@ def pag_15(date_ini,date_end, where_tk,pais, paiscomplete ):
     return sql
 # ==============================
 # Atribución de Tickets Proactivos || PAG 16
-def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PRO AS(
         SELECT A.*, COUNT(*) CONTAR FROM (
         SELECT "ATRIBUIBLE A", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
@@ -742,7 +778,7 @@ def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
 
 # ==============================
 # Causas Monitoreo Proactivo Atribuibles al Cliente
-def pag_17(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_17(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" AGRUPACION AS(
         select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tickets_2
@@ -808,7 +844,7 @@ def pag_19(date_ini,date_end, where_tk,pais, paiscomplete ):
 
 # ==============================
 # Tiempos de diagnóstico, escalación y solución de Tickets Proactivos atribuibles a Claro || pag 20
-def pag_20(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes):
+def pag_20(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" 
         agrupacion AS (
