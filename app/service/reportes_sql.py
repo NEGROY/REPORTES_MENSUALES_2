@@ -285,9 +285,17 @@ def sql_base(date_ini='01012026', date_end='31012026', where_tk=" probsummarym1.
     # --  SELECT * FROM TICKETS_2
 
 # CONSULTA PARA LOS Histórico de Indicadores (PAG 6) 
-def historico_de_indicadores(parque_where=""" WHERE CLIENTE LIKE '%BANCO DE DESARROLLO RURAL%'  AND PAIS='GT' """):
-    
-    query = sql_base()+ f""" 
+def historico_de_indicadores( datos ):
+    # obtener datos 
+    date_ini = datos["date_ini"]
+    date_end = datos["date_end"]
+    where_tk = datos["where_tk"]
+    pais     = datos["pais"]
+    paiscomplete = datos["paiscomplete"]
+    parque_where =  datos["parque_where"]
+ 
+    # DATOS COMPLETPOS 
+    query = sql_base(date_ini, date_end, where_tk, pais, paiscomplete)+ f""" 
           -------------historico_de_indicadores-----------   
         TT_ENLACES AS (
             SELECT COUNT(*) FROM  FR_PARQUE_SERVICIOS_CENAM     
@@ -325,7 +333,7 @@ def historico_de_indicadores(parque_where=""" WHERE CLIENTE LIKE '%BANCO DE DESA
                     WHEN TT_TK_CLIENTE=0 THEN 0
                 ELSE
                     NVL(ROUND(((TT_TK-TT_TK_CLIENTE)/TT_ENLACES)*100,2),0) END "INDICE DE FALLAS",
-                 NVL(INDI,0) "SITIOS REINCIDENTES",
+                 NVL(INDI,0) "SITIOS_REINCIDENTES",
                 CASE
                     WHEN INDI=0 THEN 0
                 ELSE
@@ -460,10 +468,10 @@ def pag_5(date_ini,date_end, where_tk,pais, paiscomplete):
 # PAGI 7 Comportamiento de la Red del Cliente
 def pag_7(date_ini,date_end, where_tk,pais, paiscomplete ):
 
-    # sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""
+    # sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  
     # """
 
-    return 
+    return  
 
 # ************************************************************
 # PAGI 8 Distribución de Incidentes

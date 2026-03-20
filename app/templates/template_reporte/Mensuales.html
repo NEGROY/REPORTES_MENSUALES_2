@@ -4,34 +4,24 @@
 {% block body %}
 
     <!-- FOR EACH DE LAS paginas    -->
-    {% for template in  paginas.templatesXXX %}
+    {% for template in  paginas.templates %}
         {% include template %}
     {% endfor %}
 
+
     <pre>
-    {{ paginas_data }}
+        {{paginas_data}}
     </pre>
-    <br>
+
+        <br>
+    <pre>
+        {{hi_indi}}
+    </pre>
+        <br>
+    <pre>
+    {{ meses }}
+    </pre>
+        <br>
     
-    <tr class="text-center"> 
-        {% for fila in paginas_data.pag_9  %}
-            
-            {% for filas in fila.items %}
-                <td>  {{ filas.1 }} </td>
-                
-            {% endfor %}
-
-        {% endfor %}
-    </tr>
-
-<br>
-<pre>
-{{ paginas }}
-</pre>
-
-<pre>
-{{ meses }}
-</pre>
-
 
 {% endblock %}

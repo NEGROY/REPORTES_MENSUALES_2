@@ -54,7 +54,7 @@
 
                     <tr>
                         <td>Período de Reporte</td>
-                        <td>{{data.mes}} {{data.anio}}</td>
+                        <td>{{mes}} {{data.anio}}</td>
                     </tr>
 
                 </table>
@@ -87,11 +87,11 @@
     </thead>
 
     <tbody>
-        {% for fila in paginas_data.pag_5 %}
+        {% for fila in paginas_data.pag_5.rows %}
         <tr class="text-center">
-            <td>{{ fila.COLUMNA }}</td>
-            <td>{{ fila.VALOR }}</td>
-            <td>{{ fila.PORCENTAJE  }} %</td>
+            <td>{{ fila.0 }}</td>
+            <td>{{ fila.1 }}</td>
+            <td>{{ fila.2  }} %</td>
         </tr>
         {% endfor %}
 
@@ -99,9 +99,9 @@
         <tr class="text-center">
             <td><b>Total</b></td>
             <td>
-                {{ paginas_data.pag_5.0.TT }}
+                <b> {{ paginas_data.pag_5.rows.0.3 }} </b>
             </td>
-            <td>100%</td>
+            <td><b>100% </b></td>
         </tr>
     </tbody>
 

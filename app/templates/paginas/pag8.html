@@ -19,48 +19,36 @@
                 <table class="table table-sm table-striped">
                     <thead>
                         <tr>
-
-                            <td class="rojo text-center" style="background-color:#ff0000;width:40%;">
-                                <b>Responsable</b>
-                            </td>
-
-                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;">
-                                <b>Datos</b>
-                            </td>
-
-                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;">
-                                <b>Internet</b>
-                            </td>
-
-                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;">
-                                <b>AE</b>
-                            </td>
+                            <td class="rojo text-center" style="background-color:#ff0000;width:40%;"> <b>Responsable</b> </td>
+                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;"> <b>Datos</b> </td>
+                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;"> <b>Internet</b> </td>
+                            <td class="rojo text-center" style="background-color:#ff0000;width:10%;"> <b>AE</b> </td>
                         </tr>
                     </thead>
 
                     <tbody>
-
-                        {% for fila in paginas_data.pag_8 %}
-                        <tr>
-                            <td>
-                                {% if fila.RESPONSABLE == "CLIENTE" %}
+                        <pre>
+                            {% for fila in  paginas_data.pag_8.rows %}
+                                <tr> <td>    
+                                {% if fila.0 == "CLIENTE" %}
                                     {{ data.nombre }}
-                                {% else %}
-                                    {{ fila.RESPONSABLE }}
+                                    {% else %}
+                                    {{ fila.0 }}
                                 {% endif %}
-                            </td>
-                            <td class="text-center">{{ fila.DATOS }}</td>
-                            <td class="text-center">{{ fila.INTERNET }}</td>
-                            <td class="text-center">{{ fila.AE }}</td>
-                        </tr>
-                        {% endfor %}
+                                </td>
+                                <td class="text-center">{{ fila.1 }}</td>
+                                <td class="text-center">{{ fila.2 }}</td>
+                                <td class="text-center">{{ fila.3 }}</td>
+                                </tr> 
+                            {% endfor %}         
+                        </pre>
 
                         <!-- TOTAL -->
                         <tr>
                             <td><b>Total de Incidentes</b></td>
                             <td colspan="3" class="text-center">
                                 <b>
-                                    {{ paginas_data.pag_8.0.TOTAL|add:paginas_data.pag_8.1.TOTAL }}
+                                    {{ paginas_data.pag_8.rows.0.4|add:paginas_data.pag_8.rows.1.4 }}
                                 </b>
                             </td>
                         </tr>
