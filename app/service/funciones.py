@@ -25,10 +25,10 @@ PAGINAS_CONFIG = {
     "pag_14": "5meses",
     "pag_15": "actual",
     "pag_16": "5meses",
-    "pag_17": "actual",
+    "pag_17": "5meses",
     "pag_18": "actual",
-    "pag_19": "5meses",
-    "pag_20": "actual",
+    "pag_19": "actual",
+    "pag_20": "5meses",
 }
 #DEFINIMOS LOS MESES 
 meses_nombre = {

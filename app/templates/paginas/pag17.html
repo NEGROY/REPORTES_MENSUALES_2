@@ -1,0 +1,57 @@
+
+<!-- HOJA 17 -->
+<div class="hoja col-12">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1"> </div>
+            <div class="col-10 p-3 text-center text-white fondo_rojo espaciotitulo">
+                <h1><b>Causas Monitoreo Proactivo Atribuibles al  Cliente</b></h1>
+            </div>
+            <div class="col-1"> </div>
+        </div>
+        <div class="row">
+            <div  class="col-1"></div>
+            <div class="col-10">
+
+                <br><br><br>
+                <table class="table table-sm table-condensed table-stripedes" >
+                    <thead>
+                    <tr style="background-color: #ff0000;">
+                        <td  class="rojo text-center" style=" width: 25%;" ><b>FALLA</b></td>
+                        <td  class="rojo text-center" style=" width: 10%;" ><b>SUBFALLA</b></td>
+                        <td  class="rojo text-center" style=" width: 20%;" ><b>CODIGO DE CIERRE</b></td>
+                        <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_5}} </b></td> 
+                        <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_4}} </b></td>
+                        <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_3}} </b></td>
+                        <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_2}} </b></td>
+                        <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_1}} </b></td> 
+                        <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES}}   </b></td> 
+                    </tr>
+                </thead>
+                
+                <tbody>   
+                    {% if paginas_data.pag_17.rows %}
+                        {% for c in paginas_data.pag_17.rows %}
+                         <tr>
+                             <td>{{ c.0 }}</td>
+                             <td>{{ c.1 }}</td>
+                             <td class="text-center">{{ c.2 }}</td>
+                             <td class="text-center">{{ c.3|default_if_none:"0"  }}</td>
+                             <td class="text-center">{{ c.4|default_if_none:"0"  }}</td>
+                             <td class="text-center">{{ c.5|default_if_none:"0"  }}</td>
+                             <td class="text-center">{{ c.6|default_if_none:"0"  }}</td>
+                             <td class="text-center">{{ c.7|default_if_none:"0"  }}</td>
+                             <td class="text-center">{{ c.8|default_if_none:"0"  }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                            <td colspan="9" class="text-center">NO SE ENCUENTRA TICKETS ATRIBUIBLES A CLIENTE</td>
+                    {% endif %}
+                </tbody>
+                </table>
+            </div>
+            <div  class="col-1"></div>
+        </div>
+    </div>
+</div>
+<!-- FIN HOJA 17 -->

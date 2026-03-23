@@ -1,0 +1,50 @@
+
+<!-- HOJA 18 -->
+<div class="hoja17 col-12">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1"> </div>
+            <div class="col-10 p-3 text-center text-white fondo_rojo espaciotitulo">
+                <h1><b>Tiempos de Restauración Fallas de Energía en  Sitios del Cliente</b></h1>
+            </div>
+            <div class="col-1"> </div>
+        </div>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-8">
+                <br><br><br>
+                <table class="table table-sm table-condensed table-stripedes" >
+                    <thead>
+                    <tr >
+                        <td colspan="3" class="rojo text-center" style="background-color: #ff0000; width: 25%;" ><b>INCIDENTES POR FALLAS DE ENERGIA		
+                        </b></td>                    
+                    </tr>
+                    <tr style="background-color: #ff0000;" >
+                        <td  class="rojo text-center" style=" width: 40%;" ><b>Tiempo</b></td>
+                        <td  class="rojo text-center" style=" width: 10%;" ><b>Incidentes</b></td>
+                        <td  class="rojo text-center" style=" width: 10%;" ><b>Porcentaje</b></td> 
+                    </tr>
+                   
+                </thead>
+                <tbody>
+                     {% if paginas_data.pag_18.rows %}
+                        {% for c in paginas_data.pag_18.rows %}
+                         <tr>
+                             <td>{{ c.0 }}</td>
+                             <td>{{ c.1 }}</td>
+                             <td class="text-center">{{ c.2|default_if_none:"0" }} %</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <td colspan="3" class="text-center">NO SE ENCUENTRA TICKETS </td>
+                    {% endif %} 
+                </tbody>
+                
+                </table>
+               
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div>
+</div>
+<!-- FIN HOJA 18 -->

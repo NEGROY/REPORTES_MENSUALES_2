@@ -763,10 +763,12 @@ def pag_15(date_ini,date_end, where_tk,pais, paiscomplete ):
 # ==============================
 # Atribución de Tickets Proactivos || PAG 16
 def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
-    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PRO AS(
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (
+    SELECT * FROM TICKETS_2 WHERE "FECHA DE CIERRE" BETWEEN (SELECT (F_INI) FROM VARIABLES)AND(SELECT (F_FIN)+1 FROM VARIABLES )), 
+    PRO AS(
         SELECT A.*, COUNT(*) CONTAR FROM (
         SELECT "ATRIBUIBLE A", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
-        FROM TK WHERE "TIPO MONITOREO"='MONITOREO PROACTIVO')A GROUP BY "ATRIBUIBLE A",MES,ANIO ORDER BY MES )
+        FROM TK2 WHERE "TIPO MONITOREO"='MONITOREO PROACTIVO')A GROUP BY "ATRIBUIBLE A",MES,ANIO ORDER BY MES )
         SELECT * FROM (
         SELECT "ATRIBUIBLE A", MES,CONTAR FROM PRO)
         PIVOT (
@@ -780,8 +782,13 @@ def pag_16(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_an
 # Causas Monitoreo Proactivo Atribuibles al Cliente
 def pag_17(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
-    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" AGRUPACION AS(
-        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tickets_2
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (
+        SELECT * FROM TICKETS_2
+        WHERE "TIPO MONITOREO"='MONITOREO PROACTIVO' and "ATRIBUIBLE A"='CLIENTE'   
+         AND "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
+        AND (SELECT  (F_FIN)+1 FROM VARIABLES  )
+        ),   AGRUPACION AS(
+        select FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,COUNT(*) CONTAR from tk2
         GROUP BY FALLA,SUBFALLA,"CODIGO DE CIERRE",TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM'))
         )
         SELECT * FROM(
@@ -790,7 +797,7 @@ def pag_17(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_an
         PIVOT(
           AVG(CONTAR) 
           FOR MES IN ({cadena_mes})
-        )
+        ) ORDER BY FALLA
     """
 
     return sql
@@ -831,13 +838,21 @@ def pag_18(date_ini,date_end, where_tk,pais, paiscomplete ):
 #  Top 20 de Sitios Reincidentes por Energía || PAG 19
 def pag_19(date_ini,date_end, where_tk,pais, paiscomplete ):
 
-    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" PROCESO AS(
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""      TK2 AS (
+        SELECT * FROM TICKETS_2 WHERE  "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  )
+        AND (SELECT  (F_FIN)+1 FROM VARIABLES  )
+        ),
+        PROCESO AS(
         select * from(
-        select  ENLACE,UBICACION,"DURACION TICKET (horas)" 
-            from TICKETS_2 where "CODIGO DE CIERRE" = 'SERVICIO_ENERGIA COMERCIAL'  ))
+        select  ENLACE,UBICACION,"DURACION TICKET (horas)"
+            from TK2 where "CODIGO DE CIERRE" = 'SERVICIO_ENERGIA COMERCIAL'  ))
+
         SELECT * FROM (
-        SELECT ENLACE,UBICACION,COUNT(ENLACE) TT , ROUND(AVG("DURACION TICKET (horas)"),2) TT_T 
-            FROM PROCESO  GROUP BY ENLACE,UBICACION)A WHERE ROWNUM <=20 ORDER BY TT DESC
+        SELECT ENLACE,UBICACION,COUNT(ENLACE) TT , ROUND(AVG("DURACION TICKET (horas)"),2) TT_T
+            FROM PROCESO  
+            GROUP BY ENLACE,UBICACION
+            ORDER BY TT DESC 
+              ) A WHERE ROWNUM <=20
     """
 
     return sql
@@ -846,14 +861,21 @@ def pag_19(date_ini,date_end, where_tk,pais, paiscomplete ):
 # Tiempos de diagnóstico, escalación y solución de Tickets Proactivos atribuibles a Claro || pag 20
 def pag_20(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
-    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" 
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (
+        SELECT * FROM tickets_2
+        WHERE
+                "TIPO MONITOREO" = 'MONITOREO PROACTIVO'
+            AND "ATRIBUIBLE A" = 'CLARO'
+            AND "FECHA DE CIERRE" BETWEEN 
+            ( SELECT F_INI FROM variables ) 
+            AND ( SELECT (F_FIN) + 1 FROM variables )
+        ),
+
         agrupacion AS (
             SELECT "ATRIBUIBLE A", "RANGO SOLUCION",
                 TO_NUMBER(to_char("FECHA DE CIERRE", 'MM')) mes,
                 COUNT(*) contar
-            FROM
-                TICKETS_2
-            WHERE
+            FROM TK2 WHERE
                 "TIPO MONITOREO" = 'MONITOREO PROACTIVO'
                 AND "ATRIBUIBLE A" = 'CLARO'   
             GROUP BY
@@ -884,7 +906,7 @@ def pag_20(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_an
 
 # ==============================
 # CONSULTA GENERAL 21
-def pag_20(date_ini,date_end, where_tk,pais, paiscomplete  ):
+def pag_21(date_ini,date_end, where_tk,pais, paiscomplete  ):
 
     sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  PROCESO AS(
         select * from(
