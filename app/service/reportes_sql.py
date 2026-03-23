@@ -694,9 +694,9 @@ def pag_13(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_an
 
 # ==============================
 # Tiempos de solución Tickets Reactivos atribuibles a Claro PAG 14
-def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
+def pag_14(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
-    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" tk AS (
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" tk2 AS (
             SELECT *
             FROM tickets_2
             WHERE
@@ -706,7 +706,7 @@ def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
                     SELECT F_INI
                     FROM   variables
                 ) AND (
-                    SELECT  TO_DATE(f_fin + 1)
+                    SELECT  (f_fin + 1)
                     FROM    variables
                 )
         ), agrupacion AS (
@@ -716,7 +716,7 @@ def pag_14(date_ini,date_end, where_tk,pais, paiscomplete ):
                 TO_NUMBER(to_char("FECHA DE CIERRE", 'MM')) mes,
                 COUNT(*) contar
             FROM
-                tickets_2
+                tk2
             GROUP BY
                 "ATRIBUIBLE A",
                 "RANGO SOLUCION",

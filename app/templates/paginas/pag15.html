@@ -1,0 +1,53 @@
+<!-- Top 10 enlaces –Tickets atribuibles a Claro  Monitoreo Reactivo yProactivo -->
+
+
+<!-- HOJA 14-->
+<div class="hoja4 col-12">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-1"> </div>
+            <div class="col-10 p-3 text-center text-white fondo_rojo espaciotitulo">
+                <h1><b>Top 10 enlaces – Tickets atribuibles a Claro  <br>Monitoreo Reactivo y Proactivo</b></h1>
+            </div>
+            <div class="col-1"> </div>
+        </div>
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <br><br>
+                <table class="table table-sm table-condensed table-stripedes" >
+                    <thead>
+                    <tr style="background-color: #ff0000;" >
+                        <td  class="rojo text-center" style="width: 15%;" ><b>ENLACE</b></td>
+                        <td  class="rojo text-center" style="width: 40%;" ><b>UBICACIÓN REMOTA</b></td>
+                        <td  class="rojo text-center" style="width: 10%;" ><b>MONITOREO PROACTIVO</b></td> 
+                        <td  class="rojo text-center" style="width: 10%;" ><b>MONITOREO REACTIVO</b></td>
+                        <td  class="rojo text-center" style="width: 10%;" ><b>CANTIDAD DE TICKETS</b></td>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    
+                    {% if paginas_data.pag_15.rows %}
+                        {% for c in paginas_data.pag_15.rows %}
+                            </tr>
+                            <td>{{ c.0 }}</td>
+                            <td>{{ c.1 }}</td>
+
+                            <td class="text-center">{{c.2|default_if_none:"0" }} </td>
+                            <td class="text-center">{{c.3|default_if_none:"0" }} </td>
+                            <td class="text-center">{{c.4|default_if_none:"0" }} </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <td colspan="6" class="text-center">NO SE ENCUENTRA TICKETS ATRIBUIBLES A CLARO</td>
+                    {% endif %}
+                </tbody>
+
+        </table>
+            </div>
+            <div class="col-1"></div>
+        </div>
+    </div>
+</div>
+<!-- FIN HOJA 14-->

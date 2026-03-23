@@ -221,7 +221,8 @@ def get_pag_MesActual(datosPag,   func_sql):
         if not func_sql:
             raise ValueError(f"Función SQL no válida: {func_sql}")
     #CONSULTA CONTATENADA 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete ) # print(sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete ) # 
+    print(sql)
 
     conn = obtener_conexion()
     cursor = conn.cursor()
