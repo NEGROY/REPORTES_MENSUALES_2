@@ -9,8 +9,7 @@ from app.models.empresas_catalogo import EmpresasCatalogo
 
 # http://127.0.0.1:8000/reporte-prueba/?empresa=3&mes=03&anio=2026&total_enlaces=55
 def reporte_prueba(request):
-
-     # FECHA ACTUAL ***********************************
+    # FECHA ACTUAL ***********************************
     hoy = datetime.now()
     mes_actual = hoy.strftime("%m")
     anio_actual = hoy.strftime("%Y")
@@ -114,6 +113,13 @@ def reporte_prueba(request):
     paginas_nombres = paginas["nombres"]
     paginas_data = generar_paginas_data(paginas_nombres, PAGINAS_CONFIG, datosPag, cadena_mes)
 
+    # VAMOS A SEGMENTAR TODOS LOS VALORES DE LA ULTIMA CONSULTA Y QUEREMOS REALIZAR UNA PAGINACION DE DATOS 
+    # if  paginas_data["pag_21"] == []:
+    # VOY CONTRA CUANTOS lineas tiene de info 
+    # print(len(paginas_data["pag_21"]["rows"]))
+    # tt_pag =  len(paginas_data["pag_21"]["rows"]) / 20 #TOTAL DE PAG PARA SEPARAR
+    Disponibilidad = paginacion(paginas_data["pag_21"])
+    
     # ========================== 
     return render(
         request,
@@ -121,14 +127,15 @@ def reporte_prueba(request):
         {
             "id": 1 ,
             "data": data,
-            "meses": meses,
-            "hi_indi": hi_indi,
+            "meses": meses,     # CAL CULO DE LOS MESES 
+            "hi_indi": hi_indi, # INIDISPENSABLE PARA LA PAG 7 
             # "sql": sql,
             # "empresa": empresa,
             "mes": nombre_mes,
-            "anio": anio,
-            "paginas": paginas,
-            "paginas_data": paginas_data , 
+            "anio": anio,   
+            "paginas": paginas, # orden y listado de paginas  
+            "paginas_data": paginas_data ,  # DATOS DE TODAS LAS PAGINAS PAG1, PAG2 ... PAG 21
+            "Disponibilidad": Disponibilidad,
 
         }
     )

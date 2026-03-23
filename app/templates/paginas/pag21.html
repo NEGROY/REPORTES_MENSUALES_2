@@ -1,0 +1,45 @@
+{% for item in Disponibilidad.paginas %}
+
+<!-- HOJA 21 -->
+<div class="hoja col-12 ">
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-12 p-3 text-center fondo_rojo espaciotitulo">
+                <h1 class="text-white">
+                    <b>
+                        Disponibilidad de Enlaces con Tickets atribución Claro –
+                        {{ item.pais }}
+                    </b>
+                </h1>
+            </div>
+
+            <div class="col-12 mt-4">
+                <table class="table table-condensed table-striped">
+                    <thead>
+                        <tr style="background-color: #ff0000;">
+                            <td class="text-center" style="width:15%"><b>ENLACE</b></td>
+                            <td class="text-center" style="width:50%"><b>UBICACION</b></td>
+                            <td class="text-center" style="width:9%"><b>TK ACTIVO</b></td>
+                            <td class="text-center" style="width:10%"><b>DISPONIBILIDAD MENSUAL</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in item.pagina %}
+                        <tr class="text-center align-middle small lh-1">
+                            <td>{{ row.0 }}</td>
+                            <td>{{ row.1|default:"N/A" }}</td>
+                            <td>{{ row.2|floatformat:2 }}</td>
+                            <td>{{ row.3|floatformat:2 }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- FINAL HOJA 21 -->
+
+{% endfor %}

@@ -10,21 +10,23 @@ from app.service.reportes_sql import *
 
 # VAMOS A EMPEZAR A REALIZAR las FUNCIONES DE LAS  PAGINAS 
 FUNCIONES_SQL = {
-    "pag_5": pag_5,   # MES ACTUAL 
-    "pag_7": pag_7,   # MES ACTUAL 
-    "pag_8": pag_8,   # MES ACTUAL 
-    "pag_9": pag_9,     # 5 meses 
-    "pag_10": pag_10,   # 5 meses 
-    "pag_11": pag_11,   # 5 meses 
-    "pag_12": pag_12,   # 5 meses 
-    "pag_13": pag_13,   # 5 meses 
-    "pag_14": pag_14,   # MES ACTUAL 
-    "pag_15": pag_15,   # 5 meses 
-    "pag_16": pag_16,   # 5 meses 
-    "pag_17": pag_17,   # MES ACTUAL 
-    "pag_18": pag_18,   # MES ACTUAL  
-    "pag_19": pag_19,   # 5 meses 
-    "pag_20": pag_20,   # MES ACTUAL          
+    "pag_5": pag_5,    #"actual"
+    "pag_7": pag_7,    #"actual"
+    "pag_8": pag_8,    #"5meses"
+    "pag_9": pag_9,    # "actual
+    "pag_10": pag_10,  # "5meses
+    "pag_11": pag_11,  # "5meses
+    "pag_12": pag_12,  # "5meses
+    "pag_13": pag_13,  # "5meses
+    "pag_14": pag_14,  # "5meses 
+    "pag_15": pag_15,  # "actual
+    "pag_16": pag_16,  # "5meses
+    "pag_17": pag_17,  # "5meses 
+    "pag_18": pag_18,  # "actual  
+    "pag_19": pag_19,  # "actual
+    "pag_20": pag_20,  # "5meses    
+    "pag_21": pag_21,  # "actual    
+    "pag_22": pag_22,  # "5meses                
 }
 
 # PAGINA 5
@@ -134,8 +136,7 @@ def get_pag11(datosPag, cadena_mes):
     pais = datosPag["pais"]
     paiscomplete = datosPag["paiscomplete"]
     
-    sql = pag_11(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes )
-    print(sql)
+    sql = pag_11(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes )#     print(sql)
 
     conn = obtener_conexion()
     cursor = conn.cursor()
@@ -181,8 +182,7 @@ def get_pag_General(datosPag, cadena_mes, func_sql ):
     paiscomplete = datosPag["paiscomplete"]
     cadena_anio = datosPag["cadena_anio"]
 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes, cadena_anio) #    
-    print(sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes, cadena_anio) # print(sql)
 
     with obtener_conexion() as conn:
         with conn.cursor() as cursor:
@@ -207,7 +207,7 @@ def get_pag_General(datosPag, cadena_mes, func_sql ):
 # ==============================
 # FUNCION GENERAL PARA EL MES ACTUAL 
 # FUNCION PARA CONSULTAS DEL MES SELECCIONADO, 
-def get_pag_MesActual(datosPag,   func_sql):
+def get_pag_MesActual(datosPag, func_sql):
     date_ini = datosPag["date_ini"]
     date_end = datosPag["date_end"]
     # fecha_fin = ( datetime.strptime(date_end, "%d%m%Y") + timedelta(days=1) ).strftime("%d%m%Y") #    print(fecha_fin)
@@ -222,7 +222,7 @@ def get_pag_MesActual(datosPag,   func_sql):
         if not func_sql:
             raise ValueError(f"Función SQL no válida: {func_sql}")
     #CONSULTA CONTATENADA 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete ) # print(sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete ) # print(func_sql)
 
     conn = obtener_conexion()
     cursor = conn.cursor()

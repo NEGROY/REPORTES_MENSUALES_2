@@ -4,6 +4,9 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 # MODEL DE DJANGO
 from django.db.models import Q
+from collections import defaultdict
+from django.core.paginator import Paginator
+
 # SERVICIOS
 from app.service.PAG_func import get_pag_General, get_pag_MesActual
 from app.service.reportes_sql import historico_de_indicadores
@@ -29,6 +32,8 @@ PAGINAS_CONFIG = {
     "pag_18": "actual",
     "pag_19": "actual",
     "pag_20": "5meses",
+    "pag_21": "actual",
+    "pag_22": "5meses",
 }
 #DEFINIMOS LOS MESES 
 meses_nombre = {
@@ -175,7 +180,7 @@ def ultimos_6_meses(mes, anio):
         data[f"FECHA_INI{suf}"] = fecha_ini
         data[f"FECHA_FIN{suf}"] = fecha_fin
 
-        # 🔹 NUEVO CAMPO
+        # paginas_data.pag_20 NUEVO CAMPO
         data[f"HRSxMES{suf}"] = horas_mes
 
     data["ANO_1"] = anio if mes > 5 else anio - 1
@@ -227,7 +232,7 @@ def obtener_historico_indicadores(conn, datos):
         cursor = conn.cursor()
 
         sql = historico_de_indicadores(datos) # 
-        print(sql)
+        # print(sql)
         cursor.execute(sql)
         columnas = [col[0] for col in cursor.description]
         resultados = [
@@ -288,3 +293,52 @@ def insertar_indicadores(data, empresa):
 
 ## INDICE DE PAISES 
 # TIKCKTE SNOMBRE NCOMPLETO  # PARQUE VA ABREVIADO
+
+# PARA LAS PAGINACION DE DISPONIBILIDAD DE LA PAG 21 
+def paginacion(data, por_pagina=30):
+    headers = data['headers']
+    rows = data['rows']
+
+    # paginas_data.pag_20 Orden fijo de países
+    orden_paises = [
+        'GUATEMALA',
+        'EL SALVADOR',
+        'HONDURAS',
+        'COSTA RICA',
+        'NICARAGUA'
+    ]
+
+    # paginas_data.pag_20 Agrupar por país
+    agrupado = defaultdict(list)
+    for row in rows:
+        agrupado[row[4]].append(row)
+
+    paginas = []
+
+    # paginas_data.pag_20 PAGINAR PAÍS POR PAÍS (ESTA ES LA CLAVE)
+    for pais in orden_paises:
+        if pais not in agrupado:
+            continue
+
+        # Orden interno por disponibilidad
+        filas_ordenadas = sorted(
+            agrupado[pais],
+            key=lambda x: x[3],
+            reverse=True
+        )
+
+        paginator = Paginator(filas_ordenadas, por_pagina)
+
+        for num in paginator.page_range:
+            pagina = paginator.page(num)
+
+            paginas.append({
+                "pais": pais,
+                "pagina": pagina
+            })
+
+    return {
+        "headers": headers,
+        "paginas": paginas,
+        "total_paginas": len(paginas)
+    }

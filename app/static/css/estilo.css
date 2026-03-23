@@ -23,11 +23,8 @@
   width:100%;
 }
 
-
-
 /* ----------------------------------- ESTILOS MODIFICADOS -----------------------------------  */
-  
-
+ 
 .contenido_hoja{
   width: 100%;
   height: 950px !important;
@@ -275,3 +272,13 @@ background-color:rgb(223, 241, 142) !important;
 }
 
 /* ----------------------------- {ESTILOS PARA MIS PREUBAS}  ----------------------------- */
+
+/* ********** {Disponibilidad de Enlaces con Tickets atribución Claro} {Pag 21} ********** */
+
+
+.dispo {
+    font-size: 9px;              /* letras más pequeñas */
+    text-align: center;          /* centrado horizontal */
+    vertical-align: middle;      /* centrado vertical */
+    padding: 4px;                /* reduce el alto de la fila */
+}

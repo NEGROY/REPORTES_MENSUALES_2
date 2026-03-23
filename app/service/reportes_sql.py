@@ -908,22 +908,38 @@ def pag_20(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_an
 # CONSULTA GENERAL 21
 def pag_21(date_ini,date_end, where_tk,pais, paiscomplete  ):
 
-    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  PROCESO AS(
-        select * from(
-        select  ENLACE,UBICACION,PAIS,"T TICKET ACTIVO (horas)","FECHA DE CIERRE" from tk where "ATRIBUIBLE A" = 'CLARO' AND problem_type = 'CAIDA TOTAL'
-            ))
-        SELECT * FROM (
-        SELECT ENLACE,UBICACION,TT_T, ROUND(( 1 - ( TT_T / TT_H ) )*100,3) "DISPONIBILIDAD MENSUAL", PAIS FROM (
-        SELECT ENLACE,UBICACION,PAIS,MAX("FECHA DE CIERRE"), sum("T TICKET ACTIVO (horas)") TT_T, 
-        ( 1 + trunc(last_day(MAX("FECHA DE CIERRE"))) - trunc(MAX("FECHA DE CIERRE"), 'MM') ) * 24 TT_H
-        FROM PROCESO  GROUP BY ENLACE,UBICACION, PAIS)A  ORDER BY TT_T DESC)C WHERE "DISPONIBILIDAD MENSUAL" >= 95 
-
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (
+       SELECT * FROM TICKETS_2 WHERE "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
+       AND (SELECT  (F_FIN)+1 FROM VARIABLES  )
+       ),
+     PROCESO AS(
+           select * from(
+           select  ENLACE,UBICACION,PAIS,"T TICKET ACTIVO (horas)","FECHA DE CIERRE" from tk2 where "ATRIBUIBLE A" = 'CLARO' AND problem_type = 'CAIDA TOTAL' ))
+           SELECT * FROM (
+           SELECT ENLACE,UBICACION,TT_T, ROUND(( 1 - ( TT_T / TT_H ) )*100,3) "DISPONIBILIDAD MENSUAL", PAIS FROM (
+           SELECT ENLACE,UBICACION,PAIS,MAX("FECHA DE CIERRE"), sum("T TICKET ACTIVO (horas)") TT_T, 
+           ( 1 + trunc(last_day(MAX("FECHA DE CIERRE"))) - trunc(MAX("FECHA DE CIERRE"), 'MM') ) * 24 TT_H
+           FROM PROCESO  GROUP BY ENLACE,UBICACION, PAIS)A  ORDER BY TT_T DESC)C WHERE "DISPONIBILIDAD MENSUAL" >= 95 
     """
-
-    return sql 
+    #print(sql)
+    return   sql 
 
 # ==============================
+# HISTORICO DE TICKTES WALLMART Y BANRURAL PAG 22
+def pag_22(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" tk2 as (
+        select * from (
+        select "MES CIERRE" mes, pais, count(ticket) total
+            from TICKETS_2
+            group by "MES CIERRE", pais
+            order by "MES CIERRE"
+        ) )
+        SELECT * FROM TK2
+        pivot ( sum(total)
+           for mes   in ( {cadena_mes})  ) 
+    """
+    return  sql 
 
 # ==============================
 
