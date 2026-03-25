@@ -2,7 +2,7 @@
 
 
 <!-- HOJA 18-->
-<div class="hoja18 col-12">
+<div class="hoja col-12">
     <div class="container-fluid">
         <div class="row">
             <div class="col-1"> </div>
@@ -19,10 +19,10 @@
                     <thead>
                     
                     <tr style="background-color: #ff0000;">
-                        <td  class="rojo text-center" style=" width: 20%;" ><b>ENLACE</b></td>
+                        <td  class="rojo text-center" style=" width: 15%;" ><b>ENLACE</b></td>
                         <td  class="rojo text-center" style=" width: 50%;" ><b>UBICACION</b></td>
-                        <td  class="rojo text-center" style=" width: 10%;" ><b>Cuenta de ENLACE</b></td> 
-                        <td  class="rojo text-center" style=" width: 10%;" ><b>PRMEDIO DURACION TK</b></td>
+                        <td  class="rojo text-center" style=" width: 10%;" ><b>CUENTA DE ENLACE</b></td> 
+                        <td  class="rojo text-center" style=" width: 10%;" ><b>PROMEDIO DURACIÓN TK</b></td>
                     </tr>
                    
                 </thead>
@@ -31,7 +31,7 @@
                         {% for c in paginas_data.pag_19.rows %}
                          <tr>
                              <td>{{ c.0 }}</td>
-                             <td>{{ c.1|default_if_none:"-"  }}</td>
+                             <td> {{ c.1|default_if_none:"N/A"|striptags  }} </td>
                              <td class="text-right">{{ c.2 }}</td>
                              <td class="text-center">{{ c.3}}</td>
                         </tr>

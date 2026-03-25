@@ -2,6 +2,7 @@
 import calendar, time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+from django.db import transaction
 # MODEL DE DJANGO
 from django.db.models import Q
 from collections import defaultdict
@@ -9,17 +10,17 @@ from django.core.paginator import Paginator
 
 # SERVICIOS
 from app.service.PAG_func import get_pag_General, get_pag_MesActual
-from app.service.reportes_sql import historico_de_indicadores
+from app.service.reportes_sql import historico_de_indicadores, Comportamiento
 #MODELOS
 from app.models.pag_reporte import PagReporte
-from app.models import HiDeIndicadores
+from app.models import HiDeIndicadores, ParqueCnoc
 
 
 # Define qué páginas usan qué función
 PAGINAS_CONFIG = {
-    "pag_5": "actual",
-    "pag_7": "actual",
-    "pag_8": "5meses",
+    "pag_5":  "actual",
+    "pag_7":  "actual",
+    "pag_8":  "actual",
     "pag_9":  "actual",
     "pag_10": "5meses",
     "pag_11": "5meses",
@@ -34,6 +35,7 @@ PAGINAS_CONFIG = {
     "pag_20": "5meses",
     "pag_21": "actual",
     "pag_22": "5meses",
+    "pag_23": "5meses",
 }
 #DEFINIMOS LOS MESES 
 meses_nombre = {
@@ -50,22 +52,28 @@ meses_nombre = {
     "11": "NOVIEMBRE",
     "12": "DICIEMBRE"
 }
+# SABEMOS QUE QUITAR _ / POR ESPACIOS 
+CAMPOS_NORMALIZAR = {
+    "pag_17": ["CODIGO DE CIERRE"],
+    "pag_19": ["UBICACION"]
+}
 
 # REALIZA LA CREACION DE LOS NOMBRES DE LOS TEMPLATES Y PAG
 def obtener_paginas_templates(id_empresa):
     # LISTA DEFAULT
     paginas_default = list(range(1, 21))
+    # print( "paginas por def ", paginas_default)
     # ==========================
     # VALIDAR ID EMPRESA
     if not id_empresa:
         paginas = paginas_default
         print("EMPRESA VACÍA → usando páginas por default")
     else:
-        id_empresa = int(id_empresa)
+        id_empresa = int(id_empresa) # print( "EMPRESA ID" , id_empresa)
 
         registro = PagReporte.objects.filter(
             id_cliente=id_empresa,
-            estado=True
+            estado=1
         ).first()
         # ==========================
         # VALIDAR RESULTADO
@@ -73,13 +81,15 @@ def obtener_paginas_templates(id_empresa):
             print("SIN REGISTRO → usando páginas por default")
             paginas = paginas_default
         elif isinstance(registro.paginas, list) and registro.paginas:
-            paginas = registro.paginas
+            paginas = registro.paginas # print("PAGINAS ", paginas)
         else:
             print("REGISTRO SIN PÁGINAS VÁLIDAS → usando página 3")
             paginas = [3]
     # ==========================
     # FILTRAR (máximo hasta 10)
-    paginas_filtradas = [p for p in paginas if p <= 21]
+    # print( "paginas: ", paginas)
+    paginas_filtradas = [p for p in paginas if p <= 30]
+    # print( "paginas_filtradas: ", paginas_filtradas)
     # ==========================
     # TEMPLATES
     paginas_templates = [
@@ -122,6 +132,12 @@ def generar_paginas_data(paginas_nombres, PAGINAS_CONFIG, datosPag, cadena_mes):
             
             resultado = normalizar_dinamico(resultado)
             paginas_data[nombre_pag] = resultado
+
+            # INTENTAMOS ELIMINAR _ / EN LAS PAG 
+            if nombre_pag in CAMPOS_NORMALIZAR:
+                resultado = limpiar_filas_con_headers(resultado, nombre_pag)
+            # INTENTAMOS ELIMINAR _ / EN LAS PAG 
+            
             print(f"✅ Finalizó {nombre_pag}")
 
         except Exception as e:
@@ -256,6 +272,137 @@ def obtener_historico_indicadores(conn, datos):
 
     return data
 
+#  OBTENEMOS DATOS Comportamiento de la Red del Cliente || ParqueCnoc
+def Comporta8(conn, datos):
+    mes     = int(datos["mes"])
+    anio    = int(datos["anio"])
+    empresa = datos["empresa"]
+
+    fecha_base   = datetime(anio, mes, 1)
+    fecha_inicio = fecha_base - relativedelta(months=6)
+    # ===============================
+    # 1. ASEGURAR EXISTENCIA DEL MES
+    # ===============================
+    actual = ParqueCnoc.objects.filter(
+        id_cliente_id=empresa,
+        mes=mes,
+        ano=anio
+    ).first()
+
+    if not actual:
+        try:
+            # ---- Intentar comportamiento ----
+            datos_sql = datos.copy()
+            datos_sql["date_ini"] = fecha_base.strftime("%Y-%m-01")
+            datos_sql["date_end"] = fecha_base.strftime("%Y-%m-31")
+
+            sql = Comportamiento(datos_sql)
+
+            with conn.cursor() as cursor:
+                cursor.execute(sql)
+                rows = cursor.fetchall()
+
+            data = {
+                "Total de Enlaces de datos": 0,
+                "Internet": 0,
+                "AE": 0,
+                "Total de TT": 0
+            }
+
+            for tipo, total, _ in rows:
+                data[tipo] = total
+
+            with transaction.atomic():
+                ParqueCnoc.objects.create(
+                    id_cliente_id=empresa,
+                    mes=mes,
+                    ano=anio,
+                    tt_EnlacesDatos=data["Total de Enlaces de datos"],
+                    internet=data["Internet"],
+                    AE=data["AE"],
+                    tt_tt=data["Total de TT"]
+                )
+
+        except Exception:
+            # ---- Fallback: copiar último mes ----
+            ultimo = (
+                ParqueCnoc.objects
+                .filter(id_cliente_id=empresa)
+                .order_by("-ano", "-mes")
+                .first()
+            )
+
+            if ultimo:
+                with transaction.atomic():
+                    ParqueCnoc.objects.create(
+                        id_cliente_id=empresa,
+                        mes=mes,
+                        ano=anio,
+                        sitios_activos=ultimo.sitios_activos,
+                        tt_EnlacesDatos=ultimo.tt_EnlacesDatos,
+                        internet=ultimo.internet,
+                        AE=ultimo.AE,
+                        tt_tt=ultimo.tt_tt
+                    )
+    # ===============================
+    # 2. RECONSULTA FINAL (OPTIMIZADA)
+    # ===============================
+    data = list(
+        ParqueCnoc.objects.filter(
+            id_cliente_id=empresa,
+            ano__gte=fecha_inicio.year,
+            ano__lte=fecha_base.year
+        ).values(
+            "sitios_activos",
+            "tt_EnlacesDatos",
+            "internet",
+            "AE",
+            "tt_tt",
+            "id_cliente_id",
+            "mes",
+            "ano",
+        )
+    )
+    # ORDEN FINAL SEGURO (por si MySQL/MariaDB se pone creativo)
+    data.sort(key=lambda x: (x["ano"], x["mes"]))
+
+    return data
+
+# Función auxiliar para limpiar filas según headers
+def limpiar_filas_con_headers(resultado, nombre_pag):
+    if not resultado:
+        return resultado
+
+    headers = resultado.get("headers", [])
+    rows = resultado.get("rows", [])
+
+    campos = CAMPOS_NORMALIZAR.get(nombre_pag, [])
+    if not campos:
+        return resultado
+
+    # Mapear índices de columnas a normalizar
+    idxs = [headers.index(c) for c in campos if c in headers]
+
+    filas_limpias = []
+    for fila in rows:
+        fila = list(fila)
+        for idx in idxs:
+            fila[idx] = normalizar_campo(fila[idx])
+        filas_limpias.append(tuple(fila))
+
+    resultado["rows"] = filas_limpias
+    return resultado
+# Función de normalización de texto PARA LA DE ARRIBA 
+def normalizar_campo(valor):
+    if valor is None:
+        return None
+    return (
+        str(valor)
+        .replace("_", " ")
+        .replace("/", " ")
+        .strip()
+    )
+
 # FUNCION PARA INSERTAR DATOS DE INDICADORES DESDE EL MODELO 
 def insertar_indicadores(data, empresa):
     objetos = []
@@ -308,19 +455,17 @@ def paginacion(data, por_pagina=30):
         'NICARAGUA'
     ]
 
-    # paginas_data.pag_20 Agrupar por país
+    # paginas_data.pag_21 Agrupar por país
     agrupado = defaultdict(list)
     for row in rows:
         agrupado[row[4]].append(row)
 
     paginas = []
-
-    # paginas_data.pag_20 PAGINAR PAÍS POR PAÍS (ESTA ES LA CLAVE)
+    # paginas_data.pag_21 PAGINAR PAÍS POR PAÍS (ESTA ES LA CLAVE)
     for pais in orden_paises:
         if pais not in agrupado:
             continue
-
-        # Orden interno por disponibilidad
+    # Orden interno por disponibilidad
         filas_ordenadas = sorted(
             agrupado[pais],
             key=lambda x: x[3],
@@ -342,3 +487,11 @@ def paginacion(data, por_pagina=30):
         "paginas": paginas,
         "total_paginas": len(paginas)
     }
+
+#paginacion de las ocho horas 
+def paginacion8 (rows, filas_por_pagina=35):
+ 
+    paginas = []
+    for i in range(0, len(rows), filas_por_pagina):
+        paginas.append(rows[i:i + filas_por_pagina])
+    return paginas

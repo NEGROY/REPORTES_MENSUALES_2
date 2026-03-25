@@ -17,9 +17,9 @@
                 <table class="table table-sm table-condensed table-stripedes" >
                     <thead>
                     <tr style="background-color: #ff0000;">
-                        <td  class="rojo text-center" style=" width: 25%;" ><b>FALLA</b></td>
+                        <td  class="rojo text-center" style=" width: 20%;" ><b>FALLA</b></td>
                         <td  class="rojo text-center" style=" width: 10%;" ><b>SUBFALLA</b></td>
-                        <td  class="rojo text-center" style=" width: 20%;" ><b>CODIGO DE CIERRE</b></td>
+                        <td  class="rojo text-center" style=" width: 25%;" ><b>CODIGO DE CIERRE</b></td>
                         <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_5}} </b></td> 
                         <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_4}} </b></td>
                         <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_3}} </b></td>
@@ -35,7 +35,7 @@
                          <tr>
                              <td>{{ c.0 }}</td>
                              <td>{{ c.1 }}</td>
-                             <td class="text-center">{{ c.2 }}</td>
+                             <td>  {{ c.2|default_if_none:"N/A"|striptags|cut:"_"|cut:"/" }}</td>
                              <td class="text-center">{{ c.3|default_if_none:"0"  }}</td>
                              <td class="text-center">{{ c.4|default_if_none:"0"  }}</td>
                              <td class="text-center">{{ c.5|default_if_none:"0"  }}</td>

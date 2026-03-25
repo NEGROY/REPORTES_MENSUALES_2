@@ -45,6 +45,7 @@
 
 .fondo_rojo{
   background-color: #ff0000;
+
 }
 
 .espaciotitulo{
@@ -171,6 +172,7 @@ thead {
 .rojo{
   background-color: red;
   color: white;
+  font-size: 18px !important;  
 }
 h1{
   white-space: nowrap;
@@ -281,4 +283,8 @@ background-color:rgb(223, 241, 142) !important;
     text-align: center;          /* centrado horizontal */
     vertical-align: middle;      /* centrado vertical */
     padding: 4px;                /* reduce el alto de la fila */
+}
+
+.celdas{
+  font-size: 18px !important; 
 }

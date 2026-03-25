@@ -44,6 +44,7 @@ def reporte_prueba(request):
     # 1) OBTENEMOS todas las paginas  ['paginas/pag1.html'])
     # AGREGAR UNA VALIDACION SI LA EMPRESA ES MENSUAL ENVIAR VACIO
     paginas = obtener_paginas_templates(id_empresa)
+    # print(paginas)
 
     # -----------------------------
     # 2) OBTIENE LOS DATOS DE LA EMPRESA 
@@ -65,10 +66,15 @@ def reporte_prueba(request):
     # 4.1) FUNCION PARA CALCULAR LOS ULTIMOS 6 MESES 
     meses = ultimos_6_meses(int(mes), int(anio))
     nombre_mes = meses_nombre[mes]
+    #titulos concatenada
+    titulo = (
+        f"REPORTE CNOC - {nombre_mes} {anio} - "
+        f"{empresa.razon_social}  "
+    )
 
     # 3) CREA LOS CAMPOS DE DATOS DESDE empresa
     data = {
-        "titulo": "REPORTE MONITOREO",
+        "titulo": titulo, #"REPORTE MONITOREO",
         "nombre": str(empresa) if empresa else "CLIENTE DEMO",
         "mes": mes,
         "anio": anio,
@@ -108,18 +114,32 @@ def reporte_prueba(request):
     #DATOS DE LOS HI HISTORICOS INDICADORES 
     hi_indi= obtener_historico_indicadores( conn, datosPag )
     hi_indi = normalizar_dinamico(hi_indi)
+
+    #TRAEMOS LOS DATOS DE LA PAGINA 8  ParqueCnoc
+    pag8 =  Comporta8 (conn, datosPag)
+    pag8 = normalizar_dinamico(pag8)
     
     # FUNCION PARA OBTENER TODOS LOS DATOS DE LAS PAGINAS SELECCIONADAS 
     paginas_nombres = paginas["nombres"]
     paginas_data = generar_paginas_data(paginas_nombres, PAGINAS_CONFIG, datosPag, cadena_mes)
 
     # VAMOS A SEGMENTAR TODOS LOS VALORES DE LA ULTIMA CONSULTA Y QUEREMOS REALIZAR UNA PAGINACION DE DATOS 
-    # if  paginas_data["pag_21"] == []:
-    # VOY CONTRA CUANTOS lineas tiene de info 
-    # print(len(paginas_data["pag_21"]["rows"]))
-    # tt_pag =  len(paginas_data["pag_21"]["rows"]) / 20 #TOTAL DE PAG PARA SEPARAR
-    Disponibilidad = paginacion(paginas_data["pag_21"])
-    
+    if "pag_21" in paginas_data:
+        Disponibilidad = paginacion(paginas_data["pag_21"])
+    else:
+        Disponibilidad = []
+
+    # SOLO PARA LA PAGINA 23 TAMBIEN QUIEREN ENVIAR VARIOS VALORES 
+    if "pag_23" in paginas_data:
+        print("QUE PUTAS AQUI NO DEBE DE PASAR")
+        ochoHoras = paginacion8(
+            paginas_data["pag_23"]["rows"],
+            filas_por_pagina=30
+        )
+    else:
+        ochoHoras = []
+
+      
     # ========================== 
     return render(
         request,
@@ -135,8 +155,9 @@ def reporte_prueba(request):
             "anio": anio,   
             "paginas": paginas, # orden y listado de paginas  
             "paginas_data": paginas_data ,  # DATOS DE TODAS LAS PAGINAS PAG1, PAG2 ... PAG 21
-            "Disponibilidad": Disponibilidad,
-
+            "Disponibilidad": Disponibilidad, # PAG 21
+            "ochoHoras": ochoHoras,   # ENLACES DE RESOLUCIÓN MAYOR A 8 HORAS
+            "pag8": pag8     # Comportamiento de la Red del Cliente
         }
     )
 

@@ -468,48 +468,50 @@ def pag_5(date_ini,date_end, where_tk,pais, paiscomplete):
 # ************************************************************
 # PAGI 7 Comportamiento de la Red del Cliente
 def pag_7(date_ini,date_end, where_tk,pais, paiscomplete ):
-
-    # sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  
-    # """
+    return  
+def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
     return  
 
+
 # pag 8 Comportamiento de la Red del Cliente
-def pag_8(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes,  cadena_anio ):
+def Comportamiento(datos ):
 
-   #sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" pivot_T as(
-   #    SELECT id_cliente, mes, ano, indicator_name, indicator_value
-   #    FROM lista 
-   #    UNPIVOT (
-   #        indicator_value
-   #        FOR indicator_name IN (sitios_activos,total_enlaces,internet,ae,tt)
-   #        )
-   #    ), BB AS(
-   #        SELECT *
-   #    FROM (
-   #      SELECT  mes, indicator_name, indicator_value
-   #      FROM pivot_T  WHERE   MES IN ("""+str(cadena_mes)+""") and ano in("""+str(cadena_anio)+""")
-   #    )
-   #    PIVOT (
-   #      MAX(indicator_value)
-   #      FOR mes IN ("""+str(cadena_mes)+""")
-   #    ))
+    date_ini = datos["date_ini"]
+    date_end = datos["date_end"]
+    where_tk = datos["where_tk"]
+    pais     = datos["pais"]
+    paiscomplete = datos["paiscomplete"]
+    parque_where =  datos["parque_where"]
 
-   #    SELECT BB.*, 
-   #    CASE 
-   #        WHEN  indicator_name='TOTAL_ENLACES' THEN 'Total de Enlaces de datos'
-   #        WHEN  indicator_name='INTERNET' THEN 'Internet'
-   #        WHEN  indicator_name='AE' THEN 'AE'
-   #        WHEN  indicator_name='TT' THEN 'Total de TT'
-   #        ELSE 'SITIOS_ACTIVOS' END FF,
-   #        CASE 
-   #        WHEN  indicator_name='TOTAL_ENLACES' THEN 1
-   #        WHEN  indicator_name='INTERNET' THEN 2
-   #        WHEN  indicator_name='AE' THEN 3
-   #        WHEN  indicator_name='TT' THEN 4
-   #        ELSE 5 END ORDENADO
-   #        FROM BB ORDER BY ORDENADO ASC 
-   #    """
-    return  # sql
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  COMPORTAMIENTO AS(
+        select TIPO_,SUM(CONTAR) TT from (
+            select 
+                CASE 
+        WHEN tipo like '%INTERNET%' THEN 'Total de Enlaces de datos'
+        WHEN tipo like '%ACCESO%' THEN 'AE'
+        WHEN tipo like '%CANAL%' THEN 'Internet'
+        ELSE 'NO'
+        END TIPO_
+        ,contar from (
+            select TIPO_DE_SERVICIO tipo, count(*) contar from FR_PARQUE_SERVICIOS_CENAM 
+            {parque_where}  group by TIPO_DE_SERVICIO )  a) where tipo_ not in ('NO') GROUP BY TIPO_
+        ), U AS(
+        SELECT * FROM COMPORTAMIENTO
+        UNION
+        SELECT 'Total de TT' TIPO_,(SELECT COUNT(*) FROM TK) contar FROM DUAL)
+
+
+        SELECT TIPO_,TT,
+        CASE 
+            WHEN TIPO_ = 'Total de Enlaces de datos' THEN 1
+            WHEN TIPO_ = 'Internet' THEN 2
+            WHEN TIPO_ = 'AE' THEN 3
+            WHEN TIPO_ = 'Total de TT' THEN 4
+            else 5 
+          END orden FROM U 
+        ORDER BY orden 
+    """
+    return  sql
 
 # ************************************************************
 # PAGI 8 Distribución de Incidentes
@@ -606,7 +608,6 @@ def pag_9(date_ini,date_end, where_tk,pais, paiscomplete ):
 # PAGI 10 Comportamiento Tickets Reactivos y Proactivos
 def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
-    
     sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
         SELECT * FROM TICKETS_2 WHERE  "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
         AND (SELECT TO_DATE(F_FIN)+1 FROM VARIABLES  )
@@ -756,8 +757,9 @@ def pag_15(date_ini,date_end, where_tk,pais, paiscomplete ):
           FOR "TIPO MONITOREO" IN ('MONITOREO PROACTIVO', 'MONITOREO REACTIVO')
         ))
         SELECT * FROM (
+        SELECT * FROM (
         SELECT ENLACE, UBICACION,"'MONITOREO PROACTIVO'" PROACTIVO,"'MONITOREO REACTIVO'" REACTIVO,"'MONITOREO PROACTIVO'"+"'MONITOREO REACTIVO'" TT FROM PROCESO
-        )A WHERE ROWNUM <= 10 ORDER BY TT DESC
+        )A ORDER BY TT DESC )B WHERE ROWNUM <= 10 
     """
     return sql
 # ==============================
@@ -927,22 +929,60 @@ def pag_21(date_ini,date_end, where_tk,pais, paiscomplete  ):
 # ==============================
 # HISTORICO DE TICKTES WALLMART Y BANRURAL PAG 22
 def pag_22(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
+    meses = cadena_mes.split(",")
 
-    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" tk2 as (
-        select * from (
-        select "MES CIERRE" mes, pais, count(ticket) total
-            from TICKETS_2
-            group by "MES CIERRE", pais
-            order by "MES CIERRE"
-        ) )
-        SELECT * FROM TK2
-        pivot ( sum(total)
-           for mes   in ( {cadena_mes})  ) 
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" HISTO AS 
+    ( select "MES CIERRE" as mes, pais,  count(ticket) as tk
+        from tickets_2
+        group by "MES CIERRE", pais)
+        select * from HISTO
+    pivot ( sum(tk)
+      for mes in (
+        '{meses[0]}' as mes_1,   '{meses[1]}' as mes_2,
+        '{meses[2]}' as mes_3,   '{meses[3]}' as mes_4,
+        '{meses[4]}' as mes_5,   '{meses[5]}' as mes_6 
+        )
+    )
+        order by
+            case pais
+            when 'GUATEMALA'   then 1
+            when 'EL SALVADOR' then 2
+            when 'HONDURAS'    then 3
+            when 'NICARAGUA'   then 4
+            when 'COSTA RICA'  then 5
+            else 5
+        end
     """
     return  sql 
 
 # ==============================
+# ENLACES DE RESOLUCIÓN MAYOR A 8 HORAS
+def pag_23(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
+    meses = cadena_mes.split(",")
 
+    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (   
+        SELECT * FROM (       
+            SELECT TICKET "INCIDENTE", ENLACE, "MES CIERRE" MES
+            FROM tickets_2
+            WHERE "T TICKET ACTIVO (horas)" >= 8
+           )pivot ( COUNT(INCIDENTE)
+            for mes in (
+                '{meses[0]}' as mes_1,
+                '{meses[1]}' as mes_2,
+                '{meses[2]}' as mes_3,
+                '{meses[3]}' as mes_4,
+                '{meses[4]}' as mes_5,
+                '{meses[5]}' as mes_6
+            )
+        )  )
+       SELECT * FROM ( 
+       SELECT TK2.*,(NVL(mes_1,0)+NVL(mes_2,0)+NVL(mes_3,0)
+      + NVL(mes_4,0)+NVL(mes_5,0)+NVL(mes_6,0)) TOTAL FROM TK2
+       )A ORDER BY TOTAL DESC
+
+    """
+
+    return sql 
 
 # ==============================
 

@@ -116,22 +116,25 @@
       responsive: true,
       maintainAspectRatio: true,
       aspectRatio: 2,
-      animation: false, // Ideal para PDF
+      animation: false, // Ideal para PDF   
       plugins: {
         datalabels: {
           display: true,
-          anchor: 'end',
-          align: 'top',
-          font: { weight: 'bold', size: 10 },
-          color: '#000'
+          font: { weight: 'bold', size: 12 },
+          color: '#000',
+          padding: 4,
+          anchor: (context) => {
+            return context.datasetIndex === 0 ? 'end' : 'start';
+          },
+          align: (context) => {
+            return context.datasetIndex === 0 ? 'top' : 'bottom';
+          }
         },
-        title: {
-          display: true,
-          text: 'Atribución de Tickets Reactivos'
-        }
       },
       scales: {
+        x: { stacked: true },
         y: {
+          stacked: true,
           beginAtZero: true,
           title: {
             display: true,

@@ -4,25 +4,11 @@
 {% block body %}
 
     <!-- FOR EACH DE LAS paginas    -->
-    {% for template in  paginas.templatesxx %}
+    {% for template in  paginas.templates %}
         {% include template %}
     {% endfor %}
 
  
-
-       <br>          
-    <pre>
-        {{paginas_data}}
-    </pre>
-
-        <br>
-    <pre>
-        {{hi_indi}}
-    </pre>
-
-        <br>
-    <pre>
-        {{ meses }}
-    </pre>
+ 
 
 {% endblock %}

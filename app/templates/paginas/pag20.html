@@ -26,8 +26,8 @@
                         <td  class="rojo text-center" style=" width: 7.5%;" ><b> {{meses.MES_1}} </b></td> 
                         <td  class="rojo text-center" style=" width: 7.5%;" ><b> {{meses.MES}}   </b></td> 
                     </tr>
-                   
                 </thead>
+
                 <tbody>
 
                     {% if paginas_data.pag_20.rows %}
@@ -47,7 +47,7 @@
                         <td colspan="9" class="text-center">NO SE ENCUENTRA TICKETS </td>
                     {% endif %} 
             
-                  </tbody>
+                </tbody>
 
                 </table>
             </div>
@@ -67,8 +67,8 @@
     <!-- espacio para LAS GRAFICAS  -->    
     <div class="row">
         <div class="col-1"></div>
-        <div class="col-10">
-           <div style="width: 900px; margin: 0 auto;">
+        <div class="col-12">
+           <div style="width: 950px; margin: 0 auto;">
                  <canvas id="container20"></canvas>
             </div> 
         </div>
@@ -78,79 +78,90 @@
 </div>
 
 <!-- FIN HOJA 20-->
-
 <script>
-     // 1. Preparación de datos Jinja2
-    const data_numero20 = [
-        '{{paginas_data.pag_20.rows.0.1 }}','{{ paginas_data.pag_20.rows.0.2 }}','{{ paginas_data.pag_20.rows.0.3 }}',
-        '{{paginas_data.pag_20.rows.0.4 }}','{{ paginas_data.pag_20.rows.0.5 }}','{{ paginas_data.pag_20.rows.0.6 }}'
-    ];
+/* ===== 1. Datos desde Django (solo impresión) ===== */
+const rawData20 = [
+  {% for c in paginas_data.pag_20.rows %}
+    [
+      {% for v in c|slice:"1:" %}
+        "{{ v }}"{% if not forloop.last %},{% endif %}
+      {% endfor %}
+    ]{% if not forloop.last %},{% endif %}
+  {% endfor %}
+];
 
-    const data_numer20 = [
-        '{{paginas_data.pag_20.rows.1.1 }}','{{ paginas_data.pag_20.rows.1.2 }}','{{ paginas_data.pag_20.rows.1.3 }}',
-        '{{paginas_data.pag_20.rows.1.4 }}','{{ paginas_data.pag_20.rows.1.5 }}','{{ paginas_data.pag_20.rows.1.6 }}'
-    ];
+/* ===== 2. Datasets (corrección de corrimiento de meses) ===== */
+/* NOTA: los datos traen 5 valores y hay 6 meses → se antepone 0 para MES_5 */
+const datasets_20 = rawData20.map((row, index) => {
+  const values = row.slice(1).map(v => parseInt(v) || 0);
+  if (values.length === 5) values.unshift(0); // corrige MES_5
+  return {
+    label: row[0],
+    data: values,
+    backgroundColor: [
+      'rgba(67, 41, 176, 0.79)',
+      'rgba(255, 165, 0, 0.7)',
+      'rgba(0, 123, 255, 0.7)',
+      'rgba(40, 167, 69, 0.7)',
+      'rgba(126, 159, 65, 0.79)'
+    ][index % 4],
+    borderWidth: 1
+  };
+});
 
-    const numerosEnteros_20 = data_numero20.map(n => parseInt(n) || 0);
-    const numerosEnteross_20 = data_numer20.map(n => parseInt(n) || 0);
+/* ===== 3. Gráfica ===== */
+const canvas20 = document.getElementById('container20');
+const ctx20 = canvas20.getContext('2d');
 
-    const ctx20 = document.getElementById('container20').getContext('2d');
-    
-    Chart.register(ChartDataLabels);
+Chart.register(ChartDataLabels);
 
-
-       new Chart(ctx20, {
-        type: 'bar', // En Chart.js 'column' es 'bar'
-        data: {
-            labels: [
-                '{{meses.MES_5 }}','{{meses.MES_4 }}','{{meses.MES_3 }}',
-                '{{meses.MES_2 }}','{{meses.MES_1 }}','{{meses.MES }}'
-            ],
-            datasets: [
-                {
-                    label: '{{paginas_data.pag_20.rows.0.0 }}',
-                    data: numerosEnteros_20,
-                    backgroundColor: 'red'
-                },
-                {
-                    label: '{{ paginas_data.pag_20.rows.1.0 }}',
-                    data: numerosEnteross_20,
-                    backgroundColor: 'orange'
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            aspectRatio: 2, 
-            animation: false, // Vital para capturas de PDF
-            indexAxis: 'y',
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'COMPARATIVO MENSUAL - MONITOREO PROACTIVO',
-                    align: 'start',
-                    font: { size: 14 }
-                },
-                legend: {
-                    position: 'top',
-                    align: 'start',
-                    labels: { boxWidth: 12 }
-                },
-                datalabels: {
-                    color: 'white',
-                    font: { weight: 'bold', size: 10 },
-                    formatter: (value) => value > 0 ? value : '' 
-                }
-            },
-            scales: {
-                x: { stacked: true },
-                y: { 
-                    stacked: true,
-                    beginAtZero: true,
-                    title: { display: true, text: 'Cantidad' }
-                }
-            }
+new Chart(ctx20, {
+  type: 'bar',
+  data: {
+    labels: [
+      '{{ meses.MES_5 }}',
+      '{{ meses.MES_4 }}',
+      '{{ meses.MES_3 }}',
+      '{{ meses.MES_2 }}',
+      '{{ meses.MES_1 }}',
+      '{{ meses.MES }}'
+    ],
+    datasets: datasets_20
+  },
+  options: {
+    indexAxis: 'y',
+    elements: {
+      bar: {
+        borderWidth: 2,
+      }
+    },
+    responsive: true,
+    maintainAspectRatio: true,
+    aspectRatio: 2,
+    animation: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+      datalabels: {
+        display: true // ← OCULTA LOS NÚMEROS EN LA GRÁFICA
+      },
+      title: {
+        display: true,
+        text: 'Atribución de Tickets Reactivos'
+      }
+    },
+    scales: {
+      x: { stacked: true },
+      y: {
+        stacked: true,
+        beginAtZero: true,
+        title: {
+          display: true,
+          text: 'Tickets'
         }
-    });
+      }
+    }
+  }
+});
 </script>

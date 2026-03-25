@@ -7,29 +7,25 @@
             <div class="col-1"></div>
 
             <div class="col-10 p-3 text-center text-white fondo_rojo espaciotitulo">
-                <h1><b>Indicadores</b></h1>
+                <h1> <b>Indicadores</b> </h1>
             </div>
 
             <div class="col-1"></div>
         </div>
 
         <div class="row">
-
             <!-- TABLA CLIENTE -->
             <div class="col-1"></div>
 
             <div class="col-5">
+                <br><br><br><br><br><br><br> 
 
-                <br><br><br><br><br><br><br><br>
-
-                <table class="table table-sm table-striped">
-
-                    <thead>
-                        <tr>
-                            <td colspan="2" class="rojo text-center" style="background-color:#ff0000;">
-                                <b>Datos del cliente</b>
-                            </td>
-                        </tr>
+                <table class="table  table-striped " style="font-size: medium;">                    <thead>
+                       <tr>
+                         <td colspan="2" class="rojo text-center" style="background-color:#ff0000;">
+                             <b>Datos del cliente</b>
+                         </td>
+                       </tr>
                     </thead>
 
                     <tr>
@@ -58,59 +54,43 @@
                     </tr>
 
                 </table>
-
             </div>
 
             <div class="col-1"></div>
 
             <!-- TABLA INCIDENTES -->
             <div class="col-3">
-
                 <br><br><br><br><br><br><br><br>
+            <table class="table   table-striped fs-md-2 lh-base">
 
-                <table class="table table-sm table-striped">
+                <thead>
+                    <tr>
+                        <td class="rojo text-center" style="background-color:#ff0000;width:15%;">  <b>Resp.</b>      </td>
+                        <td class="rojo text-center" style="background-color:#ff0000;width:20%;">  <b>Incidentes</b> </td>
+                        <td class="rojo text-center" style="background-color:#ff0000;width:20%;">  <b>%</b>          </td>
+                    </tr>
+                </thead>
 
-    <thead>
-        <tr>
-            <td class="rojo text-center" style="background-color:#ff0000;width:15%;">
-                <b>Resp.</b>
-            </td>
-
-            <td class="rojo text-center" style="background-color:#ff0000;width:20%;">
-                <b>Incidentes</b>
-            </td>
-
-            <td class="rojo text-center" style="background-color:#ff0000;width:20%;">
-                <b>%</b>
-            </td>
-        </tr>
-    </thead>
-
-    <tbody>
-        {% for fila in paginas_data.pag_5.rows %}
-        <tr class="text-center">
-            <td>{{ fila.0 }}</td>
-            <td>{{ fila.1 }}</td>
-            <td>{{ fila.2  }} %</td>
-        </tr>
-        {% endfor %}
-
-        <!-- TOTAL -->
-        <tr class="text-center">
-            <td><b>Total</b></td>
-            <td>
-                <b> {{ paginas_data.pag_5.rows.0.3 }} </b>
-            </td>
-            <td><b>100% </b></td>
-        </tr>
-    </tbody>
-
-</table>
+                <tbody>
+                    {% for fila in paginas_data.pag_5.rows %}
+                    <tr class="text-center celdas">
+                        <td>{{ fila.0 }}</td>
+                        <td>{{ fila.1 }}</td>
+                        <td>{{ fila.2  }} %</td>
+                    </tr>
+                    {% endfor %}
+                    <!-- TOTAL -->
+                    <tr class="text-center celdas">
+                        <td><b>Total</b></td>
+                        <td> <b> {{ paginas_data.pag_5.rows.0.3 }} </b> </td>
+                        <td><b>100% </b></td>
+                    </tr>
+                </tbody>
+            </table>
 
             </div>
 
         </div>
-
     </div>
 </div>
 <!-- FIN HOJA 5 -->
