@@ -63,7 +63,8 @@
             </div>
             <div class="col-2"></div>
         </div>
-
+    <!-- espacio para LAS GRAFICAS  -->        
+        <br><br>
     <!-- espacio para LAS GRAFICAS  -->    
     <div class="row">
         <div class="col-1"></div>
@@ -99,11 +100,13 @@ const datasets_20 = rawData20.map((row, index) => {
     label: row[0],
     data: values,
     backgroundColor: [
-      'rgba(67, 41, 176, 0.79)',
-      'rgba(255, 165, 0, 0.7)',
-      'rgba(0, 123, 255, 0.7)',
-      'rgba(40, 167, 69, 0.7)',
-      'rgba(126, 159, 65, 0.79)'
+      'rgb(255, 68, 0)',
+      'rgb(255, 179, 63)',
+      'rgb(81, 154, 102)',
+      'rgb(19, 78, 142)',
+      'rgb(69, 104, 130)',
+      'rgb(64, 96, 147)',
+      'rgb(192, 7, 7)',
     ][index % 4],
     borderWidth: 1
   };
@@ -144,11 +147,20 @@ new Chart(ctx20, {
         position: 'bottom',
       },
       datalabels: {
-        display: true // ← OCULTA LOS NÚMEROS EN LA GRÁFICA
+        display: true, // ← OCULTA LOS NÚMEROS EN LA GRÁFICA
+        font: { weight: 'bold', size: 13 },
+        color: '#41431B',
+        formatter: (value) => value > 0 ? value : '' 
       },
       title: {
         display: true,
-        text: 'Atribución de Tickets Reactivos'
+        text: 'Atribución de Tickets Reactivos',
+        align: 'start',
+        font: {
+          size: 20, // Change title font size here
+          weight: 'bold', // Optional: bold, normal, etc.
+          family: 'Arial' // Optional: custom font family
+        },
       }
     },
     scales: {

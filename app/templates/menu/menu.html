@@ -15,7 +15,8 @@
                 </div>
 
                 <div class="card-body">
-                    <form method="GET"  action="{% url 'infoCliente' %}">
+                   <!-- <form method="GET"  action="{% url 'reporte_prueba' %}"> -->
+                    <form method="GET" action="{% url 'reporte_prueba' %}" target="_blank">
 
                         <!-- SELECT -->
                         <div class="mb-3">
@@ -23,7 +24,7 @@
                         <select class="form-select" name="empresa" id="empresa_select">
                             {% for e in empresas %}
                                 <option value="{{ e.COD }}" data-enlaces="{{ e.tt_sitioa }}">
-                                    {{ e.razon_social }}
+                                    {{ e.razon_social }}  || # {{ e.COD }}
                                 </option>
                             {% endfor %}
                         </select>
@@ -67,8 +68,9 @@
 </div>
 
 <!-- PRUEBA DE GRAFIAS-->
-         <div style="width: 900px; margin: 0 auto;">
+         <div style="width: 250px; margin: 0 auto;">
             <canvas id="container"></canvas>
+            <p>DEBE DE HABER GRAFICA AQUI</p>
          </div> 
 
 </body>
@@ -81,9 +83,7 @@
 
     // 2. Configuración de Chart.js
     const ctxLine = document.getElementById('container').getContext('2d');
-    
-     //  Chart.register(ChartDataLabels);
-
+         //  Chart.register(ChartDataLabels);
     new Chart(ctxLine, {
         type: 'line', 
         data: {

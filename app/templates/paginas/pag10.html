@@ -55,6 +55,11 @@
             </div>
             <div class="col-2"></div>
         </div>
+
+        <!-- espacio para LAS GRAFICAS  -->        
+            <br><br>
+        <!-- espacio para LAS GRAFICAS  -->   
+
         <div class="row">
             <div class="col-1"></div>
             <div class="col-10">
@@ -123,12 +128,18 @@ const data_nume = [
                     display: true,
                     align: 'top', // Número arriba del punto
                     anchor: 'end',
-                    font: { weight: 'bold', size: 10 },
+                    font: { weight: 'bold', size: 13 },
                     color: (context) => context.dataset.borderColor // Color igual a la línea
                 },
                 title: {
                     display: true,
-                    text: 'COMPARATIVO CANTIDAD DE TICKETS POR MES'
+                    text: 'COMPARATIVO CANTIDAD DE TICKETS POR MES',
+                    align: 'start',
+                    font: {
+                      size: 20, // Change title font size here
+                      weight: 'bold', // Optional: bold, normal, etc.
+                      family: 'Arial' // Optional: custom font family
+                    },
                 }
             },
             scales: {

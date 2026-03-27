@@ -26,12 +26,12 @@
                     </tr>
                    
                 </thead>
-                <tbody>    
+                <tbody style="font-size: 14px !important;">    
                     {% if paginas_data.pag_19.rows %}
                         {% for c in paginas_data.pag_19.rows %}
                          <tr>
                              <td>{{ c.0 }}</td>
-                             <td> {{ c.1|default_if_none:"N/A"|striptags  }} </td>
+                             <td> {{ c.1|default_if_none:"--"|striptags  }} </td>
                              <td class="text-right">{{ c.2 }}</td>
                              <td class="text-center">{{ c.3}}</td>
                         </tr>

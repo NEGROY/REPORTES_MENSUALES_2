@@ -14,19 +14,19 @@
             <div class="col-2"></div>
             <div class="col-8">
                 <br><br><br>
-                <table class="table table-condensed table-stripedes"> 
-                    <thead>
-                        <tr style="background-color: #ff0000; " >
-                            <td class="rojo text-center" style="width: 42%;"><b>ATRIBUCION</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_5}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_4}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_3}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_2}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_1}}</b></td>
-                            <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES}}  </b></td>
-                        </tr>
-                   
-                </thead>
+                
+              <table class="table table-condensed table-stripedes"> 
+                  <thead>
+                      <tr style="background-color: #ff0000; " >
+                          <td class="rojo text-center" style="width: 42%;"><b>ATRIBUCION</b></td>
+                          <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_5}}</b></td>
+                          <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_4}}</b></td>
+                          <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_3}}</b></td>
+                          <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_2}}</b></td>
+                          <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES_1}}</b></td>
+                          <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES}}  </b></td>
+                      </tr>
+                  </thead>
                
                 <tr class="text-center">
                   {% for val in paginas_data.pag_11.rows.0 %}
@@ -50,20 +50,26 @@
                     <td><b>{{paginas_data.pag_11.rows.1.6|add:paginas_data.pag_11.rows.0.6}}</b></td>
                 </tr>
                 
-                </table>
+              </table>
             </div>
+
             <div class="col-2"></div>
         </div>
+
+        <!-- espacio para LAS GRAFICAS  -->        
+          <br><br>
+        <!-- espacio para LAS GRAFICAS  -->   
+
         <div class="row">
             <div class="col-1"></div>
-            <div class="col-10">
-                            
+
+            <div class="col-12">                
               <figure class="highcharts-figure">
                 <canvas id="container2"></canvas>
               </figure>
-
             </div>
         </div>
+
     </div>
 </div>
 
@@ -100,14 +106,14 @@
           label: '{{paginas_data.pag_11.rows.0.0}}',
           data: numerosEnteros10,
           backgroundColor: 'rgba(255, 0, 0, 0.7)',
-          borderColor: 'red',
+          borderColor: 'rgba(255, 0, 0, 0.7)',
           borderWidth: 1
         },
         {
           label: '{{paginas_data.pag_11.rows.1.0}}',
           data: numerosEnteross10,
-          backgroundColor: 'rgba(255, 165, 0, 0.7)',
-          borderColor: 'orange',
+          backgroundColor: 'rgba(102, 102, 102)',
+          borderColor:     'rgba(102, 102, 102)',
           borderWidth: 1
         }
       ]
@@ -120,15 +126,25 @@
       plugins: {
         datalabels: {
           display: true,
-          font: { weight: 'bold', size: 12 },
-          color: '#000',
+          font: { size: 12 },
           padding: 4,
+          color: "white",
           anchor: (context) => {
             return context.datasetIndex === 0 ? 'end' : 'start';
           },
           align: (context) => {
             return context.datasetIndex === 0 ? 'top' : 'bottom';
           }
+        },
+        title: {
+            display: true,
+            text: 'Atribución de Tickets Reactivos',
+            align: 'start',
+            font: {
+              size: 20, // Change title font size here
+              weight: 'bold', // Optional: bold, normal, etc.
+              family: 'Arial' // Optional: custom font family
+            },
         },
       },
       scales: {

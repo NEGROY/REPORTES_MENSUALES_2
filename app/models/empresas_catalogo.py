@@ -10,10 +10,10 @@ class EmpresasCatalogo(models.Model):
     COD = models.AutoField(primary_key=True)
     razon_social = models.CharField(max_length=200, null=True, blank=True)
     tt_sitioa = models.IntegerField(null=True, blank=True, help_text="Total de sitios o enlaces monitoreados" ) #TOTAL DE SITIOS || ENLACES MONITOREADOS
-    pais = models.CharField(max_length=10, choices=PAISES)
-    STATUS = models.IntegerField()  # 0 inactivo / 1 activo
-    ORDEN = models.IntegerField()           # COMO SE ENVIA EL CORREO
-    donde = models.TextField(  help_text="Condición WHERE para los tickets (where_tk + filtros desde sql_base)" )  # WHERE DE LA CONSULTA
+    pais = models.CharField(max_length=10, choices=PAISES, null=True)
+    STATUS = models.IntegerField(null=True  )  # 0 inactivo / 1 activo
+    ORDEN = models.IntegerField(null=True   )  # COMO SE ENVIA EL CORREO
+    donde = models.TextField( null=True, help_text="Condición WHERE para los tickets (where_tk + filtros desde sql_base)" )  # WHERE DE LA CONSULTA
     parque_where = models.TextField(null=True, blank=True, help_text="PARQUE DE SERVICIO" )
 
     tipo = models.CharField( max_length=20, choices=TIPOS    )

@@ -18,17 +18,17 @@
                 <table class="table table-condensed table-striped">
                     <thead>
                         <tr style="background-color: #ff0000;">
-                            <td class="text-center" style="width:15%"><b>ENLACE</b></td>
-                            <td class="text-center" style="width:50%"><b>UBICACION</b></td>
-                            <td class="text-center" style="width:9%"><b>TK ACTIVO</b></td>
-                            <td class="text-center" style="width:10%"><b>DISPONIBILIDAD MENSUAL</b></td>
+                            <td class="rojo text-center" style="width:15%"><b>ENLACE</b></td>
+                            <td class="rojo text-center" style="width:50%"><b>UBICACION</b></td>
+                            <td class="rojo text-center" style="width:9%"><b>TK ACTIVO</b></td>
+                            <td class="rojo text-center" style="width:10%"><b>DISPONIBILIDAD MENSUAL</b></td>
                         </tr>
                     </thead>
                     <tbody>
                         {% for row in item.pagina %}
                         <tr class="text-center align-middle small lh-1">
                             <td>{{ row.0 }}</td>
-                            <td>{{ row.1|default:"N/A" }}</td>
+                            <td>{{ row.1|default_if_none:"--" }}</td>
                             <td>{{ row.2|floatformat:2 }}</td>
                             <td>{{ row.3|floatformat:2 }}%</td>
                         </tr>

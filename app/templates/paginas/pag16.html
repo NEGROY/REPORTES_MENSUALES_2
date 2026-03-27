@@ -10,11 +10,13 @@
             <div class="col-1"> </div>
         </div>
         <div class="row">
+            
             <div class="col-2"></div>
-            <div class="col-8">
+            
+        <div class="col-8">
             <br><br><br>
-            <table class="table table-condensed table-stripedes">
-                <thead>
+        <table class="table table-condensed table-stripedes">
+            <thead>
                 <tr style="background-color: #ff0000;">
                     <td  class="rojo text-center" style=" width: 40%;" ><b>TIPO DE MONITOREO</b></td>
                     <td  class="rojo text-center" style=" width: 7.5%;" ><b>{{meses.MES_5}} </b></td> 
@@ -52,22 +54,29 @@
                     <td><b>{{paginas_data.pag_16.rows.0.5|add:paginas_data.pag_16.rows.1.5 }}</b></td>
                     <td><b>{{paginas_data.pag_16.rows.0.6|add:paginas_data.pag_16.rows.1.6 }}</b></td>
                 </tr>
-        </tbody>
+            </tbody>
     
-    </table>
+        </table>
         </div>
     
         <div class="col-2"></div>
-            </div>
+
+    </div>
+
+    <!-- espacio para LAS GRAFICAS  -->        
+        <br><br>
+    <!-- espacio para LAS GRAFICAS  -->    
+    
         <div class="row">
             <div class="col-1"></div>
+
             <div class="col-10">
-               <div style="width: 900px; margin: 0 auto;">
-                     <canvas id="container3"></canvas>
+                <div style="width: 900px; margin: 0 auto;">
+                    <canvas id="container3"></canvas>
                 </div> 
-    
             </div>
         </div>
+
     </div>
 </div>
  
@@ -104,12 +113,14 @@
                 {
                     label: '{{paginas_data.pag_16.rows.0.0 }}',
                     data: numerosEnteros_16,
-                    backgroundColor: 'red'
+                    backgroundColor: 'rgb(255,0,0)',
+                    align: 'top'
                 },
                 {
                     label: '{{ paginas_data.pag_16.rows.1.0 }}',
                     data: numerosEnteross_16,
-                    backgroundColor: 'orange'
+                    backgroundColor: 'rgb(102,102,102)',
+                    align: 'top'
                 }
             ]
         },
@@ -123,7 +134,11 @@
                     display: true,
                     text: 'COMPARATIVO MENSUAL - MONITOREO PROACTIVO',
                     align: 'start',
-                    font: { size: 14 }
+                    font: {
+                      size: 20, // Change title font size here
+                      weight: 'bold', // Optional: bold, normal, etc.
+                      family: 'Arial' // Optional: custom font family
+                    },
                 },
                 legend: {
                     position: 'top',
@@ -132,7 +147,8 @@
                 },
                 datalabels: {
                     color: 'white',
-                    font: { weight: 'bold', size: 10 },
+                    font: { weight: 'bold', size: 14 },
+                    align: 'top',
                     formatter: (value) => value > 0 ? value : '' 
                 }
             },

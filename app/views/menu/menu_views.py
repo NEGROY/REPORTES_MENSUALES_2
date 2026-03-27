@@ -11,7 +11,7 @@ def menu(request, pais=None):
         7:  "JULIO",    8: "AGOSTO",    9: "SEPTIEMBRE",
         10: "OCTUBRE", 11: "NOVIEMBRE", 12: "DICIEMBRE"
     }
-    mes = meses[hoy.month]
+    mes =  hoy.month #meses[hoy.month]
     anio = hoy.year
     #
 

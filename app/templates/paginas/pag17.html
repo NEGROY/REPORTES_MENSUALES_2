@@ -35,7 +35,7 @@
                          <tr>
                              <td>{{ c.0 }}</td>
                              <td>{{ c.1 }}</td>
-                             <td>  {{ c.2|default_if_none:"N/A"|striptags|cut:"_"|cut:"/" }}</td>
+                             <td>  {{ c.2|default_if_none:"--"|striptags|cut:"_"|cut:"/" }}</td>
                              <td class="text-center">{{ c.3|default_if_none:"0"  }}</td>
                              <td class="text-center">{{ c.4|default_if_none:"0"  }}</td>
                              <td class="text-center">{{ c.5|default_if_none:"0"  }}</td>

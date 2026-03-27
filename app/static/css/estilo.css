@@ -123,7 +123,7 @@ td, th {
   word-break: break-word;
   overflow-wrap: break-word;
   white-space: normal;
-  font-size: 14px;
+  /*font-size: 14px;*/
   padding: 3px;
   border: 1px solid black;
   text-align: center;
@@ -151,7 +151,7 @@ font-size: 18px;
 .table-striped td {
   border: 1px solid black;
   padding: 2px;
-  font-size: 14px;
+  font-size: 18px;
 }
 .table-stripedes tr:nth-child(even) {
   background-color: #f4e7e7;

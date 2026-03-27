@@ -61,7 +61,7 @@ CAMPOS_NORMALIZAR = {
 # REALIZA LA CREACION DE LOS NOMBRES DE LOS TEMPLATES Y PAG
 def obtener_paginas_templates(id_empresa):
     # LISTA DEFAULT
-    paginas_default = list(range(1, 21))
+    paginas_default = list(range(1, 22))
     # print( "paginas por def ", paginas_default)
     # ==========================
     # VALIDAR ID EMPRESA
