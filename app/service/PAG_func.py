@@ -121,7 +121,7 @@ def get_pag_General(datosPag, cadena_mes, func_sql ):
     paiscomplete = datosPag["paiscomplete"]
     cadena_anio = datosPag["cadena_anio"]
 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes, cadena_anio) # print(sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes, cadena_anio) #     print(sql)
 
     with obtener_conexion() as conn:
         with conn.cursor() as cursor:

@@ -75,7 +75,7 @@
                     {% for fila in paginas_data.pag_5.rows %}
                     <tr class="text-center ">
                         <td>{{ fila.0 }}</td>
-                        <td>{{ fila.1 }}</td>
+                        <td>{{ fila.1|default_if_none:"0" }}</td>
                         <td>{{ fila.2  }} %</td>
                     </tr>
                     {% endfor %}

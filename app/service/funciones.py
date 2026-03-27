@@ -212,6 +212,7 @@ def obtener_historico_indicadores(conn, datos):
     mes  = int(datos["mes"])
     anio = int(datos["anio"])
     empresa = datos["empresa"]
+    # print(empresa)
 
     #   Fecha base
     fecha_base = datetime(anio, mes, 1)
@@ -230,7 +231,8 @@ def obtener_historico_indicadores(conn, datos):
         "productividad", "sitios_reincidentes",
         "indice_de_reincidencia", "mttr_promedio", 
         "disponibilidad", "proactividad"
-    ))
+    ))   # print(data, "DATOS DEL MES ACTUAL")
+
     #   VALIDAMOS SI YA TENEMOS LOS 6 MESES
     meses_db = {(d["mes"], d["ano"]) for d in data}
 
@@ -260,13 +262,22 @@ def obtener_historico_indicadores(conn, datos):
         cursor.close()
         conn.close()
         #   RECONSULTAR YA CON DATOS INSERTADOS
-        data = list(
-            HiDeIndicadores.objects.filter(
-                id_cliente=empresa,
-                ano__gte=fecha_inicio.year,
-                ano__lte=fecha_base.year
-            ).values()
-        )
+                    
+    data = list(
+    HiDeIndicadores.objects.filter(
+        id_cliente=empresa
+    ).filter(
+        Q(ano=fecha_inicio.year, mes__gte=fecha_inicio.month) |
+        Q(ano=fecha_base.year,  mes__lte=fecha_base.month) |
+        Q(ano__gt=fecha_inicio.year, ano__lt=fecha_base.year)
+    ).values( "mes", "ano",
+        "inci_menor_o_8", "inci_mayor_a_8",
+        "productividad", "sitios_reincidentes",
+        "indice_de_reincidencia", "mttr_promedio", 
+        "disponibilidad", "proactividad")
+    )
+    # print(fecha_inicio, fecha_base, data)
+
     #   ORDEN FINAL (seguro)
     data.sort(key=lambda x: (x["ano"], x["mes"]))
 
@@ -348,10 +359,9 @@ def Comporta8(conn, datos):
     # 2. RECONSULTA FINAL (OPTIMIZADA)
     # ===============================
     data = list(
-        ParqueCnoc.objects.filter(
-            id_cliente_id=empresa,
-            ano__gte=fecha_inicio.year,
-            ano__lte=fecha_base.year
+        ParqueCnoc.objects.filter( id_cliente_id=empresa ).filter(
+        Q(ano=fecha_inicio.year, mes__gte=fecha_inicio.month) |
+        Q(ano=fecha_base.year,  mes__lte=fecha_base.month)
         ).values(
             "sitios_activos",
             "tt_EnlacesDatos",
@@ -495,3 +505,63 @@ def paginacion8 (rows, filas_por_pagina=35):
     for i in range(0, len(rows), filas_por_pagina):
         paginas.append(rows[i:i + filas_por_pagina])
     return paginas
+
+
+def validaROWS10(pagina):
+    """
+    Valida la estructura de pag_10:
+    - Verifica existencia de MONITOREO REACTIVO y PROACTIVO
+    - Crea filas faltantes con ceros
+    - Recalcula y agrega fila TOTAL al final
+    """
+
+    headers = pagina.get("headers", [])
+    rows = pagina.get("rows", [])
+
+    # Validación mínima de estructura
+    if not headers or len(headers) <= 1:
+        return pagina
+
+    total_cols = len(headers) - 1
+
+    # -----------------------------
+    # 1️⃣ Tipos de monitoreo requeridos
+    # -----------------------------
+    requeridos = [
+        "MONITOREO REACTIVO",
+        "MONITOREO PROACTIVO"
+    ]
+
+    existentes = {row[0] for row in rows if row}
+
+    # -----------------------------
+    # 2️⃣ Crear filas faltantes
+    # -----------------------------
+    for nombre in requeridos:
+        if nombre not in existentes:
+            rows.append([nombre] + [0] * total_cols)
+
+    # -----------------------------
+    # 3️⃣ Eliminar TOTAL previo (si existe)
+    # -----------------------------
+    rows[:] = [row for row in rows if row[0] != "TOTAL"]
+
+    # -----------------------------
+    # 4️⃣ Calcular TOTAL
+    # -----------------------------
+    fila_total = ["TOTAL"]
+
+    for col in range(1, total_cols + 1):
+        suma = sum(
+            (row[col] or 0)
+            for row in rows
+            if len(row) > col
+        )
+        fila_total.append(suma)
+
+    # -----------------------------
+    # 5️⃣ Agregar fila TOTAL
+    # -----------------------------
+    rows.append(fila_total)
+
+    return pagina

@@ -139,6 +139,14 @@ def reporte_prueba(request):
     else:
         ochoHoras = []
 
+    ## FALTA AGREGAR LA CANTIDAD DE SITIOS AGREGADO AL MODELO DE HISTORICO DONDE MES Y AÑO SEA IGUAL A 
+    #************************************************************************************************************
+
+
+    # paginas_data que sume y genere los totales y lo agrege al rows y header de total PARA LA PAG 10 
+    if 'pag_10' in paginas_data:
+        validaROWS10(paginas_data['pag_10'] )
+
       
     # ========================== 
     return render(

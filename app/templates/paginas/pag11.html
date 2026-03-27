@@ -30,13 +30,13 @@
                
                 <tr class="text-center">
                   {% for val in paginas_data.pag_11.rows.0 %}
-                    <td>{{val}}</td>
+                    <td>{{val|default_if_none:"0"}}</td>
                   {% endfor %}
                 </tr>
 
                 <tr class="text-center">
                   {% for val in paginas_data.pag_11.rows.1 %}
-                    <td>{{val}}</td>
+                    <td>{{val|default_if_none:"0"}}</td>
                   {% endfor %}
                 </tr>
                 

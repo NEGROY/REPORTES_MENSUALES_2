@@ -27,29 +27,30 @@
                         </tr>
 
                     </thead>
-                    
+                <tbody>
+                {% if paginas_data.pag_10.rows %}
                     <tr class="text-center"> 
                         {% for fila in paginas_data.pag_10.rows.0  %}
-                            <td>{{ fila }} </td>
+                            <td>{{ fila|default_if_none:"0" }} </td>
                         {% endfor %}
                     </tr>
 
                     <tr class="text-center"> 
                         {% for fila in paginas_data.pag_10.rows.1  %}
-                            <td>{{ fila }} </td>
+                            <td>{{ fila|default:0 }} </td>
                         {% endfor %}
                     </tr>
 
-                    <tr class="text-center">
-                        <td><b>TOTAL</b></td>
-                        <td><b>{{ paginas_data.pag_10.rows.0.1|add:paginas_data.pag_10.rows.1.1 }}</b></td>
-                        <td><b>{{ paginas_data.pag_10.rows.0.2|add:paginas_data.pag_10.rows.1.2 }}</b></td>
-                        <td><b>{{ paginas_data.pag_10.rows.0.3|add:paginas_data.pag_10.rows.1.3 }}</b></td>
-                        <td><b>{{ paginas_data.pag_10.rows.0.4|add:paginas_data.pag_10.rows.1.4 }}</b></td>
-                        <td><b>{{ paginas_data.pag_10.rows.0.5|add:paginas_data.pag_10.rows.1.5 }}</b></td>
-                        <td><b>{{ paginas_data.pag_10.rows.0.6|add:paginas_data.pag_10.rows.1.6 }}</b></td>
+                    <tr class="text-center"> 
+                        {% for fila in paginas_data.pag_10.rows.2  %}
+                            <td>{{ fila|default:0 }} </td>
+                        {% endfor %}
                     </tr>
 
+                {% else %}
+                        <td colspan="7" class="text-center">NO SE ENCUENTRA TICKETS ATRIBUIBLES A CLARO</td>
+                {% endif %}
+                    </tbody>
                 </table>
 
             </div>
@@ -75,14 +76,19 @@
 
 <script type="text/javascript">
     // 1. Datos (Manteniendo tu estructura Jinja2)
+    {% if paginas_data.pag_10.rows.0 %}
 const data_num = [
     '{{ paginas_data.pag_10.rows.0.1 }}','{{ paginas_data.pag_10.rows.0.2 }}','{{ paginas_data.pag_10.rows.0.3 }}',
     '{{ paginas_data.pag_10.rows.0.4 }}','{{ paginas_data.pag_10.rows.0.5 }}','{{ paginas_data.pag_10.rows.0.6 }}'
-];
+    ];
+    {% endif %}
+
+ {% if paginas_data.pag_10.rows.1 %}
 const data_nume = [
     '{{ paginas_data.pag_10.rows.1.1 }}','{{ paginas_data.pag_10.rows.1.2 }}','{{ paginas_data.pag_10.rows.1.3 }}',
     '{{ paginas_data.pag_10.rows.1.4 }}','{{ paginas_data.pag_10.rows.1.5 }}','{{ paginas_data.pag_10.rows.1.6 }}'
-];
+    ];
+    {% endif %}
 
     const numerosEnteros = data_num.map(n => parseInt(n) || 0);
     const numerosEnteross = data_nume.map(n => parseInt(n) || 0);
