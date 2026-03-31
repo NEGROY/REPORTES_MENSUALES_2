@@ -211,31 +211,29 @@ def obtener_historico_indicadores(conn, datos):
     # DATOS DE CONSULTA 
     mes  = int(datos["mes"])
     anio = int(datos["anio"])
-    empresa = datos["empresa"]
-    # print(empresa)
-
+    empresa = datos["empresa"]    
     #   Fecha base
     fecha_base = datetime(anio, mes, 1)
     #   RANGO (más eficiente que lista + Q manual)
     fecha_inicio = fecha_base - relativedelta(months=5)
     #   Consulta directa (SIN exists)
     query = HiDeIndicadores.objects.filter(
-        id_cliente=empresa,
-        ano__gte=fecha_inicio.year,
-        ano__lte=fecha_base.year
-    )
-
+         id_cliente=empresa,
+         ano__gte=fecha_inicio.year,
+         ano__lte=fecha_base.year
+     )
+    
     data = list(query.values(
-        "mes", "ano",
-        "inci_menor_o_8", "inci_mayor_a_8",
-        "productividad", "sitios_reincidentes",
-        "indice_de_reincidencia", "mttr_promedio", 
-        "disponibilidad", "proactividad"
-    ))   # print(data, "DATOS DEL MES ACTUAL")
-
+         "mes", "ano",
+         "inci_menor_o_8", "inci_mayor_a_8",
+         "productividad", "sitios_reincidentes",
+         "indice_de_reincidencia", "mttr_promedio", 
+         "disponibilidad", "proactividad"
+     ))   # > print(data, "DATOS DEL MES ACTUAL")
+     
     #   VALIDAMOS SI YA TENEMOS LOS 6 MESES
     meses_db = {(d["mes"], d["ano"]) for d in data}
-
+    # -----------------
     meses_esperados = {
         (
             (fecha_base - relativedelta(months=i)).month,
@@ -243,14 +241,12 @@ def obtener_historico_indicadores(conn, datos):
         )
         for i in range(6)
     }
-
-    faltantes = meses_esperados - meses_db
+    faltantes = meses_esperados - meses_db # print("meses_esperados:",meses_esperados, "MESE DB:", meses_db)
     #   SI FALTAN MESES → CONSULTA E INSERTA
     if faltantes:
         cursor = conn.cursor()
 
-        sql = historico_de_indicadores(datos) # 
-        # print(sql)
+        sql = historico_de_indicadores(datos) # print(sql)
         cursor.execute(sql)
         columnas = [col[0] for col in cursor.description]
         resultados = [
@@ -258,7 +254,7 @@ def obtener_historico_indicadores(conn, datos):
             for fila in cursor.fetchall()
         ]
 
-        insertar_indicadores(resultados, datos)
+        insertar_indicadores(resultados, datos) # print( "insertar_indicadores: ")
         cursor.close()
         conn.close()
         #   RECONSULTAR YA CON DATOS INSERTADOS
@@ -276,8 +272,6 @@ def obtener_historico_indicadores(conn, datos):
         "indice_de_reincidencia", "mttr_promedio", 
         "disponibilidad", "proactividad")
     )
-    # print(fecha_inicio, fecha_base, data)
-
     #   ORDEN FINAL (seguro)
     data.sort(key=lambda x: (x["ano"], x["mes"]))
 
@@ -288,9 +282,11 @@ def Comporta8(conn, datos):
     mes     = int(datos["mes"])
     anio    = int(datos["anio"])
     empresa = datos["empresa"]
+    sitios_activos = datos["total_enlaces"]
 
     fecha_base   = datetime(anio, mes, 1)
-    fecha_inicio = fecha_base - relativedelta(months=6)
+    fecha_inicio = fecha_base - relativedelta(months=5)
+    
     # ===============================
     # 1. ASEGURAR EXISTENCIA DEL MES
     # ===============================
@@ -328,10 +324,11 @@ def Comporta8(conn, datos):
                     id_cliente_id=empresa,
                     mes=mes,
                     ano=anio,
-                    tt_EnlacesDatos=data["Total de Enlaces de datos"],
+                    tt_EnlacesDatos= data["tt_EnlacesDatos"],
                     internet=data["Internet"],
                     AE=data["AE"],
-                    tt_tt=data["Total de TT"]
+                    tt_tt=data["Total de TT"],
+                    sitios_activos = sitios_activos
                 )
 
         except Exception:
@@ -349,7 +346,7 @@ def Comporta8(conn, datos):
                         id_cliente_id=empresa,
                         mes=mes,
                         ano=anio,
-                        sitios_activos=ultimo.sitios_activos,
+                        sitios_activos= sitios_activos,
                         tt_EnlacesDatos=ultimo.tt_EnlacesDatos,
                         internet=ultimo.internet,
                         AE=ultimo.AE,
@@ -506,8 +503,8 @@ def paginacion8 (rows, filas_por_pagina=35):
         paginas.append(rows[i:i + filas_por_pagina])
     return paginas
 
-
-def validaROWS10(pagina):
+# FUNCION QUE VALIDA CAMPOS Y AGREGAR 0 Y TOTAL 
+def validaROWS10(pagina, requeridos):
     """
     Valida la estructura de pag_10:
     - Verifica existencia de MONITOREO REACTIVO y PROACTIVO
@@ -523,17 +520,12 @@ def validaROWS10(pagina):
         return pagina
 
     total_cols = len(headers) - 1
-
     # -----------------------------
-    # 1️⃣ Tipos de monitoreo requeridos
+    # Tipos de monitoreo requeridos
     # -----------------------------
-    requeridos = [
-        "MONITOREO REACTIVO",
-        "MONITOREO PROACTIVO"
-    ]
+    requeridos = requeridos
 
     existentes = {row[0] for row in rows if row}
-
     # -----------------------------
     # 2️⃣ Crear filas faltantes
     # -----------------------------

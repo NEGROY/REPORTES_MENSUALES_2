@@ -99,7 +99,8 @@ def reporte_prueba(request):
         "HN": "HONDURAS",
         "NI": "NICARAGUA",
         "CR": "COSTA RICA",
-        "CENAM": "CENAM"
+        "CENAM": "CNAM",
+        "CNAM": "CNAM",
     }
     paisComplete = pais_abrev.get(empresa.pais, empresa.pais)
 

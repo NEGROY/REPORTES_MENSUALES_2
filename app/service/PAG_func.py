@@ -64,7 +64,6 @@ def get_pag5(datosp5):
 
     return datos
 # ==============================
-
 # ==============================
 # Causas Monitoreo Reactivo Atribuibles al Cliente PAG 11
 def get_pag11(datosPag, cadena_mes):
@@ -121,7 +120,7 @@ def get_pag_General(datosPag, cadena_mes, func_sql ):
     paiscomplete = datosPag["paiscomplete"]
     cadena_anio = datosPag["cadena_anio"]
 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes, cadena_anio) #     print(sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes, cadena_anio) #    print(sql)
 
     with obtener_conexion() as conn:
         with conn.cursor() as cursor:
@@ -161,7 +160,7 @@ def get_pag_MesActual(datosPag, func_sql):
         if not func_sql:
             raise ValueError(f"Función SQL no válida: {func_sql}")
     #CONSULTA CONTATENADA 
-    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete ) # print(func_sql)
+    sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete ) #     print(func_sql)
 
     conn = obtener_conexion()
     cursor = conn.cursor()

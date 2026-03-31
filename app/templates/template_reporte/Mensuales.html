@@ -3,14 +3,16 @@
 {% block title %}{{ data.titulo }}{% endblock %}
 {% block body %}
 
+
+    <pre>
+        {{paginas_data.pag_9}}
+    </pre>
+
     <!-- FOR EACH DE LAS paginas    -->
     {% for template in  paginas.templates %}
         {% include template %}
     {% endfor %}
 
- <pre>
-    {{paginas_data}}
- </pre>
- 
+
 
 {% endblock %}

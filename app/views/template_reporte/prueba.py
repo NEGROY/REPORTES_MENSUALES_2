@@ -88,7 +88,8 @@ def reporte_prueba(request):
         "HN": "HONDURAS",
         "NI": "NICARAGUA",
         "CR": "COSTA RICA",
-        "CENAM": "CENAM"
+        "CENAM": "CNAM",
+        "CNAM": "CNAM",
     }
     paisComplete = pais_abrev.get(empresa.pais, empresa.pais)
     # CADENAS DE MESE PARA LAS CONSULTAS DE 5 MESES 
@@ -108,7 +109,8 @@ def reporte_prueba(request):
         "empresa": id_empresa,
         "date_ini_5": meses["FECHA_INI_5"],
         "HRSxMES" : meses["HRSxMES"],
-        "cadena_anio":cadena_anio
+        "cadena_anio":cadena_anio,
+        "total_enlaces": total_enlaces
     }
 
     #DATOS DE LOS HI HISTORICOS INDICADORES 
@@ -141,11 +143,18 @@ def reporte_prueba(request):
 
     ## FALTA AGREGAR LA CANTIDAD DE SITIOS AGREGADO AL MODELO DE HISTORICO DONDE MES Y AÑO SEA IGUAL A 
     #************************************************************************************************************
-
-
+    requeridos1 = ["CLIENTE", "CLARO"]
+    requeridos2 = ["MONITOREO REACTIVO", "MONITOREO PROACTIVO"]
+    
     # paginas_data que sume y genere los totales y lo agrege al rows y header de total PARA LA PAG 10 
     if 'pag_10' in paginas_data:
-        validaROWS10(paginas_data['pag_10'] )
+        validaROWS10(paginas_data['pag_10'], requeridos2 )
+
+    if 'pag_11' in paginas_data:
+        validaROWS10(paginas_data['pag_11'], requeridos1 )
+
+    if 'pag_16' in paginas_data:
+        validaROWS10(paginas_data['pag_16'], requeridos1 )
 
       
     # ========================== 

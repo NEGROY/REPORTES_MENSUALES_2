@@ -4,7 +4,7 @@ def sql_base(date_ini='01012026', date_end='31012026', where_tk=" probsummarym1.
     
     # IF SI PAIS SE = CENAM NO PONER WHERE PAIS, SI ES LO CONTRARIO PONER EL PAIS
     filtro_pais = ""
-    if pais != 'CENAM':
+    if pais != 'CNAM':
        filtro_pais = f" WHERE TK.PAIS = '{paiscomplete}' "
     
     query =f""" with
@@ -608,14 +608,14 @@ def pag_9(date_ini,date_end, where_tk,pais, paiscomplete ):
 # PAGI 10 Comportamiento Tickets Reactivos y Proactivos
 def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
-    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (
         SELECT * FROM TICKETS_2 WHERE  "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
         AND (SELECT TO_DATE(F_FIN)+1 FROM VARIABLES  )
         ), PRO AS(
 
         SELECT A.*, COUNT(*) CONTAR FROM (
         SELECT "TIPO MONITOREO"  , TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
-        FROM TK)A GROUP BY "TIPO MONITOREO"   ,MES,ANIO ORDER BY MES )
+        FROM TK2)A GROUP BY "TIPO MONITOREO"   ,MES,ANIO ORDER BY MES )
         SELECT * FROM (
         SELECT "TIPO MONITOREO" AS MONITOREO, MES,CONTAR FROM PRO)
         PIVOT (
@@ -629,14 +629,14 @@ def pag_10(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_an
 # Atribución de Tickets Reactivos pag 11
 def pag_11(date_ini,date_end, where_tk,pais, paiscomplete, cadena_mes, cadena_anio ):
 
-    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK AS (
+    sql =  sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f""" TK2 AS (
         SELECT * FROM TICKETS_2 WHERE   "FECHA DE CIERRE" BETWEEN (SELECT F_INI FROM VARIABLES  ) 
         AND (SELECT (F_FIN +1) FROM VARIABLES  )
         ), PRO AS(
 
         SELECT A.*, COUNT(*) CONTAR FROM (
         SELECT "ATRIBUIBLE A", TO_NUMBER(TO_CHAR("FECHA DE CIERRE",'MM')) MES,TO_CHAR("FECHA DE CIERRE",'YYYY') ANIO
-        FROM TK WHERE "TIPO MONITOREO"='MONITOREO REACTIVO')A GROUP BY "ATRIBUIBLE A",MES,ANIO ORDER BY MES )
+        FROM TK2 WHERE "TIPO MONITOREO"='MONITOREO REACTIVO')A GROUP BY "ATRIBUIBLE A",MES,ANIO ORDER BY MES )
         SELECT * FROM ( SELECT "ATRIBUIBLE A", MES,CONTAR FROM PRO)
         PIVOT (  AVG(CONTAR)   FOR MES IN ({cadena_mes})  )ORDER BY  "ATRIBUIBLE A" 
     """

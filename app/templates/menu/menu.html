@@ -19,16 +19,20 @@
                     <form method="GET" action="{% url 'reporte_prueba' %}" target="_blank">
 
                         <!-- SELECT -->
-                        <div class="mb-3">
-                            <label class="form-label">Seleccionar opción</label>
-                        <select class="form-select" name="empresa" id="empresa_select">
-                            {% for e in empresas %}
-                                <option value="{{ e.COD }}" data-enlaces="{{ e.tt_sitioa }}">
-                                    {{ e.razon_social }}  || # {{ e.COD }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        </div>
+                <div class="mb-3">
+                    <label for="empresa_select" class="form-label fw-semibold text-danger">
+                        Seleccionar empresa
+                    </label>
+                
+                    <select class="form-select form-select-lg empresa-select" name="empresa" id="empresa_select">
+                        {% for e in empresas %}
+                        <option value="{{ e.COD }}"
+                                data-enlaces="{{ e.tt_sitioa }}">
+                            {{e.ORDEN}}- {{ e.razon_social }} — ({{ e.tipo }} |{{e.COD}})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
                         <!-- MES -->
                         <div class="mb-3">
