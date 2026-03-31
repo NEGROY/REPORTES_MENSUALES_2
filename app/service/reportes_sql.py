@@ -475,15 +475,14 @@ def pag_8(date_ini,date_end, where_tk,pais, paiscomplete ):
 
 # pag 8 Comportamiento de la Red del Cliente
 def Comportamiento(datos ):
-
     date_ini = datos["date_ini"]
     date_end = datos["date_end"]
     where_tk = datos["where_tk"]
     pais     = datos["pais"]
     paiscomplete = datos["paiscomplete"]
     parque_where =  datos["parque_where"]
-
-    sql = sql_base(date_ini,date_end, where_tk,pais, paiscomplete) + f"""  COMPORTAMIENTO AS(
+        #    print(date_ini,date_end,"where_tk : ", where_tk, "pais: ",pais, "paiscomplete ", paiscomplete)
+    sql = sql_base(date_ini,date_end, where_tk, pais, paiscomplete) + f"""  COMPORTAMIENTO AS(
         select TIPO_,SUM(CONTAR) TT from (
             select 
                 CASE 
@@ -499,8 +498,6 @@ def Comportamiento(datos ):
         SELECT * FROM COMPORTAMIENTO
         UNION
         SELECT 'Total de TT' TIPO_,(SELECT COUNT(*) FROM TK) contar FROM DUAL)
-
-
         SELECT TIPO_,TT,
         CASE 
             WHEN TIPO_ = 'Total de Enlaces de datos' THEN 1
@@ -511,6 +508,7 @@ def Comportamiento(datos ):
           END orden FROM U 
         ORDER BY orden 
     """
+    # print(sql) 
     return  sql
 
 # ************************************************************

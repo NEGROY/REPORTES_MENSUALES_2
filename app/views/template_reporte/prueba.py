@@ -118,8 +118,11 @@ def reporte_prueba(request):
     hi_indi = normalizar_dinamico(hi_indi)
 
     #TRAEMOS LOS DATOS DE LA PAGINA 8  ParqueCnoc
-    pag8 =  Comporta8 (conn, datosPag)
+    pag8 =  Comporta8 (  datosPag)
     pag8 = normalizar_dinamico(pag8)
+
+    #ejem = obtener_comportamiento_sql(datosPag)
+    #print(ejem)
     
     # FUNCION PARA OBTENER TODOS LOS DATOS DE LAS PAGINAS SELECCIONADAS 
     paginas_nombres = paginas["nombres"]
@@ -133,10 +136,10 @@ def reporte_prueba(request):
 
     # SOLO PARA LA PAGINA 23 TAMBIEN QUIEREN ENVIAR VARIOS VALORES 
     if "pag_23" in paginas_data:
-        print("QUE PUTAS AQUI NO DEBE DE PASAR")
+        # print("QUE PUTAS AQUI NO DEBE DE PASAR")
         ochoHoras = paginacion8(
             paginas_data["pag_23"]["rows"],
-            filas_por_pagina=30
+            filas_por_pagina=25
         )
     else:
         ochoHoras = []

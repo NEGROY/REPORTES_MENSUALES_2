@@ -2,7 +2,7 @@
 import calendar, time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
-from django.db import transaction
+from django.db import transaction 
 # MODEL DE DJANGO
 from django.db.models import Q
 from collections import defaultdict
@@ -15,6 +15,9 @@ from app.service.reportes_sql import historico_de_indicadores, Comportamiento
 from app.models.pag_reporte import PagReporte
 from app.models import HiDeIndicadores, ParqueCnoc
 
+import oracledb
+# activar modo THICK
+oracledb.init_oracle_client(lib_dir=r"C:\oracle\instantclient_23_9")
 
 # Define qué páginas usan qué función
 PAGINAS_CONFIG = {
@@ -274,19 +277,23 @@ def obtener_historico_indicadores(conn, datos):
     )
     #   ORDEN FINAL (seguro)
     data.sort(key=lambda x: (x["ano"], x["mes"]))
-
     return data
 
 #  OBTENEMOS DATOS Comportamiento de la Red del Cliente || ParqueCnoc
-def Comporta8(conn, datos):
+def Comporta8(  datos):
     mes     = int(datos["mes"])
     anio    = int(datos["anio"])
     empresa = datos["empresa"]
     sitios_activos = datos["total_enlaces"]
+    #variables de conexxion 
+    conn = oracledb.connect(
+        user="frt_msoyos",
+        password="Heh-pBH8Mt5u",
+        dsn="172.17.114.223/sm9"
+    )
 
     fecha_base   = datetime(anio, mes, 1)
     fecha_inicio = fecha_base - relativedelta(months=5)
-    
     # ===============================
     # 1. ASEGURAR EXISTENCIA DEL MES
     # ===============================
@@ -298,38 +305,12 @@ def Comporta8(conn, datos):
 
     if not actual:
         try:
-            # ---- Intentar comportamiento ----
-            datos_sql = datos.copy()
-            datos_sql["date_ini"] = fecha_base.strftime("%Y-%m-01")
-            datos_sql["date_end"] = fecha_base.strftime("%Y-%m-31")
-
-            sql = Comportamiento(datos_sql)
-
+            sql = Comportamiento(datos)
             with conn.cursor() as cursor:
                 cursor.execute(sql)
                 rows = cursor.fetchall()
-
-            data = {
-                "Total de Enlaces de datos": 0,
-                "Internet": 0,
-                "AE": 0,
-                "Total de TT": 0
-            }
-
-            for tipo, total, _ in rows:
-                data[tipo] = total
-
-            with transaction.atomic():
-                ParqueCnoc.objects.create(
-                    id_cliente_id=empresa,
-                    mes=mes,
-                    ano=anio,
-                    tt_EnlacesDatos= data["tt_EnlacesDatos"],
-                    internet=data["Internet"],
-                    AE=data["AE"],
-                    tt_tt=data["Total de TT"],
-                    sitios_activos = sitios_activos
-                )
+            #print("rows", rows)
+            insert_parque_cnoc(empresa, mes, anio, sitios_activos, rows)
 
         except Exception:
             # ---- Fallback: copiar último mes ----
@@ -372,8 +353,8 @@ def Comporta8(conn, datos):
     )
     # ORDEN FINAL SEGURO (por si MySQL/MariaDB se pone creativo)
     data.sort(key=lambda x: (x["ano"], x["mes"]))
-
     return data
+
 
 # Función auxiliar para limpiar filas según headers
 def limpiar_filas_con_headers(resultado, nombre_pag):
@@ -496,21 +477,16 @@ def paginacion(data, por_pagina=30):
     }
 
 #paginacion de las ocho horas 
-def paginacion8 (rows, filas_por_pagina=35):
+def paginacion8 (rows, filas_por_pagina=25):
  
     paginas = []
     for i in range(0, len(rows), filas_por_pagina):
         paginas.append(rows[i:i + filas_por_pagina])
+    # print(paginas)
     return paginas
 
 # FUNCION QUE VALIDA CAMPOS Y AGREGAR 0 Y TOTAL 
 def validaROWS10(pagina, requeridos):
-    """
-    Valida la estructura de pag_10:
-    - Verifica existencia de MONITOREO REACTIVO y PROACTIVO
-    - Crea filas faltantes con ceros
-    - Recalcula y agrega fila TOTAL al final
-    """
 
     headers = pagina.get("headers", [])
     rows = pagina.get("rows", [])
@@ -527,19 +503,18 @@ def validaROWS10(pagina, requeridos):
 
     existentes = {row[0] for row in rows if row}
     # -----------------------------
-    # 2️⃣ Crear filas faltantes
+    #  Crear filas faltantes
     # -----------------------------
     for nombre in requeridos:
         if nombre not in existentes:
             rows.append([nombre] + [0] * total_cols)
 
     # -----------------------------
-    # 3️⃣ Eliminar TOTAL previo (si existe)
+    #  Eliminar TOTAL previo (si existe)
     # -----------------------------
     rows[:] = [row for row in rows if row[0] != "TOTAL"]
-
     # -----------------------------
-    # 4️⃣ Calcular TOTAL
+    #  Calcular TOTAL
     # -----------------------------
     fila_total = ["TOTAL"]
 
@@ -552,8 +527,90 @@ def validaROWS10(pagina, requeridos):
         fila_total.append(suma)
 
     # -----------------------------
-    # 5️⃣ Agregar fila TOTAL
+    #  Agregar fila TOTAL
     # -----------------------------
     rows.append(fila_total)
 
     return pagina
+
+# ejemplo 
+def obtener_comportamiento_sql(  datos):
+    conn = oracledb.connect(
+        user="frt_msoyos",
+        password="Heh-pBH8Mt5u",
+        dsn="172.17.114.223/sm9"
+    )
+
+    try:
+        print("▶ Iniciando consulta Comportamiento")
+        print("Datos:", datos)
+
+        sql = Comportamiento(datos)
+        # print("SQL generado:\n", sql)
+
+        with conn.cursor() as cursor:
+            cursor.execute(sql)
+            rows = cursor.fetchall()
+
+        print("Filas retornadas:", len(rows))
+        print("Contenido:", rows)
+
+        resultado = []
+        for row in rows:
+            if len(row) != 3:
+                raise ValueError(f"Estructura inesperada: {row}")
+
+            tipo, total, detalle = row
+            resultado.append({
+                "tipo": tipo,
+                "total": total,
+                "detalle": detalle
+            })
+
+        return resultado
+
+    except Exception as e:
+        print("❌ ERROR CRÍTICO EN obtener_comportamiento_sql")
+        print("Tipo:", type(e))
+        print("Detalle:", e)
+        raise
+
+# rinsteraleta en el culo  
+def insert_parque_cnoc(id_cliente, mes, ano, sitios_activos, rows):
+    # Mapeo SQL → modelo
+    field_map = {
+        'Total de Enlaces de datos': 'Total de Enlaces de datos',
+        'Internet': 'Internet',
+        'AE': 'AE',
+        'Total de TT': 'Total de TT',
+    }
+    # Valores por defecto
+    values = {
+        'sitios_activos': sitios_activos,
+        'Total de Enlaces de datos': None,
+        'Internet': None,
+        'AE': None,
+        'Total de TT': None,
+    }
+    # Cargar valores desde el SQL
+    for nombre, valor, _ in rows:
+        field_name = field_map.get(nombre)
+        if field_name:
+            values[field_name] = valor
+    # INSERT directo
+    with transaction.atomic():
+        ParqueCnoc.objects.create(
+            id_cliente_id=id_cliente,
+            mes=mes,
+            ano=ano,
+            sitios_activos= sitios_activos,
+            tt_EnlacesDatos=values['Total de Enlaces de datos'],
+            internet=values['Internet'],
+            AE=values['AE'],
+            tt_tt=values['Total de TT'],
+        )
+
+
+
+
+
