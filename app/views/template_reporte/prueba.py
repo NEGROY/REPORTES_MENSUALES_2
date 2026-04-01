@@ -90,6 +90,7 @@ def reporte_prueba(request):
         "CR": "COSTA RICA",
         "CENAM": "CNAM",
         "CNAM": "CNAM",
+        "ESV": "EL SALVADOR",
     }
     paisComplete = pais_abrev.get(empresa.pais, empresa.pais)
     # CADENAS DE MESE PARA LAS CONSULTAS DE 5 MESES 

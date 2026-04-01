@@ -121,6 +121,10 @@ def get_pag_General(datosPag, cadena_mes, func_sql ):
     cadena_anio = datosPag["cadena_anio"]
 
     sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete, cadena_mes, cadena_anio) #    print(sql)
+    # with open("consulta.sql.txt", "a", encoding="utf-8") as f:
+    #     f.write(sql)
+    #     f.write("\n")
+
 
     with obtener_conexion() as conn:
         with conn.cursor() as cursor:
@@ -161,6 +165,10 @@ def get_pag_MesActual(datosPag, func_sql):
             raise ValueError(f"Función SQL no válida: {func_sql}")
     #CONSULTA CONTATENADA 
     sql = func_sql(date_ini, date_end, where_tk, pais, paiscomplete ) #     print(func_sql)
+    # with open("consulta.sql.txt", "a", encoding="utf-8") as f:
+    #     f.write(sql)
+    #     f.write("\n")
+
 
     conn = obtener_conexion()
     cursor = conn.cursor()

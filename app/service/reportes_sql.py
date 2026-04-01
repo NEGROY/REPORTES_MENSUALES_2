@@ -435,7 +435,7 @@ FROM DUAL
 def pag_5(date_ini,date_end, where_tk,pais, paiscomplete):
  
    #  CONSULTA COMPLETA  
-   sql = sql_base(date_ini,date_end, where_tk, pais, paiscomplete) + f"""  a as ( select "ATRIBUIBLE A",COUNT(*) CONTAR from tk group by "ATRIBUIBLE A")
+   sql = sql_base(date_ini,date_end, where_tk, pais, paiscomplete) + f"""  a as ( select "ATRIBUIBLE A",COUNT(*) CONTAR from TICKETS_2 group by "ATRIBUIBLE A")
         , b as (
         SELECT
         CASE 
@@ -462,7 +462,7 @@ def pag_5(date_ini,date_end, where_tk,pais, paiscomplete):
         select c.*, round((VALOR/(SELECT SUM(CONTAR) FROM a))*100,2) "%",(SELECT SUM(CONTAR) FROM a)TT  from c
         )A GROUP BY COLUMNA,TT 
     """
-   
+   # print(sql)
    return sql
 
 # ************************************************************
@@ -497,7 +497,7 @@ def Comportamiento(datos ):
         ), U AS(
         SELECT * FROM COMPORTAMIENTO
         UNION
-        SELECT 'Total de TT' TIPO_,(SELECT COUNT(*) FROM TK) contar FROM DUAL)
+        SELECT 'Total de TT' TIPO_,(SELECT COUNT(*) FROM TICKETS_2) contar FROM DUAL)
         SELECT TIPO_,TT,
         CASE 
             WHEN TIPO_ = 'Total de Enlaces de datos' THEN 1
@@ -508,7 +508,7 @@ def Comportamiento(datos ):
           END orden FROM U 
         ORDER BY orden 
     """
-    # print(sql) 
+    print(sql) 
     return  sql
 
 # ************************************************************
@@ -599,7 +599,7 @@ def pag_9(date_ini,date_end, where_tk,pais, paiscomplete ):
             WHEN "ATRIBUIBLE A" = 'CLARO' THEN 2
         END     
     """
-    
+   # print(sql)
     return sql
 
 # ************************************************************

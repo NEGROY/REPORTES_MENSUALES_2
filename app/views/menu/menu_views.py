@@ -20,7 +20,7 @@ def menu(request, pais=None):
     # TOTAL DE SITIOS REGISTRADOS     # tt_sitioa
     
     data = {
-        "mes_actual": mes,
+        "mes_actual": mes-1,
         "anio_actual": anio,
         "empresas": empresas,
         "pais": pais
