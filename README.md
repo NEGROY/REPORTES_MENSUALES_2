@@ -161,7 +161,7 @@ ticktes(...)
 resultado → template
 
 
+ python manage.py runserver 172.20.97.137:5002
 
-
-
+http://172.20.97.137:8000/menu/GT/
 

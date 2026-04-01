@@ -31,6 +31,7 @@
 
 
     <tbody style="font-size: 14px !important;">
+         {% if paginas_data.pag_12.rows %}
         {% for c in paginas_data.pag_12.rows %}
             <tr>
                 <td>{{c.0}}</td>
@@ -48,9 +49,13 @@
         {% endfor %}
     </tbody> 
 
-
-                
+  {% else %}
+                        <td colspan="9" class="text-center">NO SE ENCUENTRA TICKETS ATRIBUIBLES  </td>
+                {% endif %}
+                    </tbody>
                 </table>
+                
+    
             </div>
             <div  class="col-1"></div>
         </div>

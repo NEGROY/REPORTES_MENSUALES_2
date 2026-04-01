@@ -27,7 +27,9 @@
                           <td class="rojo text-center" style="width: 10%;"> <b>{{meses.MES}}  </b></td>
                       </tr>
                   </thead>
-               
+            
+            <tbody style="font-size: 14px !important;">
+              {% if paginas_data.pag_12.rows %}
                 <tr class="text-center">
                   {% for val in paginas_data.pag_11.rows.0 %}
                     <td>{{val|default_if_none:"0"}}</td>
@@ -45,6 +47,12 @@
                         <td> <b> {{ fila|default:0 }} </b> </td>
                     {% endfor %}
                 </tr>
+              {% else %}
+                <td colspan="7" class="text-center">NO SE ENCUENTRA TICKETS ATRIBUIBLES </td>
+              {% endif %}
+                  </tbody>
+                </table>
+
 
               </table>
             </div>
