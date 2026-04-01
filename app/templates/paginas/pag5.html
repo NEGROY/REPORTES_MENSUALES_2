@@ -72,17 +72,22 @@
                 </thead>
 
                 <tbody>
-                    {% for fila in paginas_data.pag_5.rows %}
-                    <tr class="text-center ">
-                        <td>{{ fila.0 }}</td>
-                        <td>{{ fila.1|default_if_none:"0" }}</td>
-                        <td>{{ fila.2  }} %</td>
-                    </tr>
-                    {% endfor %}
+                 <tr class="text-center"> 
+                    <td> <b> {{ paginas_data.pag_5.rows.0.0|default:"CLIENTE" }} </b> </td>
+                    <td> {{ paginas_data.pag_5.rows.0.1|default:0 }}  </td>
+                    <td> {{ paginas_data.pag_5.rows.0.2|default:0 }} % </td>
+                </tr>
+
+                 <tr class="text-center"> 
+                    <td> <b> {{ paginas_data.pag_5.rows.1.0|default:"CLARO" }} </b> </td>
+                    <td> {{ paginas_data.pag_5.rows.1.1|default:0 }}  </td>
+                    <td> {{ paginas_data.pag_5.rows.1.2|default:0 }} % </td>
+                </tr>
+
                     <!-- TOTAL -->
                     <tr class="text-center ">
                         <td><b>Total</b></td>
-                        <td> <b> {{ paginas_data.pag_5.rows.0.3 }} </b> </td>
+                        <td> <b> {{ paginas_data.pag_5.rows.0.3|default:0 }} </b> </td>
                         <td><b>100% </b></td>
                     </tr>
                 </tbody>

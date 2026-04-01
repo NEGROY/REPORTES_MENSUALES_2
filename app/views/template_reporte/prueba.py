@@ -159,6 +159,8 @@ def reporte_prueba(request):
     if 'pag_16' in paginas_data:
         validaROWS10(paginas_data['pag_16'], requeridos1 )
 
+    if 'pag_5' in paginas_data:
+        validaROWS10(paginas_data['pag_5'], requeridos1 )
       
     # ========================== 
     return render(
