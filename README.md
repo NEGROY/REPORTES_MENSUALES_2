@@ -165,3 +165,11 @@ resultado → template
 
 http://172.20.97.137:8000/menu/GT/
 
+
+
+ cd C:\laragon\www\REPORTES_MENSUALES_2
+ python manage.py runserver 172.20.97.137:8000
+
+
+
+ 
