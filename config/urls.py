@@ -23,6 +23,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app.urls')),  # todas las URLs de la app
+    path('cnoc/', include('cnoc_app.urls')),  # RUTAS DEL NUEVO MODUILO 
 ]
 
 ## YA NO SE USA 
