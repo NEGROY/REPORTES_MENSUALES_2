@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | CNOC</title>
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+</head>
+<body>
+    <div class="home-bg"></div>
+
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark"></div>
+            <div>
+                <h1>CNOC</h1>
+                <p>Plataforma de gestión operativa</p>
+            </div>
+        </div>
+
+        <div class="user-info">
+            <span>Bienvenido, {{ usuario.username2 }}</span>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <section class="dashboard-header">
+            <span class="tag">Panel principal</span>
+            <h2>Acceso a módulos operativos</h2>
+            <p>
+                Seleccione el módulo que desea administrar dentro de la plataforma CNOC.
+            </p>
+        </section>
+
+        <section class="cards-grid">
+            <a href="/cnoc/escalacion/tablas/" class="module-card">
+                <div class="card-icon">📊</div>
+                <h3>Tablas de Escalación</h3>
+                <p>
+                    Administración y consulta de tablas de escalación operativa.
+                </p>
+                <span class="card-link">Ingresar al módulo</span>
+            </a>
+
+            <a href="/cnoc/asientos/" class="module-card">
+                <div class="card-icon">🪑</div>
+                <h3>Asignación de Asientos</h3>
+                <p>
+                    Gestión de asientos, asignaciones y distribución operativa.
+                </p>
+                <span class="card-link">Ingresar al módulo</span>
+            </a>
+
+            <a href="/cnoc/retroalimentacion/" class="module-card">
+                <div class="card-icon">📝</div>
+                <h3>Retroalimentación</h3>
+                <p>
+                    Seguimiento de observaciones, hallazgos y mejoras operativas.
+                </p>
+                <span class="card-link">Ingresar al módulo</span>
+            </a>
+        </section>
+    </main>
+</body>
+</html>

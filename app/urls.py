@@ -8,6 +8,8 @@ from .views.menu.infoCliente import infoCliente
     # IMPORT DE LAS  PRUEBAS 
 from app.views.template_reporte.prueba import reporte_prueba
 from app.views.login import login_view
+from app.views.home import home_view
+
 
 
 urlpatterns = [
@@ -20,5 +22,6 @@ urlpatterns = [
     # para mis pruebas LOCAS
     path('reporte-prueba/', reporte_prueba, name='reporte_prueba'),
     path('login/', login_view, name='login'),
+    path('', home_view, name='home'),
 
 ]
