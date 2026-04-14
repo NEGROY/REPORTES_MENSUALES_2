@@ -53,10 +53,8 @@ class Usuario(models.Model):
     agente = models.CharField(max_length=50, blank=True, null=True)
     telefono = models.CharField(max_length=20, blank=True, null=True)
     baja = models.BooleanField(default=False)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
     class Meta:
         db_table = "tb_usuario"
 
