@@ -71,21 +71,17 @@ class EscalacionContacto(models.Model):
 # ********************** ESCALACIÓN **************************** #
 class Escalacion(models.Model):
     nivel = models.CharField(max_length=5)
-
     tipo_contacto = models.ForeignKey(
         EscalacionContacto,
         db_column="tipo_contacto",
         on_delete=models.PROTECT
     )
-
     tiempo = models.CharField(max_length=50)
-
     area = models.ForeignKey(
         EscalacionArea,
         db_column="id_area",
         on_delete=models.PROTECT
     )
-
     tipo_escalacion = models.ForeignKey(
         EscalacionTipo,
         db_column="id_tipo_escalacion",
@@ -93,7 +89,6 @@ class Escalacion(models.Model):
         blank=True,
         null=True
     )
-
     comentario = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -149,13 +144,11 @@ class EscalacionFallaAsociada(models.Model):
 # ********************** RELOJ DE ESCALACIÓN **************************** #
 class EscalacionReloj(models.Model):
     reloj = models.CharField(max_length=100)
-
     area = models.ForeignKey(
         Area,
         db_column="area",
         on_delete=models.PROTECT
     )
-
     estado = models.BooleanField(default=True)
     extra = models.BooleanField(default=False)
 

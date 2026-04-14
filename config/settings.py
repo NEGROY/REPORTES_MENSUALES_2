@@ -40,7 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
        
     'app',
-    'cnoc_app',
+   # 'cnoc_app',
+    'cnoc_app.apps.CnocAppConfig',
+    'admin_apps.tabla_escalacion.apps.TablaEscalacionConfig',
+    'admin_apps.asientos_cnoc.apps.AsientosCNOCConfig',
+    'admin_apps.retroalimentacion.apps.RetroConfig',
 ]
 
 MIDDLEWARE = [
