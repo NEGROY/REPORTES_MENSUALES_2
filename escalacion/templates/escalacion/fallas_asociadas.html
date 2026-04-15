@@ -1,0 +1,392 @@
+{% extends 'cnoc/layout.html' %}
+{% load static %}
+
+{% block title %}Fallas Asociadas | CNOC{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fallas_asociadas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-3">
+
+    <div class="mb-4">
+        <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-2">Escalaciones</span>
+        <h2 class="fw-bold mb-1">Fallas Asociadas</h2>
+        <p class="text-muted mb-0">
+            Consulta visual de tickets relacionados y exportación de resultados.
+        </p>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body bg-white rounded p-4">
+            <div class="row g-3 align-items-end">
+
+                <div class="col-12 col-lg-5">
+                    <label for="fallaIDInput" class="form-label fw-medium">Ingresar ID de Falla</label>
+                    <div class="input-group">
+                        <input type="text" name="tkid" id="fallaIDInput" class="form-control" placeholder="F7000001" autocomplete="off" >
+                        <button class="btn btn-claro" type="button" id="buscarFalla" >
+                            Buscar
+                        </button>
+                    </div>
+                    <div class="form-text">Ingrese el ticket principal para consultar sus asociados.</div>
+                </div>
+
+                <div class="col-12 col-lg-7">
+                    <div class="d-flex flex-column flex-lg-row gap-3 align-items-stretch align-items-lg-center">
+                        <div class="flex-grow-1 p-3 border-start border-4 border-danger bg-light rounded">
+                            <h6 class="text-danger mb-1">Falla Seleccionada</h6>
+                            <p class="mb-0 fw-semibold text-dark" id="tituloFalla">
+                                Pendiente de consulta
+                            </p>
+                        </div>
+
+                        <div class="d-grid d-lg-block">
+                            <button id="btnExportar" class="btn btn-success shadow-sm" type="button" disabled >
+                                Exportar Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="alertContainer" class="mb-3"></div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
+                <div>
+                    <h5 class="mb-1 fw-semibold">Listado de fallas asociadas</h5>
+                    <p class="text-muted mb-0 small">
+                        Resultado de la búsqueda de tickets relacionados.
+                    </p>
+                </div>
+                <span class="badge text-bg-light border" id="contadorResultados">0 registros</span>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div id="fallasContainer" class="fallas-list">
+                <div class="text-center py-5 text-muted" id="emptyState">
+                    <div class="mb-3 fs-1">📄</div>
+                    <p class="mb-1 fw-medium">No hay resultados cargados</p>
+                    <small>Ingrese un ID de falla y presione buscar.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div id="global-loader" class="global-loader d-none">
+    <div class="text-center">
+        <div class="spinner-border text-danger" role="status"></div>
+        <div class="mt-2 text-white fw-semibold">Consultando información...</div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const inputFalla = document.getElementById('fallaIDInput');
+    const btnBuscar = document.getElementById('buscarFalla');
+    const btnExportar = document.getElementById('btnExportar');
+    const tituloFalla = document.getElementById('tituloFalla');
+    const fallasContainer = document.getElementById('fallasContainer');
+    const alertContainer = document.getElementById('alertContainer');
+    const contadorResultados = document.getElementById('contadorResultados');
+    const globalLoader = document.getElementById('global-loader');
+
+    let fallaValida = false;
+
+    const dataMock = [
+        {
+            tk: 'TK-700101',
+            estado: 'Abierto',
+            cliente: 'Cliente Corporativo',
+            servicio: 'Internet Dedicado',
+            wan: '10.10.10.1',
+            vrf: 'VRF-CNOC-01',
+            pe: 'PE-GT-01'
+        },
+        {
+            tk: 'TK-700102',
+            estado: 'En seguimiento',
+            cliente: 'Sucursal Zona 10',
+            servicio: 'VPN MPLS',
+            wan: '10.10.10.2',
+            vrf: 'VRF-CNOC-02',
+            pe: 'PE-GT-02'
+        },
+        {
+            tk: 'TK-700103',
+            estado: 'Pendiente',
+            cliente: 'Agencia Norte',
+            servicio: 'Datos',
+            wan: '',
+            vrf: '',
+            pe: ''
+        }
+    ];
+
+    function showAlert(message, type = 'warning') {
+        alertContainer.innerHTML = `
+            <div class="alert alert-${type} alert-dismissible fade show mb-0" role="alert">
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+            </div>
+        `;
+    }
+
+    function setLoading(loading) {
+        if (loading) {
+            globalLoader.classList.remove('d-none');
+        } else {
+            globalLoader.classList.add('d-none');
+        }
+    }
+
+    function renderRows(rows) {
+        if (!rows.length) {
+            fallasContainer.innerHTML = `
+                <div class="text-center py-5 text-muted">
+                    <div class="mb-3 fs-1">📄</div>
+                    <p class="mb-1 fw-medium">No se encontraron registros</p>
+                    <small>Pruebe con otro ID de falla.</small>
+                </div>
+            `;
+            contadorResultados.textContent = '0 registros';
+            return;
+        }
+
+        contadorResultados.textContent = `${rows.length} registros`;
+
+        fallasContainer.innerHTML = rows.map(function (row) {
+            return `
+                <div class="card border-0 shadow-sm mb-3" id="${row.tk}">
+                    <div class="card-body">
+                        <div class="row g-3 align-items-start">
+                            <div class="col-12 col-xl-8">
+                                <div class="d-flex flex-column flex-md-row justify-content-between gap-2 mb-2">
+                                    <div>
+                                        <h6 class="mb-1 fw-bold text-dark">${row.tk}</h6>
+                                        <span class="badge badge-estado">${row.estado}</span>
+                                    </div>
+                                    <div class="text-muted small">
+                                        Ticket asociado
+                                    </div>
+                                </div>
+
+                                <div class="row g-2 small">
+                                    <div class="col-12 col-md-6">
+                                        <strong>Cliente:</strong> ${row.cliente}
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <strong>Servicio:</strong> ${row.servicio}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12 col-xl-4">
+                                <div class="row g-2">
+                                    <div class="col-12">
+                                        <label class="form-label small text-muted mb-1">WAN</label>
+                                        <div class="input-group input-group-sm">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                id="wan_${row.tk}"
+                                                value="${row.wan}"
+                                                placeholder="0.0.0.0"
+                                                autocomplete="off"
+                                            >
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-secondary btn-buscar-wan"
+                                                data-tk="${row.tk}"
+                                            >
+                                                Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label small text-muted mb-1">VRF</label>
+                                        <input
+                                            type="text"
+                                            class="form-control form-control-sm"
+                                            id="vrf_${row.tk}"
+                                            value="${row.vrf}"
+                                            placeholder="-"
+                                            autocomplete="off"
+                                        >
+                                    </div>
+
+                                    <div class="col-12 col-md-6">
+                                        <label class="form-label small text-muted mb-1">PE</label>
+                                        <input
+                                            type="text"
+                                            class="form-control form-control-sm"
+                                            id="pee_${row.tk}"
+                                            value="${row.pe}"
+                                            placeholder="-"
+                                            autocomplete="off"
+                                        >
+                                    </div>
+
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-2">
+                                            <div class="btns-vrf" id="btns_${row.tk}"></div>
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-danger btn-sm btn-eliminar"
+                                                data-tk="${row.tk}"
+                                            >
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function buscarFalla() {
+        const fallaID = inputFalla.value.trim();
+
+        alertContainer.innerHTML = '';
+
+        if (!fallaID) {
+            fallaValida = false;
+            btnExportar.disabled = true;
+            showAlert('Debe ingresar un ID de falla.', 'warning');
+            return;
+        }
+
+        setLoading(true);
+
+        setTimeout(function () {
+            tituloFalla.textContent = `Consulta generada para ${fallaID}`;
+            renderRows(dataMock);
+            fallaValida = true;
+            btnExportar.disabled = false;
+            setLoading(false);
+        }, 700);
+    }
+
+    function exportarExcel() {
+        if (!fallaValida) {
+            showAlert('Debes buscar una falla válida antes de exportar.', 'warning');
+            return;
+        }
+
+        showAlert('Frontend listo: exportación pendiente de integrar con backend.', 'success');
+    }
+
+    function buscarWan(tk) {
+        const wanInput = document.getElementById(`wan_${tk}`);
+        const vrfInput = document.getElementById(`vrf_${tk}`);
+        const peInput = document.getElementById(`pee_${tk}`);
+        const containerBtns = document.getElementById(`btns_${tk}`);
+
+        if (!wanInput) return;
+
+        const wanValue = wanInput.value.trim();
+        const regexIP = /^(?:\d{1,3}\.){3}\d{1,3}$/;
+
+        containerBtns.innerHTML = '';
+
+        if (!wanValue) {
+            showAlert('Por favor ingresa una IP WAN.', 'warning');
+            return;
+        }
+
+        if (!regexIP.test(wanValue)) {
+            showAlert('La IP WAN no tiene un formato válido.', 'danger');
+            return;
+        }
+
+        const opciones = [
+            { vrf: 'VRF-ALT-01', pe: 'PE-ALT-01' },
+            { vrf: 'VRF-ALT-02', pe: 'PE-ALT-02' }
+        ];
+
+        if (wanValue.endsWith('.1')) {
+            vrfInput.value = 'VRF-CNOC-PRINCIPAL';
+            peInput.value = 'PE-GT-CENTRAL';
+            return;
+        }
+
+        containerBtns.innerHTML = opciones.map(function (opcion) {
+            return `
+                <button
+                    type="button"
+                    class="btn btn-outline-secondary btn-sm me-2 mb-2 btn-vrf-option"
+                    data-tk="${tk}"
+                    data-vrf="${opcion.vrf}"
+                    data-pe="${opcion.pe}"
+                >
+                    ${opcion.vrf} / ${opcion.pe}
+                </button>
+            `;
+        }).join('');
+    }
+
+    function eliminarRegistro(tk) {
+        const card = document.getElementById(tk);
+        if (!card) return;
+
+        card.remove();
+
+        const cards = fallasContainer.querySelectorAll('.card[id]');
+        contadorResultados.textContent = `${cards.length} registros`;
+
+        if (!cards.length) {
+            renderRows([]);
+        }
+    }
+
+    btnBuscar.addEventListener('click', buscarFalla);
+    btnExportar.addEventListener('click', exportarExcel);
+
+    inputFalla.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            buscarFalla();
+        }
+    });
+
+    document.addEventListener('click', function (event) {
+        const btnWan = event.target.closest('.btn-buscar-wan');
+        if (btnWan) {
+            buscarWan(btnWan.dataset.tk);
+        }
+
+        const btnEliminar = event.target.closest('.btn-eliminar');
+        if (btnEliminar) {
+            eliminarRegistro(btnEliminar.dataset.tk);
+        }
+
+        const btnVrf = event.target.closest('.btn-vrf-option');
+        if (btnVrf) {
+            const tk = btnVrf.dataset.tk;
+            const vrf = btnVrf.dataset.vrf;
+            const pe = btnVrf.dataset.pe;
+
+            document.getElementById(`vrf_${tk}`).value = vrf;
+            document.getElementById(`pee_${tk}`).value = pe;
+        }
+    });
+});
+</script>
+{% endblock %}

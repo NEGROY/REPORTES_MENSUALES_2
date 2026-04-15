@@ -89,4 +89,81 @@ body {
     color: #adb5bd !important;
 }
 
-/* ------------------------------------------ NAV BAR ESTILOOOS  ------------------------------------------ */ 
+/* ------------------------------------------   ESTILOOOS para el tablero ------------------------------------------ */ 
+    .kanban-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .kanban-column {
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        min-height: 60vh;
+    }
+
+    .kanban-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .kanban-card {
+        background-color: #ffffff;
+        border: 1px solid #e9ecef;
+        border-left: 4px solid #d52b1e;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .bg-success-subtle .kanban-card {
+        border-left-color: #198754;
+    }
+
+    .bg-warning-subtle .kanban-card {
+        border-left-color: #ffc107;
+    }
+
+    .bg-danger-subtle .kanban-card {
+        border-left-color: #dc3545;
+    }
+
+/* ------------------------------------------   ESTILOOOS fallas_asociadas ------------------------------------------ */ 
+    .badge-estado {
+        background-color: rgba(213, 43, 30, 0.10);
+        color: #d52b1e;
+        border: 1px solid rgba(213, 43, 30, 0.18);
+        font-weight: 600;
+    }
+
+    .fallas-list .card {
+        border: 1px solid #e9ecef;
+        border-radius: 0.85rem;
+    }
+
+    .global-loader {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(33, 37, 41, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1080;
+    }
+
+    #btnExportar:disabled {
+        cursor: not-allowed;
+    }
+
+    .btns-vrf {
+        min-height: 34px;
+    }
+
+
+/* ------------------------------------------   ESTILOOOS  ------------------------------------------ */ 
+
+/* ------------------------------------------   ESTILOOOS  ------------------------------------------ */ 
+
+/* ------------------------------------------   ESTILOOOS  ------------------------------------------ */ 

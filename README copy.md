@@ -158,3 +158,8 @@ BACKEND
 
 
 ****************************************************************************************************
+MAS ADELNATE PARA EL TABLERO DE ESCLACION 
+    Quitar JS mock
+    Renderizar cards con:
+    {% for item in escalaciones %}
+    

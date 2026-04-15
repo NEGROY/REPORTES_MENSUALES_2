@@ -11,8 +11,7 @@ urlpatterns = [
     path('cnoc/', include('cnoc_app.urls')),  # RUTAS DEL NUEVO MODUILO 
 
     # ESCALACIONES 
-    path('tablero/', include('escalacion.urls')),
-
+    path('tablas/', include('escalacion.urls')),
     # ASIENTOS
 
     # RETRO

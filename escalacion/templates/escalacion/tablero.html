@@ -1,0 +1,73 @@
+{% extends 'cnoc/layout.html' %}
+{% load static %}
+
+{% block title %}Tablero de Escalación | CNOC{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tablero.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+
+    <!-- Selector de área (solo visual por ahora) -->
+    <div class="container my-3">
+        <div class="d-flex align-items-center p-3 bg-white rounded shadow-sm">
+            <label class="me-3 fw-bold">Área:</label>
+            <select id="selectArea" class="form-select w-auto me-4">
+                <option value="">Seleccione área</option>
+                <option>CNOC</option>
+                <option>CORE</option>
+                <option>ACCESO</option>
+            </select>
+            <span class="text-muted">Seleccione un área</span>
+        </div>
+    </div>
+
+    <!-- Kanban -->
+    <div id="tablero-container" class="kanban-container">
+
+        <div class="kanban-column bg-light" id="gris">
+            <h5 class="kanban-title text-secondary">⏳ En espera</h5>
+        </div>
+
+        <div class="kanban-column bg-success-subtle" id="verde">
+            <h5 class="kanban-title text-success">🟢 &lt; 15 min</h5>
+        </div>
+
+        <div class="kanban-column bg-warning-subtle" id="amarillo">
+            <h5 class="kanban-title text-warning">🟡 15 - 10 min</h5>
+        </div>
+
+        <div class="kanban-column bg-danger-subtle" id="rojo">
+            <h5 class="kanban-title text-danger">🔴 &gt; 10 min</h5>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Cards de ejemplo (frontend puro) -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const ejemplos = [
+        { columna: 'verde', falla: 'F6144046', hora: '02:10', titulo: 'Falla de enlace', gestor: 'jlopez' },
+        { columna: 'amarillo', falla: 'F6144100', hora: '01:05', titulo: 'Intermitencia', gestor: 'mperez' },
+        { columna: 'rojo', falla: 'F6144201', hora: '00:20', titulo: 'Caída total', gestor: 'admin' },
+    ];
+
+    ejemplos.forEach(item => {
+        const card = `
+            <div class="kanban-card">
+                <p class="mb-1"><strong>ID:</strong> ${item.falla} | <strong>Hora:</strong> ${item.hora} hrs</p>
+                <p class="mb-1"><strong>Título:</strong> ${item.titulo}</p>
+                <p class="mb-0"><strong>Gestor:</strong> ${item.gestor}</p>
+            </div>
+        `;
+        document.getElementById(item.columna).insertAdjacentHTML('beforeend', card);
+    });
+
+});
+</script>
+{% endblock %}
