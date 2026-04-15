@@ -40,11 +40,16 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
        
     'app',
-   # 'cnoc_app',
     'cnoc_app.apps.CnocAppConfig',
+   # 'cnoc_app',
     'admin_apps.tabla_escalacion.apps.TablaEscalacionConfig',
     'admin_apps.asientos_cnoc.apps.AsientosCNOCConfig',
     'admin_apps.retroalimentacion.apps.RetroConfig',
+   # LA MIGRAAA
+    'escalacion.apps.EscalacionConfig',
+    'asientos.apps.AsientosConfig',
+    'retroalimentacion.apps.RetroalimentacionConfig',
+
 ]
 
 MIDDLEWARE = [
@@ -139,5 +144,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # AGREGADO PARA EL LOGIN 
 AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
     'cnoc_app.auth_backend.UsuarioBackend',
 ]

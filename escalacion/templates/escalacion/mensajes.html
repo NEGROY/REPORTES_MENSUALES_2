@@ -1,0 +1,173 @@
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-header bg-white">
+        <h5 class="mb-1 fw-semibold">Mensajes y plantillas</h5>
+        <p class="text-muted mb-0 small">
+            Espacios para copiar y pegar mensajes operativos.
+        </p>
+    </div>
+
+    <div class="card-body">
+        <div class="row g-4">
+            <!-- Mensaje de escalación -->
+            <div class="col-12 col-lg-6">
+                <div class="card border-0 bg-light h-100">
+                    <div class="card-body">
+                        <label for="notaGenerada" class="form-label fw-medium text-danger">
+                            Mensaje de escalación
+                        </label>
+
+                        <textarea
+                            id="notaGenerada"
+                            class="form-control textarea-mensaje"
+                            rows="8"
+                            placeholder="Mensaje de escalación..."
+                            autocomplete="off"
+                        ></textarea>
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary btn-sm btn-copiar"
+                                data-target="notaGenerada"
+                            >
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mensaje WhatsApp -->
+            <div class="col-12 col-lg-6">
+                <div class="card border-0 bg-light h-100">
+                    <div class="card-body">
+                        <label for="wasapp" class="form-label fw-medium text-danger">
+                            Mensaje WhatsApp
+                        </label>
+
+                        <textarea
+                            id="wasapp"
+                            class="form-control textarea-mensaje auto-ajuste-textarea"
+                            rows="8"
+                            placeholder="Mensaje WhatsApp..."
+                            autocomplete="off"
+                        ></textarea>
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary btn-sm btn-copiar"
+                                data-target="wasapp"
+                            >
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabla de escalación -->
+            <div class="col-12 col-lg-6">
+                <div class="card border-0 bg-light h-100">
+                    <div class="card-body">
+                        <label for="notaGenerada2" class="form-label fw-medium text-danger">
+                            Tabla de escalación
+                        </label>
+
+                        <textarea
+                            id="notaGenerada2"
+                            class="form-control textarea-mensaje"
+                            rows="8"
+                            placeholder="Tabla de escalación..."
+                            autocomplete="off"
+                        ></textarea>
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary btn-sm btn-copiar"
+                                data-target="notaGenerada2"
+                            >
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plantilla -->
+            <div class="col-12 col-lg-6">
+                <div class="card border-0 bg-light h-100">
+                    <div class="card-body">
+                        <label for="notaGenerada3" class="form-label fw-medium text-danger">
+                            Plantilla
+                        </label>
+
+                        <textarea
+                            id="notaGenerada3"
+                            class="form-control textarea-mensaje"
+                            rows="8"
+                            placeholder="Plantilla..."
+                            autocomplete="off"
+                        ></textarea>
+
+                        <div class="d-flex justify-content-end mt-3">
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary btn-sm btn-copiar"
+                                data-target="notaGenerada3"
+                            >
+                                Copiar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function copiarTexto(id) {
+        const textarea = document.getElementById(id);
+        if (!textarea) return;
+
+        textarea.select();
+        textarea.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(textarea.value);
+
+        const boton = document.querySelector(`.btn-copiar[data-target="${id}"]`);
+        if (boton) {
+            const textoOriginal = boton.textContent;
+            boton.textContent = 'Copiado';
+            boton.classList.add('btn-success');
+            boton.classList.remove('btn-outline-secondary');
+
+            setTimeout(() => {
+                boton.textContent = textoOriginal;
+                boton.classList.remove('btn-success');
+                boton.classList.add('btn-outline-secondary');
+            }, 1200);
+        }
+    }
+
+    function ajustarAltura(textarea) {
+        textarea.style.height = 'auto';
+        textarea.style.height = textarea.scrollHeight + 'px';
+    }
+
+    document.querySelectorAll('.btn-copiar').forEach(function (button) {
+        button.addEventListener('click', function () {
+            copiarTexto(this.dataset.target);
+        });
+    });
+
+    document.querySelectorAll('.auto-ajuste-textarea').forEach(function (textarea) {
+        ajustarAltura(textarea);
+        textarea.addEventListener('input', function () {
+            ajustarAltura(this);
+        });
+    });
+});
+</script>

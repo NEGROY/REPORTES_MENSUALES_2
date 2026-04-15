@@ -1,0 +1,200 @@
+{% extends 'cnoc/layout.html' %}
+{% load static %}
+
+{% block title %}Tablas de Escalación | CNOC{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tablas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+
+    <div class="mb-4">
+        <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-2">Escalaciones</span>
+        <h2 class="fw-bold mb-1">Tablas de Escalación</h2>
+        <p class="text-muted mb-0">
+            Generación y consulta de tablas de escalación por país, área de escalación y falla ID.
+        </p>
+    </div>
+
+    <div class="row g-4">
+        <!-- Panel lateral -->
+        <div class="col-12 col-lg-4 col-xl-3">
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-header bg-white border-0 pb-0">
+                    <h5 class="mb-0 fw-semibold">Parámetros de búsqueda</h5>
+                </div>
+
+                <div class="card-body">
+                    <form id="form-escalacion" method="post" onsubmit="return false;">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="falla" class="form-label fw-medium">Falla ID</label>
+                            <input
+                                type="text"
+                                id="falla"
+                                name="falla"
+                                class="form-control"
+                                placeholder="F6144046"
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="CIERRE" class="form-label fw-medium">Hora de cierre</label>
+                            <input
+                                type="text"
+                                id="CIERRE"
+                                name="CIERRE"
+                                class="form-control"
+                                placeholder="-"
+                                disabled
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="pais" class="form-label fw-medium">País</label>
+                            <select id="pais" name="pais" class="form-select">
+                                <option value="0" selected>Busque un país</option>
+                                {% if paises %}
+                                    {% for pais in paises %}
+                                        <option value="{{ pais.id }}">{{ pais.nombre }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                            <input type="hidden" id="ids" name="ids">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="areasxpais" class="form-label fw-medium">Áreas de Escalación</label>
+                            <select id="areasxpais" name="areasxpais" class="form-select">
+                                <option value="">---Seleccione un país---</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="falla_dire" class="form-label fw-medium">Dirección</label>
+                            <input
+                                type="text"
+                                id="falla_dire"
+                                name="falla_dire"
+                                class="form-control"
+                                placeholder="---"
+                                disabled
+                                autocomplete="off"
+                            >
+                        </div>
+
+                        <input
+                            type="text"
+                            id="company"
+                            name="company"
+                            hidden
+                            disabled
+                            autocomplete="off"
+                        >
+
+                        <div class="d-grid">
+                            <button
+                                type="button"
+                                class="btn btn-claro"
+                                id="btnBuscar"
+                                disabled
+                            >
+                                Buscar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel principal -->
+        <div class="col-12 col-lg-8 col-xl-9">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-body">
+                    <small id="titulo" class="text-muted d-block mb-1">-</small>
+                    <h4 id="titulos" class="mb-0 fw-semibold">-</h4>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <label for="open_time" class="form-label text-muted small mb-1">Hora apertura</label>
+                            <input type="text" id="open_time" class="form-control form-control-sm" value="" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <label for="totalHoras" class="form-label text-muted small mb-1">Hora actual</label>
+                            <input type="text" id="totalHoras" class="form-control form-control-sm" value="" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <label for="tiempoAcumulado" class="form-label text-muted small mb-1">Tiempo acumulado</label>
+                            <input type="text" id="tiempoAcumulado" class="form-control form-control-sm" value="" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <label for="acumulado" class="form-label text-muted small mb-1">Nivel</label>
+                            <input type="text" id="acumulado" class="form-control form-control-sm" value="" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white">
+                    <h5 class="mb-1 fw-semibold">Resultado de la tabla de escalación</h5>
+                    <p class="text-muted mb-0 small">
+                        La información generada a partir de los parámetros seleccionados se mostrará en este panel.
+                    </p>
+                </div>
+
+                <div class="card-body" id="TB_calcu">
+                    <div class="text-center py-5 text-muted">
+                        <p class="mb-0">
+                            Seleccione un país, un área de escalación y/o ingrese una falla para consultar la tabla correspondiente.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resultado" class="mt-4"></div>
+        </div>
+    </div>
+
+    <!-- area de LOS MENSAJES  -->
+    {% include 'escalacion/mensajes.html' %}s
+
+    <div id="modal-formato" hidden></div>
+    <div id="modal-relojes" hidden></div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const paisSelect = document.getElementById('pais');
+    if (paisSelect) {
+        paisSelect.selectedIndex = 0;
+    }
+});
+</script>
+{% endblock %}

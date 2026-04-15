@@ -165,7 +165,7 @@ body {
     padding: 14px 16px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(90deg, var(--dark), var(--primary-red));
+    background: var(--primary-red); /*linear-gradient(90deg, var(--dark), var(--primary-red));*/
     color: var(--white);
     font-size: 1rem;
     font-weight: 700;

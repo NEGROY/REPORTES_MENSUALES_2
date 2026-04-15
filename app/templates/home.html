@@ -7,6 +7,7 @@
     <title>Home | CNOC</title>
     <link rel="stylesheet" href="{% static 'css/home.css' %}">
 </head>
+
 <body>
     <div class="home-bg"></div>
 
@@ -34,12 +35,10 @@
         </section>
 
         <section class="cards-grid">
-            <a href="/cnoc/escalacion/tablas/" class="module-card">
+            <a href="{% url 'escalacion:tableroEscalacion' %}" class="module-card">
                 <div class="card-icon">📊</div>
                 <h3>Tablas de Escalación</h3>
-                <p>
-                    Administración y consulta de tablas de escalación operativa.
-                </p>
+                <p> Administración y consulta de tablas de escalación operativa. </p>
                 <span class="card-link">Ingresar al módulo</span>
             </a>
 

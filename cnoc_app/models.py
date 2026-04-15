@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 
 # MODELOS DE CNOC_APP 
-# from cnoc_app.escalacion.models import *
 
 # =========================
 # MODELOS MAESTROS (GENERALES)

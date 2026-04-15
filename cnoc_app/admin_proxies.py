@@ -1,8 +1,19 @@
-from cnoc_app.escalacion.models import Escalacion  # ajusta nombre real
+from escalacion.models import (
+    Escalacion,
+    EscalacionArea,
+    EscalacionContacto,
+    EscalacionTipo,
+    EscalacionReloj,
+)
 
-from cnoc_app.escalacion.models import ( Escalacion, EscalacionArea, EscalacionContacto, EscalacionTipo, EscalacionReloj, )
-from  cnoc_app.asientos.models import ( Matriz, Asiento, AsignacionAsiento, HorarioUsuario, )
-from cnoc_app.retroalimentacion.models import *
+from asientos.models import (
+    Matriz,
+    Asiento,
+    AsignacionAsiento,
+    HorarioUsuario,
+)
+
+from retroalimentacion.models import Hallazgo
 
 
 # ======================================================
@@ -86,7 +97,7 @@ class HorarioUsuarioProxy(HorarioUsuario):
 
 
 # ======================================================
-# retroalimentacion RETRO
+# RETROALIMENTACIÓN (GRUPO VISUAL)
 # ======================================================
 
 class HallazgoProxy(Hallazgo):
@@ -96,11 +107,10 @@ class HallazgoProxy(Hallazgo):
         verbose_name = "Hallazgo"
         verbose_name_plural = "Hallazgos"
 
+
 class Retroalimentacion(Hallazgo):
     class Meta:
         proxy = True
         app_label = "retroalimentacion"
-        verbose_name = "Retroalimentacion"
+        verbose_name = "Retroalimentación"
         verbose_name_plural = "RETRO"
-
-

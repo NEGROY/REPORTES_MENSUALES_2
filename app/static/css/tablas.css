@@ -1,0 +1,92 @@
+:root {
+    --claro-rojo: #d52b1e;
+    --claro-rojo-hover: #b92318;
+    --claro-gris: #6c757d;
+    --claro-fondo: #f5f6f8;
+    --claro-borde: #e9ecef;
+    --claro-texto: #212529;
+}
+
+body {
+    background-color: var(--claro-fondo);
+    color: var(--claro-texto);
+}
+
+.card {
+    border: 1px solid var(--claro-borde);
+    border-radius: 0.75rem;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--claro-borde);
+}
+
+.btn-claro {
+    background-color: var(--claro-rojo);
+    border-color: var(--claro-rojo);
+    color: #fff;
+}
+
+.btn-claro:hover,
+.btn-claro:focus {
+    background-color: var(--claro-rojo-hover);
+    border-color: var(--claro-rojo-hover);
+    color: #fff;
+}
+
+.btn-claro:disabled {
+    background-color: #d9d9d9;
+    border-color: #d9d9d9;
+    color: #7a7a7a;
+}
+
+.form-control:focus,
+.form-select:focus,
+.textarea-mensaje:focus {
+    border-color: rgba(213, 43, 30, 0.45);
+    box-shadow: 0 0 0 0.2rem rgba(213, 43, 30, 0.12);
+}
+
+.badge.bg-danger-subtle {
+    background-color: rgba(213, 43, 30, 0.10) !important;
+}
+
+.text-danger {
+    color: var(--claro-rojo) !important;
+}
+
+.textarea-mensaje {
+    min-height: 180px;
+    resize: vertical;
+    background-color: #fff;
+}
+
+.btn-copiar {
+    min-width: 90px;
+}
+
+
+/* ------------------------------------------ NAV BAR ESTILOOOS  ------------------------------------------ */ 
+
+.cnoc-navbar .nav-link {
+    color: #495057;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.85rem;
+}
+
+.cnoc-navbar .nav-link:hover {
+    color: var(--claro-rojo);
+    background-color: rgba(213, 43, 30, 0.08);
+}
+
+.cnoc-navbar .nav-link.active {
+    background-color: rgba(213, 43, 30, 0.10);
+    color: var(--claro-rojo) !important;
+}
+
+.cnoc-navbar .nav-link.disabled {
+    color: #adb5bd !important;
+}
+
+/* ------------------------------------------ NAV BAR ESTILOOOS  ------------------------------------------ */ 

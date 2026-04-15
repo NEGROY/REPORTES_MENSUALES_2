@@ -1,0 +1,63 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm cnoc-navbar">
+    <div class="container-fluid px-4">
+
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
+            <span class="cnoc-brand-mark"></span>
+            <span class="d-flex flex-column lh-sm">
+                <strong class="text-danger">CNOC</strong>
+                <small class="text-muted">Plataforma operativa</small>
+            </span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cnocNavbar" aria-controls="cnocNavbar" aria-expanded="false" aria-label="Mostrar navegación" >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="cnocNavbar">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-2">
+
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active fw-semibold text-danger{% endif %}"
+                        href="{% url 'home' %}" >
+                        Inicio
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link {% if '/tablero/' in request.path %}active fw-semibold text-danger{% endif %}"
+                        href="{% url 'escalacion:tableroEscalacion' %}" >
+                        Tablas de Escalación
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true" >
+                        Asignación de Asientos
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true" >
+                        Retroalimentación
+                    </a>
+                </li>
+
+            </ul>
+
+            <div class="d-flex align-items-center gap-3 ms-lg-3">
+                <div class="text-end">
+                    <div class="small fw-semibold text-dark">
+                        {{ request.session.agente|default:request.session.username2|default:"Usuario" }}
+                    </div>
+                    <div class="small text-muted">
+                        IBM: {{ request.session.ibm|default:"-" }}
+                    </div>
+                </div>
+
+                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm">
+                    Salir
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>

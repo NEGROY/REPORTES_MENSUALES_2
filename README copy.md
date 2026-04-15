@@ -128,3 +128,33 @@ CNOC_ENABLE_AUDIT = True
 
 
 
+pasos 
+
+AGREGAR SUB MENUS A LOS dropdown DEL NAVBAR
+
+Lo más limpio en Django para un dropdown dinámico es:
+1. Definir el menú en Python
+2. Resolver URLs en backend
+3. Enviar el menú al template con context processor
+4. Renderizar con un solo for en navbar.html
+Así evitas hardcodear enlaces en HTML y luego puedes agregar permisos sin tocar el template.
+
+****************************************************************************************************
+    FRONT END 
+        ESCALACIONES 
+        ASIENTOS
+        RETRO 
+
+****************************************************************************************************
+BACKEND 
+    MODEALES 
+    JS 
+    CONSULTAS 
+
+****************************************************************************************************
+    TOMAR EN CUENTA LOS ASIENTOS 
+    Y PARA EL TABLERO DE ESCALACION 
+    QUE SEGUN USUARIOS TENDRAN ALGUNAAS VISTA U OPCIONES 
+
+
+****************************************************************************************************
