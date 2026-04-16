@@ -161,8 +161,21 @@ body {
         min-height: 34px;
     }
 
+/* ------------------------------------------   ESTILOOOS  dropdown nav bar ------------------------------------------ */ 
+.cnoc-navbar .dropdown-menu {
+    min-width: 240px;
+    border-radius: 0.75rem;
+}
 
-/* ------------------------------------------   ESTILOOOS  ------------------------------------------ */ 
+.cnoc-navbar .dropdown-item {
+    padding: 0.55rem 1rem;
+    font-weight: 500;
+}
+
+.cnoc-navbar .dropdown-item:hover {
+    background-color: rgba(213, 43, 30, 0.08);
+    color: var(--claro-rojo);
+}
 
 /* ------------------------------------------   ESTILOOOS  ------------------------------------------ */ 
 

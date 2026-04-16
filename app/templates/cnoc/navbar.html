@@ -9,39 +9,60 @@
             </span>
         </a>
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cnocNavbar" aria-controls="cnocNavbar" aria-expanded="false" aria-label="Mostrar navegación" >
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#cnocNavbar"
+            aria-controls="cnocNavbar"
+            aria-expanded="false"
+            aria-label="Mostrar navegación"
+        >
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="cnocNavbar">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-lg-2">
+                {% for item in cnoc_menu %}
+                    {% if item.children %}
+                        <li class="nav-item dropdown">
+                            <a
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                id="dropdown-{{ forloop.counter }}"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                            >
+                                {{ item.label }}
+                            </a>
 
-                <li class="nav-item">
-                    <a class="nav-link {% if request.path == '/' %}active fw-semibold text-danger{% endif %}"
-                        href="{% url 'home' %}" >
-                        Inicio
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link {% if '/tablero/' in request.path %}active fw-semibold text-danger{% endif %}"
-                        href="{% url 'escalacion:tableroEscalacion' %}" >
-                        Tablas de Escalación
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true" >
-                        Asignación de Asientos
-                    </a>
-                </li>
-
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true" >
-                        Retroalimentación
-                    </a>
-                </li>
-
+                            <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="dropdown-{{ forloop.counter }}">
+                                {% for child in item.children %}
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="{{ child.href }}"
+                                            {% if child.target_blank %}target="_blank" rel="noopener noreferrer"{% endif %}
+                                        >
+                                            {{ child.label }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a
+                                class="nav-link"
+                                href="{{ item.href }}"
+                                {% if item.target_blank %}target="_blank" rel="noopener noreferrer"{% endif %}
+                            >
+                                {{ item.label }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
             </ul>
 
             <div class="d-flex align-items-center gap-3 ms-lg-3">
@@ -54,7 +75,7 @@
                     </div>
                 </div>
 
-                <a href="{% url 'login' %}" class="btn btn-outline-secondary btn-sm">
+                <a class="btn btn-outline-secondary btn-sm" href="{% url 'login' %}">
                     Salir
                 </a>
             </div>

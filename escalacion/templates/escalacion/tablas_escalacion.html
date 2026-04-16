@@ -9,14 +9,44 @@
 
 {% block content %}
 <div class="container-fluid px-4">
+ 
+<div class="row">
+    <!-- COLUMNA IZQUIERDA -->
+    <div class="col-12 col-md-3 mb-3">
+        <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-2">
+            Escalaciones
+        </span>
 
-    <div class="mb-4">
-        <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-2">Escalaciones</span>
         <h2 class="fw-bold mb-1">Tablas de Escalación</h2>
+
         <p class="text-muted mb-0">
-            Generación y consulta de tablas de escalación por país, área de escalación y falla ID.
+            Generación y consulta de tablas de escalación.
         </p>
     </div>
+
+    <!-- COLUMNA DERECHA -->
+    <div class="col-12 col-md-9 mb-4">
+        <div class="card shadow-sm border-0">
+            <div class="card-body">
+                <small id="titulo" class="text-muted d-block mb-1">-</small>
+                <h4 id="titulo_principal" class="mb-3 fw-semibold" hidden>-</h4>
+
+                <div class="row g-3">
+                    <div class="col-12 col-md-3 form-floating">
+                        <input type="text" id="cierre" name="cierre" class="form-control" placeholder="-" readonly autocomplete="off" disabled>
+                        <label for="cierre" class="fw-medium"> Hora de cierre </label>
+                    </div>
+
+                    <div class="col-12 col-md-3 form-floating">
+                        <input type="text" id="falla_direccion" name="falla_direccion" class="form-control" placeholder="---" readonly autocomplete="off" disabled >
+                        <label for="falla_direccion" class="fw-medium"> Dirección </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <div class="row g-4">
         <!-- Panel lateral -->
@@ -30,33 +60,12 @@
                     <form id="form-escalacion" method="post" onsubmit="return false;">
                         {% csrf_token %}
 
-                        <div class="mb-3">
+                        <div class="form-floating mb-3">
+                            <input type="text" id="falla" name="falla" class="form-control" placeholder="F6144046" autocomplete="off" >
                             <label for="falla" class="form-label fw-medium">Falla ID</label>
-                            <input
-                                type="text"
-                                id="falla"
-                                name="falla"
-                                class="form-control"
-                                placeholder="F6144046"
-                                autocomplete="off"
-                            >
                         </div>
 
-                        <div class="mb-3">
-                            <label for="CIERRE" class="form-label fw-medium">Hora de cierre</label>
-                            <input
-                                type="text"
-                                id="CIERRE"
-                                name="CIERRE"
-                                class="form-control"
-                                placeholder="-"
-                                disabled
-                                autocomplete="off"
-                            >
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="pais" class="form-label fw-medium">País</label>
+                        <div class="form-floating mb-3">
                             <select id="pais" name="pais" class="form-select">
                                 <option value="0" selected>Busque un país</option>
                                 {% if paises %}
@@ -65,45 +74,21 @@
                                     {% endfor %}
                                 {% endif %}
                             </select>
+                            <label for="pais" class="form-label fw-medium">País</label>
                             <input type="hidden" id="ids" name="ids">
                         </div>
 
-                        <div class="mb-3">
-                            <label for="areasxpais" class="form-label fw-medium">Áreas de Escalación</label>
+                        <div class="form-floating mb-3">
                             <select id="areasxpais" name="areasxpais" class="form-select">
                                 <option value="">---Seleccione un país---</option>
                             </select>
+                            <label for="areasxpais" class="form-label fw-medium">Áreas de Escalación</label>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="falla_dire" class="form-label fw-medium">Dirección</label>
-                            <input
-                                type="text"
-                                id="falla_dire"
-                                name="falla_dire"
-                                class="form-control"
-                                placeholder="---"
-                                disabled
-                                autocomplete="off"
-                            >
-                        </div>
-
-                        <input
-                            type="text"
-                            id="company"
-                            name="company"
-                            hidden
-                            disabled
-                            autocomplete="off"
-                        >
+                        <input type="text" id="company" name="company" hidden disabled autocomplete="off" >
 
                         <div class="d-grid">
-                            <button
-                                type="button"
-                                class="btn btn-claro"
-                                id="btnBuscar"
-                                disabled
-                            >
+                            <button type="button" class="btn btn-claro" id="btnBuscar" disabled >
                                 Buscar
                             </button>
                         </div>
@@ -114,50 +99,66 @@
 
         <!-- Panel principal -->
         <div class="col-12 col-lg-8 col-xl-9">
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-body">
-                    <small id="titulo" class="text-muted d-block mb-1">-</small>
-                    <h4 id="titulos" class="mb-0 fw-semibold">-</h4>
+
+<div class="row g-3 mb-4">
+
+    <!-- Hora apertura -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="form-floating">
+                    <input type="text" id="open_time" name="open_time" class="form-control" placeholder="-" readonly >
+                    <label for="open_time" class="text-muted small">
+                        Hora apertura
+                    </label>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="row g-3 mb-4">
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body">
-                            <label for="open_time" class="form-label text-muted small mb-1">Hora apertura</label>
-                            <input type="text" id="open_time" class="form-control form-control-sm" value="" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body">
-                            <label for="totalHoras" class="form-label text-muted small mb-1">Hora actual</label>
-                            <input type="text" id="totalHoras" class="form-control form-control-sm" value="" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body">
-                            <label for="tiempoAcumulado" class="form-label text-muted small mb-1">Tiempo acumulado</label>
-                            <input type="text" id="tiempoAcumulado" class="form-control form-control-sm" value="" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-sm-6 col-xl-3">
-                    <div class="card shadow-sm border-0 h-100">
-                        <div class="card-body">
-                            <label for="acumulado" class="form-label text-muted small mb-1">Nivel</label>
-                            <input type="text" id="acumulado" class="form-control form-control-sm" value="" readonly>
-                        </div>
-                    </div>
+    <!-- Hora actual -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="form-floating">
+                    <input type="text" id="current_time" name="current_time" class="form-control" placeholder="-" readonly >
+                    <label for="current_time" class="text-muted small">
+                        Hora actual
+                    </label>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Tiempo acumulado -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="form-floating">
+                    <input type="text" id="elapsed_time" name="elapsed_time" class="form-control" placeholder="-" readonly >
+                    <label for="elapsed_time" class="text-muted small">
+                        Tiempo acumulado
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nivel -->
+    <div class="col-12 col-sm-6 col-xl-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body">
+                <div class="form-floating">
+                    <input type="text" id="nivel" name="nivel" class="form-control" placeholder="-" readonly >
+                    <label for="nivel" class="text-muted small">
+                        Nivel
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 
             <div class="card shadow-sm border-0">
                 <div class="card-header bg-white">
