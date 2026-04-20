@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso CNOC | </title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body>
+    <div class="background-overlay"></div>
+
+    <main class="login-wrapper">
+        <section class="login-card">
+            <div class="login-brand">
+                <div class="brand-line"></div>
+                <h1>CNOC</h1>
+                <p>Plataforma de gestión y escalación</p>
+            </div>
+
+            <div class="login-header">
+                <h2>Iniciar sesión</h2>
+                <p>Acceso seguro al módulo operativo</p>
+            </div>
+
+            {% if messages %}
+                <div class="alert-box">
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" class="login-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="username">Usuario</label>
+                    <input type="text" id="username" name="username" placeholder="Ingrese su usuario" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+                </div>
+
+                <button type="submit" class="btn-login">
+                    Ingresar
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Centro de Operaciones de Red · Acceso restringido</p>
+            </div>
+        </section>
+
+        <section class="login-info-panel">
+            <div class="info-content">
+                <span class="panel-tag">Monitoreo · Escalación · Gestión</span>
+                <h3>Control operativo centralizado</h3>
+                <p>
+                    Plataforma diseñada para el seguimiento de incidencias, administración de escalaciones
+                    y trazabilidad operativa dentro del entorno CNOC.
+                </p>
+
+                <ul>
+                    <li>Gestión de tablas de escalación</li>
+                    <li>Seguimiento de incidencias masivas</li>
+                    <li>Control de usuarios y módulos operativos</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

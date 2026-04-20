@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from cnoc_app.decorators import usuario_login_required
 
+
+
 # Create your views here.
 
 @usuario_login_required

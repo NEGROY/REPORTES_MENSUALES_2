@@ -1,0 +1,182 @@
+:root {
+    --claro-rojo: #d52b1e;
+    --claro-rojo-hover: #b92318;
+    --claro-gris: #6c757d;
+    --claro-fondo: #f5f6f8;
+    --claro-borde: #e9ecef;
+    --claro-texto: #212529;
+}
+
+body {
+    background-color: var(--claro-fondo);
+    color: var(--claro-texto);
+}
+
+.card {
+    border: 1px solid var(--claro-borde);
+    border-radius: 0.75rem;
+}
+
+.card-header {
+    border-bottom: 1px solid var(--claro-borde);
+}
+
+.btn-claro {
+    background-color: var(--claro-rojo);
+    border-color: var(--claro-rojo);
+    color: #fff;
+}
+
+.btn-claro:hover,
+.btn-claro:focus {
+    background-color: var(--claro-rojo-hover);
+    border-color: var(--claro-rojo-hover);
+    color: #fff;
+}
+
+.btn-claro:disabled {
+    background-color: #d9d9d9;
+    border-color: #d9d9d9;
+    color: #7a7a7a;
+}
+
+.form-control:focus,
+.form-select:focus,
+.textarea-mensaje:focus {
+    border-color: rgba(213, 43, 30, 0.45);
+    box-shadow: 0 0 0 0.2rem rgba(213, 43, 30, 0.12);
+}
+
+.badge.bg-danger-subtle {
+    background-color: rgba(213, 43, 30, 0.10) !important;
+}
+
+.text-danger {
+    color: var(--claro-rojo) !important;
+}
+
+.textarea-mensaje {
+    min-height: 180px;
+    resize: vertical;
+    background-color: #fff;
+}
+
+.btn-copiar {
+    min-width: 90px;
+}
+
+
+/* ------------------------------------------ NAV BAR ESTILOOOS  ------------------------------------------ */ 
+
+.cnoc-navbar .nav-link {
+    color: #495057;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.85rem;
+}
+
+.cnoc-navbar .nav-link:hover {
+    color: var(--claro-rojo);
+    background-color: rgba(213, 43, 30, 0.08);
+}
+
+.cnoc-navbar .nav-link.active {
+    background-color: rgba(213, 43, 30, 0.10);
+    color: var(--claro-rojo) !important;
+}
+
+.cnoc-navbar .nav-link.disabled {
+    color: #adb5bd !important;
+}
+
+/* ------------------------------------------   ESTILOOOS para el tablero ------------------------------------------ */ 
+    .kanban-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .kanban-column {
+        border-radius: 0.75rem;
+        padding: 0.75rem;
+        min-height: 60vh;
+    }
+
+    .kanban-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+
+    .kanban-card {
+        background-color: #ffffff;
+        border: 1px solid #e9ecef;
+        border-left: 4px solid #d52b1e;
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .bg-success-subtle .kanban-card {
+        border-left-color: #198754;
+    }
+
+    .bg-warning-subtle .kanban-card {
+        border-left-color: #ffc107;
+    }
+
+    .bg-danger-subtle .kanban-card {
+        border-left-color: #dc3545;
+    }
+
+/* ------------------------------------------   ESTILOOOS fallas_asociadas ------------------------------------------ */ 
+    .badge-estado {
+        background-color: rgba(213, 43, 30, 0.10);
+        color: #d52b1e;
+        border: 1px solid rgba(213, 43, 30, 0.18);
+        font-weight: 600;
+    }
+
+    .fallas-list .card {
+        border: 1px solid #e9ecef;
+        border-radius: 0.85rem;
+    }
+
+    .global-loader {
+        position: fixed;
+        inset: 0;
+        background-color: rgba(33, 37, 41, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1080;
+    }
+
+    #btnExportar:disabled {
+        cursor: not-allowed;
+    }
+
+    .btns-vrf {
+        min-height: 34px;
+    }
+
+/* ------------------------------------------   ESTILOOOS  dropdown nav bar ------------------------------------------ */ 
+.cnoc-navbar .dropdown-menu {
+    min-width: 240px;
+    border-radius: 0.75rem;
+}
+
+.cnoc-navbar .dropdown-item {
+    padding: 0.55rem 1rem;
+    font-weight: 500;
+}
+
+.cnoc-navbar .dropdown-item:hover {
+    background-color: rgba(213, 43, 30, 0.08);
+    color: var(--claro-rojo);
+}
+
+/* ------------------------------------------   ESTILOOOS  ------------------------------------------ */ 
+
+/* ------------------------------------------   ESTILOOOS  ------------------------------------------ */ 

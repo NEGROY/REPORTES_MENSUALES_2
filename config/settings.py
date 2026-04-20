@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'escalacion.apps.EscalacionConfig',
     'asientos.apps.AsientosConfig',
     'retroalimentacion.apps.RetroalimentacionConfig',
-
 ]
 
 MIDDLEWARE = [
@@ -74,7 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'app.context_processors.cnoc_navigation', # AGREGADO PARA EL DROP´DOWN
+                'cnoc_app.context_processors.cnoc_navigation', # AGREGADO PARA EL DROP´DOWN
             ],
         },
     },
@@ -120,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CST'
 
 USE_I18N = True
 

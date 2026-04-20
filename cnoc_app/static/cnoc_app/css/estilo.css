@@ -1,0 +1,310 @@
+/*----------------------------------- ESTILOS MODIFICADOS  (MEJORADOS POR EL NEGROY ) ----------------------------------- */
+
+.hoja{
+  width: 100% !important;
+  height: 1056px !important;
+  background-color: rgb(255, 255, 255);
+  position: relative;
+  MARGIN-TOP: 50px;
+}
+
+.linea_negra{
+  background-color: rgb(0, 0, 0); 
+  height: 40px;
+  color: white;
+  position: absolute;
+  bottom: 40px;   /* distancia desde abajo */
+  width: 100%;
+}
+
+.footer_pagina{
+  position:absolute;
+  bottom:40px;
+  width:100%;
+}
+
+/* ----------------------------------- ESTILOS MODIFICADOS -----------------------------------  */
+ 
+.contenido_hoja{
+  width: 100%;
+  height: 950px !important;
+  background-color: rgb(255, 255, 255);
+}
+
+.abs-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+.abs-left {
+  display: flex;
+  justify-content: flex-end;
+  margin-left: -50px;
+}
+
+.fondo_rojo{
+  background-color: #ff0000;
+
+}
+
+.espaciotitulo{
+  margin-top: 20px;
+}
+
+.espaciotitulo2{
+margin-top: 35px;
+}
+.espacio_1{
+  width: auto;;
+  height: 175px;
+  color: #ecece7;
+  background-color: #ecece7;
+}
+
+.espacioS_1{
+width: auto;;
+height: 125px;
+color: #ecece7;
+background-color: #ecece7;
+}
+
+.div_{
+  height: 90%;
+}
+
+.espacios{
+  background-color: rgb(255, 255, 255); 
+  height: 720px;
+}
+
+.espacios_4{
+  background-color: rgb(255, 255, 255); 
+  height: 625px;
+}
+.espacios_5{
+background-color: rgb(255, 255, 255); 
+height: 225px;
+}
+
+.espacios_{
+background-color: rgb(255, 255, 255); 
+height: 480px;
+}
+
+.img_mover{
+  margin-top: -55px;
+}
+
+.striped2 {
+font-size: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-wrap: break-word;
+  margin-bottom: 1rem;
+  page-break-inside: auto;
+  break-inside: auto;
+}
+
+thead {
+  display: table-header-group;
+}
+
+tbody, tr {
+  page-break-inside: auto;
+  break-inside: auto;
+}
+
+td, th {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  /*font-size: 14px;*/
+  padding: 3px;
+  border: 1px solid black;
+  text-align: center;
+}
+
+.table-striped2 td {
+border: 1px solid black;
+padding: 2px;
+font-size: 18px;
+}
+.table-striped {
+  border-collapse: collapse;
+  
+}
+
+.table-striped tr:nth-child(even) {
+  background-color: #f4e7e7;
+}
+
+.table-striped tr:nth-child(odd) {
+  background-color: #e8cbcb;
+  font-size: 18px;
+}
+
+.table-striped td {
+  border: 1px solid black;
+  padding: 2px;
+  font-size: 18px;
+}
+.table-stripedes tr:nth-child(even) {
+  background-color: #f4e7e7;
+}
+
+.table-stripedes tr:nth-child(odd) {
+  background-color: #e8cbcb;
+  font-size: 18px;
+}
+.table-stripedes td {
+  border: 1px solid black;
+  padding: 2px;
+  font-size: 18px;
+}
+thead {
+  display: table-header-group;
+}
+.rojo{
+  background-color: red;
+  color: white;
+  font-size: 18px !important;  
+}
+h1{
+  white-space: nowrap;
+  
+}
+.pequeño{
+  font-size: 70%;
+}
+h3{
+  font-size: 40px;
+}
+
+.highcharts-figure,
+.highcharts-data-table table {
+min-width: 160px;
+max-width: 645px;
+margin: 1em auto;
+}
+
+.highcharts-data-table table {
+font-family: Verdana, sans-serif;
+border-collapse: collapse;
+border: 1px solid #ebebeb;
+margin: 10px auto;
+text-align: center;
+width: 60%;
+max-width: 500px;
+}
+
+.highcharts-data-table caption {
+padding: 1em 0;
+font-size: 1.2em;
+color: #555;
+}
+
+.highcharts-data-table th {
+font-weight: 600;
+padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tr:nth-child(even) {
+background: #f8f8f8;
+}
+
+.highcharts-data-table tr:hover {
+background: #f1f7ff;
+}
+
+.highcharts-credits{
+color: white!important;
+}
+#container .highcharts-credits {
+display: none;
+}
+#container2 .highcharts-credits {
+display: none;
+}
+
+#container3 .highcharts-credits {
+display: none;
+}
+
+#container4 .highcharts-credits {
+display: none;
+}
+
+.seccion1 {
+page-break-before: always;
+}
+
+.ime_p{
+max-width: 80%;
+height: auto;
+}
+
+.fondo_gris{
+background-color:aqua !important;
+}
+.fondo_gris2{
+background-color:rgb(223, 241, 142) !important;
+}
+
+
+/* ----------------------------- {ESTILOS PARA MIS PREUBAS}  ----------------------------- */
+
+.fondo_reporte{
+    background-image: url("../img/prueba.png");
+    background-size: cover;
+    background-position: center;
+    min-height: 900px;
+    padding-top:40px;
+}
+
+/* ----------------------------- {ESTILOS PARA MIS PREUBAS}  ----------------------------- */
+
+/* ********** {Disponibilidad de Enlaces con Tickets atribución Claro} {Pag 21} ********** */
+
+
+.dispo {
+    font-size: 9px;              /* letras más pequeñas */
+    text-align: center;          /* centrado horizontal */
+    vertical-align: middle;      /* centrado vertical */
+    padding: 4px;                /* reduce el alto de la fila */
+}
+
+.celdas{
+  font-size: 18px !important; 
+}
+ 
+
+
+/* Elimina cualquier estilo previo */
+.empresa-select {
+    background-color: #ffffff;
+    border-color: #dc3545; /* Rojo Bootstrap */
+    color: #212529;
+}
+
+/* Mejor legibilidad */
+.empresa-select option {
+    padding: 10px;
+}
+
+/* En foco: sobrio, corporativo */
+.empresa-select:focus {
+    border-color: #b02a37;
+    box-shadow: 0 0 0 0.15rem rgba(220, 53, 69, 0.25);
+}

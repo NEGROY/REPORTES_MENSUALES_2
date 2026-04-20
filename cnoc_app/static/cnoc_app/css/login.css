@@ -1,0 +1,310 @@
+:root {
+    --primary-red: #d50000;
+    --dark-red: #a80000;
+    --soft-red: #ffebeb;
+    --white: #ffffff;
+    --light-gray: #f4f4f4;
+    --medium-gray: #cfcfcf;
+    --dark: #111111;
+    --dark-2: #1a1a1a;
+    --text-gray: #5f5f5f;
+    --shadow: 0 16px 40px rgba(0, 0, 0, 0.20);
+    --radius: 18px;
+    --transition: all 0.25s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background:
+        linear-gradient(135deg, rgba(17,17,17,0.97), rgba(34,34,34,0.94)),
+        radial-gradient(circle at top right, rgba(213, 0, 0, 0.18), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(213, 0, 0, 0.12), transparent 25%);
+    min-height: 100vh;
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+.background-overlay {
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    opacity: 0.35;
+}
+
+.login-wrapper {
+    position: relative;
+    z-index: 2;
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 480px 1fr;
+    align-items: center;
+    gap: 40px;
+    padding: 40px 60px;
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.98);
+    color: var(--dark);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 40px 34px;
+    border: 1px solid rgba(213, 0, 0, 0.12);
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: linear-gradient(90deg, var(--primary-red), #ff3b3b);
+}
+
+.login-brand {
+    margin-bottom: 26px;
+}
+
+.brand-line {
+    width: 58px;
+    height: 5px;
+    border-radius: 10px;
+    background: var(--primary-red);
+    margin-bottom: 14px;
+}
+
+.login-brand h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary-red);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+}
+
+.login-brand p {
+    color: var(--text-gray);
+    font-size: 0.96rem;
+}
+
+.login-header {
+    margin-bottom: 24px;
+}
+
+.login-header h2 {
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+}
+
+.login-header p {
+    font-size: 0.95rem;
+    color: var(--text-gray);
+}
+
+.alert-box {
+    background: #fff1f1;
+    border: 1px solid #ffc7c7;
+    color: #9a0000;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 18px;
+    font-size: 0.93rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #2a2a2a;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 15px;
+    border: 1px solid #d8d8d8;
+    border-radius: 12px;
+    font-size: 0.97rem;
+    outline: none;
+    background: #fff;
+    transition: var(--transition);
+}
+
+.form-group input:focus {
+    border-color: var(--primary-red);
+    box-shadow: 0 0 0 4px rgba(213, 0, 0, 0.10);
+}
+
+.btn-login {
+    margin-top: 8px;
+    width: 100%;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 12px;
+    background: var(--primary-red); /*linear-gradient(90deg, var(--dark), var(--primary-red));*/
+    color: var(--white);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 10px 20px rgba(213, 0, 0, 0.18);
+}
+
+.btn-login:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+}
+
+.btn-login:active {
+    transform: translateY(0);
+}
+
+.login-footer {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #ececec;
+}
+
+.login-footer p {
+    font-size: 0.84rem;
+    color: var(--text-gray);
+    text-align: center;
+}
+
+.login-info-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.info-content {
+    max-width: 560px;
+    color: var(--white);
+}
+
+.panel-tag {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid rgba(255,255,255,0.14);
+    padding: 8px 14px;
+    border-radius: 999px;
+    font-size: 0.84rem;
+    margin-bottom: 18px;
+    backdrop-filter: blur(8px);
+}
+
+.info-content h3 {
+    font-size: 2.3rem;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    font-weight: 800;
+}
+
+.info-content p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.86);
+    margin-bottom: 18px;
+    max-width: 90%;
+}
+
+.info-content ul {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.info-content ul li {
+    position: relative;
+    padding-left: 22px;
+    color: rgba(255,255,255,0.92);
+    font-size: 0.98rem;
+}
+
+.info-content ul li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--primary-red);
+    box-shadow: 0 0 10px rgba(213, 0, 0, 0.45);
+}
+
+@media (max-width: 1100px) {
+    .login-wrapper {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 30px 20px;
+    }
+
+    .login-info-panel {
+        order: -1;
+        justify-content: flex-start;
+        padding: 0;
+    }
+
+    .info-content {
+        max-width: 100%;
+    }
+
+    .info-content h3 {
+        font-size: 1.8rem;
+    }
+
+    .info-content p {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    .login-card {
+        padding: 28px 22px;
+    }
+
+    .login-brand h1 {
+        font-size: 1.65rem;
+    }
+
+    .login-header h2 {
+        font-size: 1.3rem;
+    }
+
+    .info-content h3 {
+        font-size: 1.5rem;
+    }
+
+    .info-content p,
+    .info-content ul li {
+        font-size: 0.93rem;
+    }
+}
