@@ -1,11 +1,21 @@
 from django.shortcuts import render
 
+# para lOS MODELOS 
+from cnoc_app.models import Pais  # importar el modelo
+
+
 # Create your views here.
 # PASO 1 CREAR MI VISTA DEL TEMPLATE -> creAR EN EL URL 
-
 def tablas_escalacion(request):
+    #paises = Pais.objects.all().values('id', 'nombre_pais')
+    paises = (
+        Pais.objects
+        .filter(id__gt=1)          # id mayor a 1
+        .order_by('id')            # ordenado por id ascendente
+        .values('id', 'nombre_pais')
+    )
     context = {
-        'paises': [],
+        'paises': paises,
     }
     return render(request, 'escalacion/tablas_escalacion.html', context)
 

@@ -70,7 +70,7 @@
                                 <option value="0" selected>Busque un país</option>
                                 {% if paises %}
                                     {% for pais in paises %}
-                                        <option value="{{ pais.id }}">{{ pais.nombre }}</option>
+                                        <option value="{{ pais.id }}">{{ pais.nombre_pais }}</option>
                                     {% endfor %}
                                 {% endif %}
                             </select>

@@ -244,10 +244,7 @@ constants.py: estados, nombres fijos, tipos
 Fase 1: contrato funcional
 Debes listar por cada pantalla del frontend:
 
-URL o vista
-método HTTP
-parámetros de entrada
-qué devuelve
+URL o vista, método HTTP, parámetros de entrada, qué devuelve
 fuente de datos
 si modifica estado o solo consulta
 
@@ -256,29 +253,21 @@ tener un inventario claro de endpoints.
 ****************************************************************************************************
 Fase 2: modelo de datos del módulo
 Debes definir:
+ necesitan modelo Django
 
-qué datos vive en MySQL
-qué tablas ya existen
-cuáles necesitan modelo Django
-cuáles son solo lectura
-cuáles son resultado de integración externa
 ****************************************************************************************************
 Fase 3: construir primero un flujo completo
 No intentes hacer todo el módulo de una vez.
 Empieza con un caso de uso completo.
 Por ejemplo:
 
-búsqueda por falla ID
-obtención de datos del tablero
-detalle de una escalación
-listado filtrado
+búsqueda por falla ID, obtención de datos del tablero
+detalle de una escalación, listado filtrado
 ****************************************************************************************************
 Fase 4: backend por capas
 Por cada funcionalidad:
 
-ruta en urls.py
-entrada en views.py
-lógica en services.py
+ruta en urls.py  --  entrada en views.py -- lógica en services.py 
 si aplica:
 
 ORM en models.py
