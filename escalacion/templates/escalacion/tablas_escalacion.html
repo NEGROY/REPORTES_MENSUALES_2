@@ -4,7 +4,7 @@
 {% block title %}Tablas de Escalación | CNOC{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/tablas.css' %}">
+<link rel="stylesheet" href="{% static 'cnoc_app/css/tablas.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -13,15 +13,9 @@
 <div class="row">
     <!-- COLUMNA IZQUIERDA -->
     <div class="col-12 col-md-3 mb-3">
-        <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-2">
-            Escalaciones
-        </span>
-
+        <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-2"> Escalaciones </span>
         <h2 class="fw-bold mb-1">Tablas de Escalación</h2>
-
-        <p class="text-muted mb-0">
-            Generación y consulta de tablas de escalación.
-        </p>
+        <p class="text-muted mb-0"> Generación y consulta de tablas de escalación. </p>
     </div>
 
     <!-- COLUMNA DERECHA -->
@@ -189,13 +183,11 @@
 </div>
 {% endblock %}
 
+
 {% block extra_js %}
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const paisSelect = document.getElementById('pais');
-    if (paisSelect) {
-        paisSelect.selectedIndex = 0;
-    }
-});
+    console.log('✅ extra_js de tablas_escalacion cargado');
 </script>
+
+<script type="module" src="{% static 'cnoc_app/js/modules/escalacion/escalacion.js' %}"></script>
 {% endblock %}
