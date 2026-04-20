@@ -29,4 +29,4 @@ def login_view(request):
             print("Credenciales incorrectas")
             messages.error(request, 'Credenciales incorrectas')
 
-    return render(request, 'login.html')
+    return render(request, 'cnoc_app/login.html')

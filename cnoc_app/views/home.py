@@ -4,7 +4,7 @@ from cnoc_app.decorators import usuario_login_required
 
 @usuario_login_required
 def home_view(request):
-    return render(request, 'home.html', {
+    return render(request, 'cnoc_app/home.html', {
         'usuario': request.user
     })
 

@@ -1,57 +1,66 @@
-{% extends 'cnoc_app/layout.html' %}
 {% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | CNOC</title>
+    <link rel="stylesheet" href="{% static 'cnoc_app/css/home.css' %}">
+</head>
 
-{% block title %}Inicio | CNOC{% endblock %}
+<body>
+    <div class="home-bg"></div>
 
-{% block body %}
-<section class="page-header">
-    <span class="page-tag">Panel Principal</span>
-    <h1>Bienvenido a la Plataforma CNOC</h1>
-    <p>
-        Desde este panel podrás acceder a los módulos operativos del sistema,
-        administrar tablas de escalación, gestionar asignación de asientos
-        y consultar procesos de retroalimentación de forma centralizada.
-    </p>
-</section>
+    <header class="topbar">
+        <div class="brand">
+            <div class="brand-mark"></div>
+            <div>
+                <h1>CNOC</h1>
+                <p>Plataforma de gestión operativa</p>
+                <h1>  ESTA ES LA DE PRIUEBA EN APP   </h1>
+            </div>
+        </div>
 
-<section class="module-grid">
-    <a href="{% url 'tablas_escalacion' %}" class="module-card">
-        <div class="module-icon">📊</div>
-        <h3>Tablas de Escalación</h3>
-        <p>
-            Consulta, cálculo y administración de tablas de escalación por país,
-            área de escalación y falla ID dentro del entorno CNOC.
-        </p>
-        <span class="module-link">Ingresar al módulo</span>
-    </a>
+        <div class="user-info">
+            <span>Bienvenido, {{ usuario }}</span>
+        </div>
+    </header>
 
-    <a href="#" class="module-card">
-        <div class="module-icon">🪑</div>
-        <h3>Asignación de Asientos</h3>
-        <p>
-            Gestión de asientos, distribución operativa, asignaciones y control
-            de disponibilidad de posiciones dentro del centro operativo.
-        </p>
-        <span class="module-link">Próximamente</span>
-    </a>
+    <main class="dashboard-container">
+        <section class="dashboard-header">
+            <span class="tag">Panel principal</span>
+            <h2>Acceso a módulos operativos</h2>
+            <p>
+                Seleccione el módulo que desea administrar dentro de la plataforma CNOC.
+            </p>
+        </section>
 
-    <a href="#" class="module-card">
-        <div class="module-icon">📝</div>
-        <h3>Retroalimentación</h3>
-        <p>
-            Registro y seguimiento de hallazgos, observaciones y acciones de
-            mejora para control y trazabilidad operativa.
-        </p>
-        <span class="module-link">Próximamente</span>
-    </a>
-</section>
+        <section class="cards-grid">
+            <a href="{% url 'escalacion:tableroEscalacion' %}" class="module-card">
+                <div class="card-icon">📊</div>
+                <h3>Tablas de Escalación</h3>
+                <p> Administración y consulta de tablas de escalación operativa. </p>
+                <span class="card-link">Ingresar al módulo</span>
+            </a>
 
-<section class="info-panel">
-    <h4>Estado actual del sistema</h4>
-    <p>
-        La plataforma se encuentra en proceso de migración modular desde PHP hacia Django,
-        iniciando por el módulo de Escalación y manteniendo una arquitectura escalable,
-        reutilizable y alineada con la operación CNOC.
-    </p>
-</section>
-{% endblock %}
+            <a href="/cnoc/asientos/" class="module-card">
+                <div class="card-icon">🪑</div>
+                <h3>Asignación de Asientos</h3>
+                <p>
+                    Gestión de asientos, asignaciones y distribución operativa.
+                </p>
+                <span class="card-link">Ingresar al módulo</span>
+            </a>
+
+            <a href="/cnoc/retroalimentacion/" class="module-card">
+                <div class="card-icon">📝</div>
+                <h3>Retroalimentación</h3>
+                <p>
+                    Seguimiento de observaciones, hallazgos y mejoras operativas.
+                </p>
+                <span class="card-link">Ingresar al módulo</span>
+            </a>
+        </section>
+    </main>
+</body>
+</html>
