@@ -16,7 +16,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
@@ -25,12 +24,11 @@ SECRET_KEY = 'django-insecure-p@+q1j23%3ogv6$h++ba(43ln1y9d5m()8pj&vq(56tt#a)=y*
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = ['*']
 
+ 
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -41,6 +39,7 @@ INSTALLED_APPS = [
        
     'app',
     'cnoc_app.apps.CnocAppConfig',
+    'api_gateway.apps.ApiGatewayConfig',
    # 'cnoc_app',
     'admin_apps.tabla_escalacion.apps.TablaEscalacionConfig',
     'admin_apps.asientos_cnoc.apps.AsientosCNOCConfig',

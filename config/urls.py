@@ -17,10 +17,14 @@ urlpatterns = [
     path('', include('cnoc_app.urls')), # todas las URLs de la app
     #path('cnoc/', include('cnoc_app.urls')),  # RUTAS DEL NUEVO MODUILO 
 
+    # API Gateway pública para navegador / Excel
+    path('api/', include('api_gateway.urls')),
+
     # ESCALACIONES 
     path('tablas/', include('escalacion.urls')),
     # ASIENTOS
     # RETRO
+
 ]
 
 ## YA NO SE USA 

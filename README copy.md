@@ -274,3 +274,26 @@ ORM en models.py
 Oracle en core/db/oracle
 API en core/apis
 ****************************************************************************************************
+core/
+├── queries/
+│   └── oracle/
+│       └── cnoc/
+│           ├── __init__.py
+│           ├── cronologia.py
+│           ├── seguimiento.py
+│           └── busqueda_tk.py
+│
+├── services/
+│   └── cnoc/
+│       ├── __init__.py
+│       ├── base_cnoc_service.py
+│       ├── cronologia_service.py
+│       ├── seguimiento_service.py
+│       └── busqueda_tk_service.py
+│
+└── db/
+    └── oracle/
+        ├── connection.py
+        ├── cursor.py
+        ├── dboracle.py
+        └── healthcheck.py
