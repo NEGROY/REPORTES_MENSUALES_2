@@ -5,11 +5,13 @@ from django.views.decorators.http import require_GET
 # para lOS MODELOS 
 from cnoc_app.models import Pais  # importar el modelo
 from .models import EscalacionArea
-from .service import listar_areasXpais
+# from .service import listar_areasXpais
+
+from .service.factory import SelectServiceFactory
 
 # Create your views here.
 # PASO 1 CREAR MI VISTA DEL TEMPLATE -> creAR EN EL URL 
-def tablas_escalacion(request):
+def tablas_escalacion2(request):
     #paises = Pais.objects.all().values('id', 'nombre_pais')
     paises = (
         Pais.objects
@@ -39,7 +41,7 @@ def fallas_asociadas(request):
 
 # DEFINIMOS para listar las areas de escalacion 
 @require_GET
-def api_areas_por_pais(request, pais_id):
+def api_areas_por_pais2(request, pais_id):
     areas = (
         EscalacionArea.objects
         .filter(pais_id=pais_id, activo=True)
@@ -48,13 +50,36 @@ def api_areas_por_pais(request, pais_id):
     )
     # PRUEBAS DE DATOS IMPRIMIDOS 
     data = list(areas)
-    print(f'>>> Áreas encontradas: {data}')
+    # print(f'>>> Áreas encontradas: {data}')
 
     return JsonResponse({
         'ok': True,
         'data': list(areas)
     })
 
+# ********************************************************************
+# PRUEBA DE REFACTORIZACION Y POLYMORFISMO
+def api_areas_por_pais(request, pais_id):
+    service = SelectServiceFactory.build('areas_por_pais', pais_id=pais_id)
+    data = service.execute()
+
+    return JsonResponse({
+        'ok': True,
+        'data': data,
+    })
+
+def tablas_escalacion(request):
+    service = SelectServiceFactory.build('paises')
+    paises = service.execute()
+
+    return render(request, 'escalacion/tablas_escalacion.html', {
+        'paises': paises,
+    })
+# ********************************************************************
+
 #
 
 #
+
+#
+
