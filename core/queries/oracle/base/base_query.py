@@ -8,10 +8,10 @@ class BaseOracleQuery(ABC):
     @abstractmethod
     def get_sql(self) -> str:
         raise NotImplementedError
-
+    
     def get_params(self) -> dict:
         return {}
-
+    # Normalización recursiva
     def _normalize_recursive(self, value):
         if isinstance(value, dict):
             return {key: self._normalize_recursive(item) for key, item in value.items()}
@@ -23,3 +23,9 @@ class BaseOracleQuery(ABC):
             return value.strip()
 
         return value
+    
+
+    # EJEMPLO PARA SER UTILIZADO 
+#   Class MiQuery(BaseOracleQuery):
+#      def get_sql(self):
+#          return "SELECT 1 FROM dual"
