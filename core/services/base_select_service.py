@@ -1,3 +1,4 @@
+# CLASE BASE PARA EL SELECT DE LOS MODELOS 
 class BaseSelectService:
     model = None
     order_by = ()
@@ -26,3 +27,9 @@ class BaseSelectService:
 
     def execute(self):
         return list(self.get_queryset())
+
+# AGREGAREMOS EN UN FUTURO LAS CLASES DE UPDATE Y DELETE A MEDIDA QUE LAS NECESITEMOS   
+
+# DELETE 
+
+# UPDATE 

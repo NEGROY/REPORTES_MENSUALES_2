@@ -1,6 +1,7 @@
 from .select_services import PaisSelectService, AreaPorPaisSelectService
 
 
+# PUENTE ENTRE EL CONTROLADOR (views) Y Los select PARA EJECUTAR 
 class SelectServiceFactory:
     @staticmethod
     def build(select_type, **kwargs):

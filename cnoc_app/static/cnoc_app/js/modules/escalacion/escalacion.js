@@ -1,7 +1,6 @@
 import { escalacionApi } from './api.js';
 
  /* console.log('✅ tablas_escalacion.html cargado'); */
-
  /* ************************ ------------------ ************************ */
 document.addEventListener('DOMContentLoaded', () => {
     const selectPais = document.getElementById('pais');
@@ -11,15 +10,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // DESAVILITAMOS EL BUTON DE BUSCAR API 
     btnBuscar.disabled = true;
-
+    /* validamos vacios */
     if (!selectPais || !selectAreas) {
         return;
     }
-
     // console.log("holas");
     selectPais.addEventListener('change', async function () {
         const paisId = this.value;
-
+        /* limpieza y validacion de formulario */
         resetAreas();
         validarFormulario();
 
@@ -79,8 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
             selectAreas.appendChild(option);
         });
     }
-
-
 });
 
 // BOTON PARA BUSCAR  LA FALLA ()

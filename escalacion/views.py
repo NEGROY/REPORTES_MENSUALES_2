@@ -6,23 +6,9 @@ from django.views.decorators.http import require_GET
 from cnoc_app.models import Pais  # importar el modelo
 from .models import EscalacionArea
 # from .service import listar_areasXpais
-
+# PARA REUTILIZAR LOS SELECT DE LOS MODELOS YA HECHOS
 from .service.factory import SelectServiceFactory
 
-# Create your views here.
-# PASO 1 CREAR MI VISTA DEL TEMPLATE -> creAR EN EL URL 
-def tablas_escalacion2(request):
-    #paises = Pais.objects.all().values('id', 'nombre_pais')
-    paises = (
-        Pais.objects
-        .filter(id__gt=1)          # id mayor a 1
-        .order_by('id')            # ordenado por id ascendente
-        .values('id', 'nombre_pais')
-    )
-    context = {
-        'paises': paises,
-    }
-    return render(request, 'escalacion/tablas_escalacion.html', context)
 
 # TABLARO DE ESCALACION SOLO FRONT END 
     # DE LAS FALAS ESCALADAS, SI EL USUARIO ES del AREA DE LIDER, SE DEBE DE TENER UN FILTRO PARA QUE SE MUESTREN EL DE LA AREA CORRESPONDIENTE 
@@ -39,23 +25,6 @@ def tablero_escalacion(request):
 def fallas_asociadas(request):
     return render(request, 'escalacion/fallas_asociadas.html')
 
-# DEFINIMOS para listar las areas de escalacion 
-@require_GET
-def api_areas_por_pais2(request, pais_id):
-    areas = (
-        EscalacionArea.objects
-        .filter(pais_id=pais_id, activo=True)
-        .order_by('nombre_area')
-        .values('id', 'nombre_area')
-    )
-    # PRUEBAS DE DATOS IMPRIMIDOS 
-    data = list(areas)
-    # print(f'>>> Áreas encontradas: {data}')
-
-    return JsonResponse({
-        'ok': True,
-        'data': list(areas)
-    })
 
 # ********************************************************************
 # PRUEBA DE REFACTORIZACION Y POLYMORFISMO
@@ -76,6 +45,7 @@ def tablas_escalacion(request):
         'paises': paises,
     })
 # ********************************************************************
+
 
 #
 

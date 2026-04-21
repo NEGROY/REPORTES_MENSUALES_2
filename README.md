@@ -186,4 +186,27 @@ COMANDO PARA PROBAR LA CONECTIVIDAD DEL ORACLE
 # ORACLE_STMT_CACHE_SIZE=40
 # ORACLE_FETCH_BATCH_SIZE=1000
 # ORACLE_CALL_TIMEOUT_MS=60000
-/*  */
+
+
+/* ESTRUCTUIRA PARA UTILIZAR FECTH  MANDAREMOS A LA BABY AJAX JQUERY (tendra vulnerabilidades ) */
+fetch solo sirve para:
+comunicar frontend ↔ backend
+
+Frontend (JS)
+   ↓
+fetch / AJAX
+   ↓
+Django view (controlador)
+   ↓
+service.py (lógica y cálculos)
+   ↓
+models / API / Oracle
+   ↓
+JsonResponse
+
+
+/* CORE | CNOC_APP | DESCRIPCION DE FUNCIONES  */
+core/     → integraciones externas, APIs, Oracle, infraestructura
+cnoc_app/ → templates, static, JS base, portal visual
+
+/* ****  **** */
