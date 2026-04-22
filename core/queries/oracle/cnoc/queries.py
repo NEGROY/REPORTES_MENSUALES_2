@@ -388,7 +388,6 @@ class CronologiaQuery(BaseOracleQuery):
 
         return ticket
 
-
 # ------------------------------
 # Endpoint 6: ENDPOINT PARA EL EXCEL en get TRAE DE LA TB  probsummarym1 
 # http://127.0.0.1:8000/api/cnoc/tickets/
