@@ -11,7 +11,7 @@ from .models import EscalacionArea
 # from .service import listar_areasXpais
 # PARA REUTILIZAR LOS SELECT DE LOS MODELOS YA HECHOS
 from .service.factory import SelectServiceFactory
-from .service import listar_areasXpais, TablaCalculadoraService
+from .service import listar_areasXpais, TablaCalculadoraService,  MensajeTablaService 
 
 # TABLARO DE ESCALACION SOLO FRONT END 
     # DE LAS FALAS ESCALADAS, SI EL USUARIO ES del AREA DE LIDER, SE DEBE DE TENER UN FILTRO PARA QUE SE MUESTREN EL DE LA AREA CORRESPONDIENTE 
@@ -69,8 +69,26 @@ def api_tabla_calculadora(request):
 
     return JsonResponse(result, status=status_code)
 
-
 # ********************************************************************
+@require_POST
+def api_mensaje_tabla(request):
+    try:
+        payload = json.loads(request.body.decode('utf-8'))
+    except (json.JSONDecodeError, UnicodeDecodeError):
+        payload = {}
+
+    service = MensajeTablaService(
+        area_id=payload.get('area_id'),
+        hr_actual=payload.get('hr_actual'),
+        titulo=payload.get('titulo', ''),
+        falla_id=payload.get('falla_id', ''),
+        permiso=request.session.get('estado', 0),
+    )
+
+    result = service.execute()
+    status_code = 200 if result.get('ok') else 400
+
+    return JsonResponse(result, status=status_code)
 
 
 # ********************************************************************

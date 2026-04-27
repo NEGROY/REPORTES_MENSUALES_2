@@ -1,5 +1,6 @@
 // import {getData, asignar_inputs_data } from './api.js';
 import { escalacionApi, getData, getFirstRow, asignar_inputs_data } from './api.js';
+import { tb_copy, mnsjEscala } from './messages.js';
 // # LAS APIS 
 // import {escalacionApi} from '../cnoc/api.js';
 
@@ -166,7 +167,6 @@ function getTipoIcon(tipo = '') {
     return '•';
 }
 
-
 /* **************************************************************************************************************************** */
 function renderTablaEscalacion(rows = []) {
     const div = document.getElementById('TB_calcu');
@@ -209,6 +209,7 @@ function renderTablaEscalacion(rows = []) {
                 <td>${item.tiempo} Horas</td>
                 <td><label class="form-label">${item.hr_suma} Hrs</label></td>
                 <td>
+
                     <button type="button"
                         class="btn btn-outline-secondary btn-sm rounded-pill shadow-sm px-3"
                         onclick="window.mnsjEscala && mnsjEscala(window.__tablaEscalacionRows[${index}].action_data)"
@@ -241,6 +242,7 @@ function renderTablaEscalacion(rows = []) {
     div.innerHTML = html;
 }
 
+/* **************************************************************************************************************************** */
 async function buscarDatos_api() {
     console.clear();
 
@@ -289,22 +291,25 @@ async function buscarDatos_api() {
         };
 
         const tablaPayload = await escalacionApi.generarTablaEscalacion(calculadoraPayload);
+        console.log("📦 tablaPayload:", tablaPayload);
 
-        if (!tablaPayload?.ok) {
-            console.error('❌ Error calculadora:', tablaPayload);
+        if (!tablaPayload || tablaPayload.ok !== true) {
+            console.error("❌ Error calculadora:", tablaPayload?.message || tablaPayload?.error || tablaPayload);
             return;
         }
 
-        renderTablaEscalacion(tablaPayload.data?.rows || []);
+        renderTablaEscalacion(
+            tablaPayload.data?.rows || [],
+            tablaPayload.data?.meta || {}
+        );
     } catch (err) {
         console.error('🔥 Error JS:', err);
     }
 }
 
 window.buscarDatos_api = buscarDatos_api;
-
-
-
+window.mnsjEscala = mnsjEscala;
+window.tb_copy = tb_copy;
 
 /* **************************************************************************************************************************** */
 

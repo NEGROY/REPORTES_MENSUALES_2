@@ -63,7 +63,6 @@ inputs.forEach(cfg => {
 }
 
 /* ------------ * * ------------ */
-
 export const escalacionApi = {
     async listarAreasPorPais(paisId) {
         const url = `/tablas/api/paises/${paisId}/areas/`;
@@ -84,10 +83,20 @@ export const escalacionApi = {
         const response = await ajax.post(url, payload);
         console.log('📦 generarTablaEscalacion:', response);
         return response;
+    },
+
+    async generarMensajeTabla(payload) {
+        const url = '/tablas/api/mensaje-tabla/';
+        return await ajax.post(url, payload);
+        console.log('📦 generarMensajeTabla:', response);
     }
+
+
 };
 
 /* ------------ * * ------------ */
+
+
 
 /* ------------ * * ------------ */
 

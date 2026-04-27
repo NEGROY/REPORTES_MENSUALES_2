@@ -14,4 +14,6 @@ urlpatterns = [
 
     # rutas locas
     path('api/calculadora/', views.api_tabla_calculadora, name='api_tabla_calculadora'),
+    path('api/mensaje-tabla/', views.api_mensaje_tabla, name='api_mensaje_tabla'),
+    
 ]
