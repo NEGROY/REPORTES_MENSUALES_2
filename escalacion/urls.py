@@ -11,4 +11,7 @@ urlpatterns = [
 
     # APIS 
     path('api/paises/<int:pais_id>/areas/', views.api_areas_por_pais, name='api_areas_por_pais'),
+
+    # rutas locas
+    
 ]

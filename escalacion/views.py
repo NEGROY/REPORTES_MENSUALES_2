@@ -1,6 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render
-from django.views.decorators.http import require_GET
+
+from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.csrf import csrf_exempt
 
 # para lOS MODELOS 
 from cnoc_app.models import Pais  # importar el modelo
@@ -8,6 +10,7 @@ from .models import EscalacionArea
 # from .service import listar_areasXpais
 # PARA REUTILIZAR LOS SELECT DE LOS MODELOS YA HECHOS
 from .service.factory import SelectServiceFactory
+
 
 
 # TABLARO DE ESCALACION SOLO FRONT END 
@@ -45,11 +48,15 @@ def tablas_escalacion(request):
         'paises': paises,
     })
 # ********************************************************************
+ 
 
+# ********************************************************************
 
 
 # ********************************************************************
 
+
+# ********************************************************************
 #
 
 #

@@ -16,6 +16,9 @@ def listar_areasXpais(pais_id: int) -> list[dict]:
 
 
 
+# OTRAS 
+
+
 
 # consultas ORM del módulo
 # lógica de negocio

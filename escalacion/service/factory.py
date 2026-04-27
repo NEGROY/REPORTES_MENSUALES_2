@@ -16,3 +16,7 @@ class SelectServiceFactory:
             raise ValueError(f'Select no soportado: {select_type}')
 
         return service_class(**kwargs)
+
+
+# CREO QUE AQUI COLOCARE LAS  FUNCIONES para crear 
+# LA LOGICA DE LAS TABLAS DE ESCALACION

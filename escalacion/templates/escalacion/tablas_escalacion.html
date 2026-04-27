@@ -22,8 +22,11 @@
     <div class="col-12 col-md-9 mb-4">
         <div class="card shadow-sm border-0">
             <div class="card-body">
-                <small id="titulo" class="text-muted d-block mb-1">-</small>
-                <h4 id="titulo_principal" class="mb-3 fw-semibold" hidden>-</h4>
+
+                <div class="fw-semibold">
+                    <span id="compannia" class="mb-3 fw-semibold"  >-</span>
+                    <small id="titulo" class="text-muted mb-1">-</small>
+                </div>
 
                 <div class="row g-3">
                     <div class="col-12 col-md-3 form-floating">
@@ -32,7 +35,7 @@
                     </div>
 
                     <div class="col-12 col-md-3 form-floating">
-                        <input type="text" id="falla_direccion" name="falla_direccion" class="form-control" placeholder="---" readonly autocomplete="off" disabled >
+                        <input type="text" id="falla_dire" name="falla_direccion" class="form-control" placeholder="---" readonly autocomplete="off" disabled >
                         <label for="falla_direccion" class="fw-medium"> Dirección </label>
                     </div>
                 </div>
@@ -82,7 +85,7 @@
                         <input type="text" id="company" name="company" hidden disabled autocomplete="off" >
 
                         <div class="d-grid">
-                            <button type="button" class="btn btn-claro" id="btnBuscar"  onclick="buscarDatos_api( )" disabled >
+                            <button type="button" class="btn btn-claro" id="btnBuscar"  disabled >
                                 Buscar
                             </button>
                         </div>
@@ -93,87 +96,73 @@
 
         <!-- Panel principal -->
         <div class="col-12 col-lg-8 col-xl-9">
-
-<div class="row g-3 mb-4">
-
-    <!-- Hora apertura -->
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
-                <div class="form-floating">
-                    <input type="text" id="open_time" name="open_time" class="form-control" placeholder="-" readonly >
-                    <label for="open_time" class="text-muted small">
-                        Hora apertura
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Hora actual -->
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
-                <div class="form-floating">
-                    <input type="text" id="current_time" name="current_time" class="form-control" placeholder="-" readonly >
-                    <label for="current_time" class="text-muted small">
-                        Hora actual
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Tiempo acumulado -->
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
-                <div class="form-floating">
-                    <input type="text" id="elapsed_time" name="elapsed_time" class="form-control" placeholder="-" readonly >
-                    <label for="elapsed_time" class="text-muted small">
-                        Tiempo acumulado
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Nivel -->
-    <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-body">
-                <div class="form-floating">
-                    <input type="text" id="nivel" name="nivel" class="form-control" placeholder="-" readonly >
-                    <label for="nivel" class="text-muted small">
-                        Nivel
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white">
-                    <h5 class="mb-1 fw-semibold">Resultado de la tabla de escalación</h5>
-                    <p class="text-muted mb-0 small">
-                        La información generada a partir de los parámetros seleccionados se mostrará en este panel.
-                    </p>
-                </div>
-
-                <div class="card-body" id="TB_calcu">
-                    <div class="text-center py-5 text-muted">
-                        <p class="mb-0">
-                            Seleccione un país, un área de escalación y/o ingrese una falla para consultar la tabla correspondiente.
-                        </p>
+            <div class="row g-3 mb-4">
+                <!-- Hora apertura -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <div class="form-floating">
+                                <input type="text" id="open_time" name="open_time" class="form-control" placeholder="-" readonly >
+                                <label for="open_time" class="text-muted small"> Hora apertura </label>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            
+                <!-- Hora actual -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <div class="form-floating">
+                                <input type="text" id="current_time" name="current_time" class="form-control" placeholder="-" readonly >
+                                <label for="current_time" class="text-muted small"> Hora actual </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Tiempo acumulado -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <div class="form-floating">
+                                <input type="text" id="tiempoAcumulado" name="elapsed_time" class="form-control" placeholder="-" readonly >
+                                <label for="tiempoAcumulado" class="text-muted small"> Tiempo acumulado </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+                <!-- Nivel -->
+                <div class="col-12 col-sm-6 col-xl-3">
+                    <div class="card shadow-sm border-0 h-100">
+                        <div class="card-body">
+                            <div class="form-floating">
+                                <input type="text" id="nivel" name="nivel" class="form-control" value="1" placeholder="-" readonly >
+                                <label for="nivel" class="text-muted small"> Nivel </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
             </div>
 
-            <div id="resultado" class="mt-4"></div>
-        </div>
-    </div>
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-white">
+                                <h5 class="mb-1 fw-semibold">Resultado de la tabla de escalación</h5>
+                                <p class="text-muted mb-0 small"> La información generada a partir de los parámetros seleccionados se mostrará en este panel. </p>
+                            </div>
+                        
+                            <div class="card-body" id="TB_calcu">
+                                <div class="text-center py-5 text-muted">
+                                    <p class="mb-0"> Seleccione un país, un área de escalación y/o ingrese una falla para consultar la tabla correspondiente. </p>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div id="resultado" class="mt-4"></div>
+                    </div>
+                </div>
 
     <!-- area de LOS MENSAJES  -->
     {% include 'escalacion/mensajes.html' %}s
@@ -183,11 +172,7 @@
 </div>
 {% endblock %}
 
-
+ 
 {% block extra_js %}
-<script>
-    console.log('✅ extra_js de tablas_escalacion cargado');
-</script>
-
 <script type="module" src="{% static 'cnoc_app/js/modules/escalacion/escalacion.js' %}"></script>
 {% endblock %}
