@@ -62,9 +62,30 @@ inputs.forEach(cfg => {
     });
 }
 
-
 /* ------------ * * ------------ */
 
+export const escalacionApi = {
+    async listarAreasPorPais(paisId) {
+        const url = `/tablas/api/paises/${paisId}/areas/`;
+        const response = await ajax.get(url);
+        console.log('📦 listarAreasPorPais:', response);
+        return response;
+    },
+
+   async obtenerMasivaDetalle(tk) {
+        const url = `/api/masivas/${encodeURIComponent(tk)}/`;
+        const response = await ajax.get(url);
+        console.log('📦 obtenerMasivaDetalle:', response);
+        return response;
+    },
+
+    async generarTablaEscalacion(payload) {
+        const url = '/tablas/api/calculadora/';
+        const response = await ajax.post(url, payload);
+        console.log('📦 generarTablaEscalacion:', response);
+        return response;
+    }
+};
 
 /* ------------ * * ------------ */
 

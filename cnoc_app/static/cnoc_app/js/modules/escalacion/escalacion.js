@@ -1,6 +1,7 @@
-import {getData, asignar_inputs_data } from './api.js';
+// import {getData, asignar_inputs_data } from './api.js';
+import { escalacionApi, getData, getFirstRow, asignar_inputs_data } from './api.js';
 // # LAS APIS 
-import {escalacionApi} from '../cnoc/api.js';
+// import {escalacionApi} from '../cnoc/api.js';
 
 /* ESTRUCTURA PARA LOS INPUTS */
     /* inputs para tablas de escalacion  /api/masivas/F6843026/ */
@@ -10,8 +11,24 @@ import {escalacionApi} from '../cnoc/api.js';
     { id: "open_time", field: "OPEN_TIME" },
     { id: "cierre", field: "CLOSE_TIME" },
     { id: "compannia", field: "COMPANY" },
-    
   ]
+/* const MAPEO_INPUTS_ESCALACION = [
+    { id: "falla", field: "TK" },
+    { id: "titulo", field: "TITULO" },
+    { id: "company", field: "COMPANY" },
+    { id: "falla_dire", field: "TG_ENLACE_DESTINO" },
+    { id: "open_time", field: "OPEN_TIME" },
+    { id: "cierre", field: "CLOSE_TIME" },
+    { id: "tiempoAcumulado", field: "HH_MM_SS" },
+    { id: "totalHoras", field: "TOTAL_MENOS_CLIENTE_HORAS" },
+]; */
+ 
+const ICONS = {
+    comment: '/static/icon/comment.svg',
+    plus: '/static/icon/plus.svg',
+    right: '/static/icon/right.svg',
+};
+
 /* ESTRUCTURA PARA LOS INPUTS */
 
  /* console.log('✅ tablas_escalacion.html cargado'); */
@@ -136,8 +153,155 @@ document.addEventListener('DOMContentLoaded', () => {
            console.log("toggleLoader");
           }
     }
+
 /* **************************************************************************************************************************** */
-    /* FUNCIONES QUE VA A RELLENAR LOS INPUTS  */
+function getTipoIcon(tipo = '') {
+    const value = String(tipo || '').toLowerCase();
+
+    if (value.includes('tel')) return '📞';
+    if (value.includes('mail')) return '✉️';
+    if (value.includes('teams')) return '🟣';
+    if (value.includes('whatsapp')) return '🟢';
+
+    return '•';
+}
+
+
+/* **************************************************************************************************************************** */
+function renderTablaEscalacion(rows = []) {
+    const div = document.getElementById('TB_calcu');
+    if (!div) return;
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+        div.innerHTML = `
+            <div class="text-center py-5 text-muted">
+                <p class="mb-0">No hay datos para mostrar en la tabla de escalación.</p>
+            </div> `;
+        return;
+    }
+    window.__tablaEscalacionRows = rows;
+
+    let html = `
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre</th>
+                        <th>Medio</th>
+                        <th>Tiempo</th>
+                        <th>Calculadora</th>
+                        <th>Opciones</th>
+                    </tr>
+                </thead>
+                <tbody>    `;
+
+    rows.forEach((item, index) => {
+        const comentarioBadge = item.comentario
+            ? `<span class="badge bg-light text-dark">${item.comentario}</span>`
+            : '';
+
+        html += `
+            <tr>
+                <td>${item.nivel}</td>
+                <td>${item.nombre} ${comentarioBadge}</td>
+                <td>${item.telefono} ${getTipoIcon(item.tipo)}</td>
+                <td>${item.tiempo} Horas</td>
+                <td><label class="form-label">${item.hr_suma} Hrs</label></td>
+                <td>
+                    <button type="button"
+                        class="btn btn-outline-secondary btn-sm rounded-pill shadow-sm px-3"
+                        onclick="window.mnsjEscala && mnsjEscala(window.__tablaEscalacionRows[${index}].action_data)"
+                        title="Genera mensajes">
+                        <img src="${ICONS.comment}" alt="comment" style="width:1.4em; height:1.4em; vertical-align:middle;">
+                    </button>
+
+                    <button type="button"
+                        class="btn btn-outline-secondary btn-sm rounded-pill shadow-sm px-3"
+                        onclick="window.toggleTable && toggleTable(window.__tablaEscalacionRows[${index}].action_data)"
+                        title="+2 horas">
+                        <img src="${ICONS.plus}" alt="plus" style="width:1.4em; height:1.4em; vertical-align:middle;">
+                    </button>
+
+                    <button type="button"
+                        class="btn btn-outline-success btn-sm rounded-pill shadow-sm px-3"
+                        onclick="window.tablerosave && tablerosave(window.__tablaEscalacionRows[${index}].action_data)"
+                        title="Escalación">
+                        <img src="${ICONS.right}" alt="right" style="width:1.4em; height:1.4em; vertical-align:middle;">
+                    </button>
+                </td>
+            </tr> `;
+    });
+
+    html += ` </tbody>
+            </table>
+        </div>
+        <div id="tableContainer"></div>    `;
+
+    div.innerHTML = html;
+}
+
+async function buscarDatos_api() {
+    console.clear();
+
+    const tk = (document.getElementById("falla")?.value || "").trim();
+    const areaId = document.getElementById('areasxpais')?.value || '';
+    const nivel = document.getElementById('acumulado')?.value || '1';
+
+    if (!tk) {
+        console.warn("⚠️ No se ingresó falla");
+        toggleLoader?.(0);
+        return;
+    }
+
+    if (!areaId) {
+        console.warn("⚠️ No se seleccionó área");
+        return;
+    }
+
+    const url = `/api/masivas/${encodeURIComponent(tk)}/`;
+    console.log("🌐 URL:", url);
+
+    try {
+        const resp = await fetch(url, {
+            method: "GET",
+            headers: { "Accept": "application/json" }
+        });
+
+        const payload = await resp.json();
+
+        if (!resp.ok || payload?.ok === false) {
+            console.error("❌ Error backend:", payload);
+            return;
+        }
+
+        const rows = getData(payload);
+        const row = rows[0] || {};
+
+        console.log('✅ row masiva:', row);
+
+        asignar_inputs_data(row, MAPEO_INPUTS_ESCALACION);
+
+        const calculadoraPayload = {
+            area_id: areaId,
+            nivel: nivel,
+            falla_data: row,
+        };
+
+        const tablaPayload = await escalacionApi.generarTablaEscalacion(calculadoraPayload);
+
+        if (!tablaPayload?.ok) {
+            console.error('❌ Error calculadora:', tablaPayload);
+            return;
+        }
+
+        renderTablaEscalacion(tablaPayload.data?.rows || []);
+    } catch (err) {
+        console.error('🔥 Error JS:', err);
+    }
+}
+
+window.buscarDatos_api = buscarDatos_api;
 
 
 

@@ -1,4 +1,4 @@
-from .models import EscalacionArea
+from ..models import EscalacionArea
 
 
 # defiunimos lista de areas de escalacion por pAis 
