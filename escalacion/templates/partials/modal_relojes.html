@@ -1,0 +1,49 @@
+<div class="modal fade" id="modalCalculo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content shadow-lg border-0">
+
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title">Relojes del ticket</h5>
+                <button
+                    type="button"
+                    class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"
+                    aria-label="Cerrar"
+                ></button>
+            </div>
+
+            <div class="modal-body">
+                <p class="text-muted mb-2">Tiempos incluidos:</p>
+
+                <div id="listaTiempos" class="list-group mb-3">
+                    <div class="list-group-item text-muted text-center">
+                        No hay relojes cargados.
+                    </div>
+                </div>
+
+                <div class="alert alert-secondary text-center fw-bold mb-0">
+                    Total: <span id="MoHrsTotal">00:00:00</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-warning" id="btnLimpiarRelojes">
+                    Limpiar
+                </button>
+
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cerrar
+                </button>
+
+                <button type="button" class="btn btn-primary" id="btnCalcularRelojes">
+                    Calcular
+                </button>
+
+                <button type="button" class="btn btn-danger" id="btnRestarRelojes">
+                    Restar tiempos
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>

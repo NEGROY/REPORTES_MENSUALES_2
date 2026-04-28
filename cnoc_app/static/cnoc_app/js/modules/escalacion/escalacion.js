@@ -2,6 +2,7 @@
 import { escalacionApi, getData, asignar_inputs_data } from './api.js';
 import { tb_copy, mnsjEscala } from './messages.js';
 import { formatDateValue, normalizeDateForBackend, getCurrentDateTimeLocal  } from '../../helpers/dates.js';
+import { abrirModalRelojes, registrarEventosClocks } from './clocks.js';
 
 // # LAS APIS
 // import {escalacionApi} from '../cnoc/api.js';
@@ -44,6 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
     /* validamos que si existan */
     if (!btnBuscar) return;
     if (!selectPais || !selectAreas || !inputFalla) return;
+
+    // VALIDA RELOJES 
+    if (btnRelojes) {
+            btnRelojes.addEventListener('click', async () => {
+                const tk = validarTicket(document.getElementById('falla')?.value || '');
+                if (!tk) return;
+                await abrirModalRelojes(tk);
+            });
+        }
+        registrarEventosClocks();
+
 
     // DESHABILITAMOS EL BOTON DE BUSCAR API
     btnBuscar.disabled = true;
@@ -92,9 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* Relojes (placeholder por ahora) */
-    if (btnRelojes) {
-        btnRelojes.addEventListener('click', () => {
-            console.log('🕒 Botón Relojes presionado (pendiente de implementación)');
+   if (btnRelojes) {
+        btnRelojes.addEventListener('click', async () => {
+            const tk = validarTicket(document.getElementById('falla')?.value || '');
+            if (!tk) return;
+
+            await abrirModalRelojes(tk);
         });
     }
 

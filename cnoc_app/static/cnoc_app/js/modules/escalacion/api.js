@@ -89,7 +89,7 @@ export const escalacionApi = {
    async obtenerMasivaDetalle(tk) {
         const url = `/api/masivas/${encodeURIComponent(tk)}/`;
         const response = await ajax.get(url);
-        console.log('📦 obtenerMasivaDetalle:', response);
+        console.log('📦 obtenerMasivaDetalle:' ); //, response
         return response;
     },
 
@@ -103,9 +103,15 @@ export const escalacionApi = {
     async generarMensajeTabla(payload) {
         const url = '/tablas/api/mensaje-tabla/';
         return await ajax.post(url, payload);
-        console.log('📦 generarMensajeTabla:', response);
-    }
+        console.log('📦 generarMensajeTabla:' ); //, response
+    },
 
+    async obtenerClocksFalla(falla) {
+        const url = `/api/masivas/clocks/${encodeURIComponent(falla)}/`;
+        const response = await ajax.get(url);
+        console.log('📦 obtenerClocksFalla:', response); //, response
+        return response;
+    },
 
 };
 

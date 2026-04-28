@@ -173,12 +173,14 @@
                 </div>
 
     <!-- area de LOS MENSAJES  -->
-    {% include 'escalacion/mensajes.html' %}s
-
+    {% include 'escalacion/mensajes.html' %}
     <div id="modal-formato" hidden></div>
-    <div id="modal-relojes" hidden></div>
 </div>
+
+{% include 'partials/modal_relojes.html' %}
+
 {% endblock %}
+
 
  
 {% block extra_js %}
