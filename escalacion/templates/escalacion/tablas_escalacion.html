@@ -38,6 +38,13 @@
                         <input type="text" id="falla_dire" name="falla_direccion" class="form-control" placeholder="---" readonly autocomplete="off" disabled >
                         <label for="falla_direccion" class="fw-medium"> Dirección </label>
                     </div>
+                    
+                    <!-- Botones derecha -->
+                    <div class="col-12 col-md-6 d-flex gap-2 align-items-end">
+                        <button type="button" class="btn btn-outline-secondary" id="btnRelojes" disabled > Relojes </button>
+                        <button type="button" class="btn btn-dark" id="btnCalcularTabla" > Calcular </button>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -113,13 +120,14 @@
                 <div class="col-12 col-sm-6 col-xl-3">
                     <div class="card shadow-sm border-0 h-100">
                         <div class="card-body">
-                            <div class="form-floating">
-                                <input type="text" id="current_time" name="current_time" class="form-control" placeholder="-" readonly >
-                                <label for="current_time" class="text-muted small"> Hora actual </label>
+                            <div class="form-floating"> 
+                                <input type="datetime-local" id="current_time" name="current_time" class="form-control" placeholder="-"
+                                    autocomplete="off" > <label for="current_time" class="text-muted small">Hora actual</label>
                             </div>
                         </div>
                     </div>
                 </div>
+
             
                 <!-- Tiempo acumulado -->
                 <div class="col-12 col-sm-6 col-xl-3">
@@ -134,7 +142,7 @@
                 </div>
             
                 <!-- Nivel -->
-                <div class="col-12 col-sm-6 col-xl-3">
+                <div class="col-2 col-sm-3 col-xl-1 hidden">
                     <div class="card shadow-sm border-0 h-100">
                         <div class="card-body">
                             <div class="form-floating">

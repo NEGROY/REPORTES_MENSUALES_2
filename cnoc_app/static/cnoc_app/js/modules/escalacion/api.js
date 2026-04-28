@@ -96,7 +96,7 @@ export const escalacionApi = {
     async generarTablaEscalacion(payload) {
         const url = '/tablas/api/calculadora/';
         const response = await ajax.post(url, payload);
-        console.log('📦 generarTablaEscalacion:', response);
+        console.log('📦 generarTablaEscalacion:' ); //, response
         return response;
     },
 

@@ -69,9 +69,9 @@ def api_tabla_calculadora(request):
         area_id=payload.get('area_id'),
         nivel=payload.get('nivel', 1),
         falla_data=payload.get('falla_data', {}),
+        hr_actual_override=payload.get('hr_actual_override', ''),
         permiso=request.session.get('estado', 0),
     )
-
     result = service.execute()
     status_code = 200 if result.get('ok') else 400
 

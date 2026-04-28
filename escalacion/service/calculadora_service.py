@@ -3,11 +3,13 @@ from escalacion.models import Escalacion
 from .base_escalacion_service import BaseEscalacionService
 
 
+# ********************************************************
 class TablaCalculadoraService(BaseEscalacionService):
     def execute(self):
         area_id = self.kwargs.get('area_id')
         nivel_actual = self.parse_level(self.kwargs.get('nivel', 1))
         falla_data = self.kwargs.get('falla_data', {}) or {}
+        hr_actual_override = self.kwargs.get('hr_actual_override', '')
 
         if not area_id:
             return self.build_error_response('Debe seleccionar un área de escalación.')
@@ -16,11 +18,13 @@ class TablaCalculadoraService(BaseEscalacionService):
             return self.build_error_response('No se recibieron datos de la falla.')
 
         hr_actual_raw = (
-            falla_data.get('OPEN_TIME')
+            hr_actual_override
+            or falla_data.get('OPEN_TIME')
             or falla_data.get('open_time')
             or falla_data.get('F_UPDATE')
             or ''
         )
+
         hr_actual = self.parse_datetime(hr_actual_raw)
 
         if hr_actual is None:
