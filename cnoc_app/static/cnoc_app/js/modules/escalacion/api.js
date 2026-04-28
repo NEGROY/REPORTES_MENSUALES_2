@@ -1,4 +1,5 @@
 import { ajax } from '../../helpers/ajax.js';
+import { formatDateValue } from '../../helpers/dates.js';
 
  /* ------------ * DEVUELVE LOS VALORES DE DATA DE LOS ENDPOINTS  * ------------ */
 /* ANTES PRUEBAS MAS 
@@ -27,40 +28,54 @@ export function getFirstRow(payload) {
 /* ------------ * ASIGNA VALORES A UN ARRAY DE INPUTS DEFINIDOS PREVIAMENTE * ------------ */
 export function asignar_inputs_data(datos, inputs = []) {
    // console.log('🧩 MAPEO INPUTS:', inputs);
+
    console.log('📦 DATA:', datos);
     // validamos vacios
     if (!datos || typeof datos !== 'object') {
         console.warn('⚠️ data inválida');
         return;
     }
-    
+ 
 inputs.forEach(cfg => {
-        const { id, field, default: def = "" } = cfg;
-        const el = document.getElementById(id);
+        const {
+            id,
+            field,
+            default: def = "",
+            isDate = false,
+            dateMode = 'display',
+        } = cfg;
 
-        if (!el) {
-            console.warn(`⚠️ Elemento #${id} no existe`);
-            return;
-        }
-        // Resolver valor SOLO por key
-        let valor = datos[field];
-        //  console.log(valor)
-        if (valor === undefined || valor === null) {
-            valor = def;
-        }
-        //console.log(`✅ ${id} ← datos["${field}"] =`, valor);
-        // ✅ Asignar según tipo de elemento
-        if (
-            el.tagName === 'INPUT' ||
-            el.tagName === 'TEXTAREA' ||
-            el.tagName === 'SELECT'
-        ) {
-            el.value = valor;
+        const el = document.getElementById(id);
+        if (!el) return;
+
+        let value = def;
+
+        if (typeof field === 'function') {
+            value = field(datos);
+        } else if (Array.isArray(field)) {
+            for (const f of field) {
+                const candidate = datos[f];
+                if (candidate !== undefined && candidate !== null && String(candidate).trim() !== '') {
+                    value = candidate;
+                    break;
+                }
+            }
         } else {
-            el.textContent = valor;
+            value = datos[field] ?? def;
+        }
+
+        if (isDate) {
+            value = formatDateValue(value, dateMode);
+        }
+
+        if (["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName)) {
+            el.value = value ?? def;
+        } else {
+            el.textContent = value ?? def;
         }
     });
 }
+
 
 /* ------------ * * ------------ */
 export const escalacionApi = {

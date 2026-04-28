@@ -9,9 +9,10 @@ import { tb_copy, mnsjEscala } from './messages.js';
  const MAPEO_INPUTS_ESCALACION = [
     { id: "titulo", field: "TITULO" },
     { id: "falla_dire", field: "TG_ENLACE_DESTINO"},
-    { id: "open_time", field: "OPEN_TIME" },
-    { id: "cierre", field: "CLOSE_TIME" },
     { id: "compannia", field: "COMPANY" },
+    // Fechas
+    { id: "open_time", field: "OPEN_TIME", isDate: true, dateMode: "sql" },
+    { id: "cierre", field: "CLOSE_TIME", isDate: true, dateMode: "sql" },
   ]
 /* const MAPEO_INPUTS_ESCALACION = [
     { id: "falla", field: "TK" },
@@ -157,14 +158,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* **************************************************************************************************************************** */
 function getTipoIcon(tipo = '') {
-    const value = String(tipo || '').toLowerCase();
+    const value = String(tipo || '').trim().toLowerCase();
+    const basePath = '/static/icon/';
+    let icon = '';
+    switch (value) {
+        case 'llamada':
+            icon = 'phone.svg';
+            break;
 
-    if (value.includes('tel')) return '📞';
-    if (value.includes('mail')) return '✉️';
-    if (value.includes('teams')) return '🟣';
-    if (value.includes('whatsapp')) return '🟢';
+        case 'whatsapp':
+            icon = 'whatsapp.svg';
+            break;
 
-    return '•';
+        case 'correo':
+            icon = 'envelope.svg';
+            break;
+
+        case 'teams':
+            icon = 'teams.svg';
+            break;
+
+        case 'llamada & teams':
+            icon = 'llamadaTeams.svg';
+            break;
+
+        default:
+            return '';
+    }
+
+    return ` <span style="vertical-align:middle;">
+            <img
+                src="${basePath}${icon}"
+                alt="${value}"
+                width="16"
+                height="16"
+                class="icon"
+                style="vertical-align:middle;"
+            >
+        </span> `;
 }
 
 /* **************************************************************************************************************************** */

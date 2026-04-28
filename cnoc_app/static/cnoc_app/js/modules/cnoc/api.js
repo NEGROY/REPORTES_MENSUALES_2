@@ -19,6 +19,7 @@ export const escalacionApi = {
         console.log('📦 obtenerMasivaDetalle:', response);
         return response;
     }, 
+
     // ** another bite the dust
 
     // ** AQUI VAMOS AGREGANDO TOOODAS LOS ENDPOINTS QUE VAMOS REAQLIZANDO 

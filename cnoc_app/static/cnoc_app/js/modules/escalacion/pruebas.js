@@ -33,14 +33,12 @@ function pick(row, candidates) {
 
 function fillFromMasivasDetail(payload) {
   const row = getRow(payload);
-
   // 🔥 Mapeo basado en tu JSON real
   // Respuesta 1 (externa) trae: OPEN_TIME, CLOSE_TIME, TITULO, COMPANY, HH_MM_SS, TIEMPO_VIDA_TK, etc.
   // Respuesta 2 (tu /api/masivas/<tk>/) trae: F_UPDATE, SYSDATE, "GRUPO ASIGNADO", VARIABLE3, UPDATE_ACTION, etc.
 
   // Inputs superiores
   setValue("cierre", pick(row, ["CLOSE_TIME", "cierre", "close_time"]));
-
   // "Dirección": no viene explícita como "direccion", así que usamos fallback:
   // 1) TITULO (trae ubicación)  // 2) FALLA   // 3) UPDATE_ACTION (si no hay título)
   setValue("falla_direccion", pick(row, ["TITULO", "FALLA", "falla", "UPDATE_ACTION"]));
