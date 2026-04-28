@@ -72,12 +72,11 @@
                     </div>
                     <div class="small text-muted">
                         IBM: {{ request.session.ibm|default:"-" }}
+                        AREA: {{ request.session.area_id|default:"-" }}
                     </div>
                 </div>
 
-                <a class="btn btn-outline-secondary btn-sm" href="{% url 'login' %}">
-                    Salir
-                </a>
+                <a class="btn btn-outline-secondary btn-sm" href="{% url 'login' %}"> Salir </a>
             </div>
         </div>
     </div>

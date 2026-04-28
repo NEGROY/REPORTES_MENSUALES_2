@@ -40,13 +40,21 @@ def api_areas_por_pais(request, pais_id):
         'data': data,
     })
 
+# ------------------------------------------------------------------------------
 def tablas_escalacion(request):
     service = SelectServiceFactory.build('paises')
     paises = service.execute()
 
-    return render(request, 'escalacion/tablas_escalacion.html', {
+    area_id = request.session.get('area_id')
+    mostrar_mensajes_especiales = area_id in [1, 10, 11, 12]
+
+    context = {
         'paises': paises,
-    })
+        'area_id_sesion': area_id,
+        'mostrar_mensajes_especiales': mostrar_mensajes_especiales,
+    }
+    return render(request, 'escalacion/tablas_escalacion.html', context)
+
 
 # ********************************************************************
 #  endpoint 

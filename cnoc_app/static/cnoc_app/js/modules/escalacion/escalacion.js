@@ -214,7 +214,7 @@ function renderTablaEscalacion(rows = []) {
 
     let html = `
         <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered">
+            <table class="table table-sm table-hover table-bordered mb-0">
                 <thead class="table-dark">
                     <tr>
                         <th>#</th>
@@ -225,7 +225,7 @@ function renderTablaEscalacion(rows = []) {
                         <th>Opciones</th>
                     </tr>
                 </thead>
-                <tbody>    `;
+                <tbody> `;
 
     rows.forEach((item, index) => {
         const comentarioBadge = item.comentario

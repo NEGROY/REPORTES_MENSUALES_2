@@ -8,30 +8,20 @@
 
     <div class="card-body">
         <div class="row g-4">
+        {% if mostrar_mensajes_especiales %}
+        <!-- mostrar_mensajes_especiales DESDE def tablas_escalacion -->
             <!-- Mensaje de escalación -->
             <div class="col-12 col-lg-6">
                 <div class="card border-0 bg-light h-100">
                     <div class="card-body">
-                        <label for="notaGenerada" class="form-label fw-medium text-danger">
-                            Mensaje de escalación
-                        </label>
+                        <label for="notaGenerada" class="form-label fw-medium text-danger"> Mensaje de escalación </label>
 
-                        <textarea
-                            id="notaGenerada"
-                            class="form-control textarea-mensaje"
-                            rows="8"
-                            placeholder="Mensaje de escalación..."
-                            autocomplete="off"
-                        ></textarea>
+                        <textarea id="notaGenerada" class="form-control textarea-mensaje"
+                            rows="8" placeholder="Mensaje de escalación..." autocomplete="off" ></textarea>
 
                         <div class="d-flex justify-content-end mt-3">
-                            <button
-                                type="button"
-                                class="btn btn-outline-secondary btn-sm btn-copiar"
-                                data-target="notaGenerada"
-                            >
-                                Copiar
-                            </button>
+                            <button type="button" data-target="notaGenerada"
+                                class="btn btn-outline-secondary btn-sm btn-copiar" > Copiar </button>
                         </div>
                     </div>
                 </div>
@@ -41,30 +31,20 @@
             <div class="col-12 col-lg-6">
                 <div class="card border-0 bg-light h-100">
                     <div class="card-body">
-                        <label for="wasapp" class="form-label fw-medium text-danger">
-                            Mensaje WhatsApp
-                        </label>
+                        <label for="wasapp" class="form-label fw-medium text-danger"> Mensaje WhatsApp </label>
 
-                        <textarea
-                            id="wasapp"
-                            class="form-control textarea-mensaje auto-ajuste-textarea"
-                            rows="8"
-                            placeholder="Mensaje WhatsApp..."
-                            autocomplete="off"
-                        ></textarea>
+                        <textarea id="wasapp" class="form-control textarea-mensaje auto-ajuste-textarea"
+                            rows="8" placeholder="Mensaje WhatsApp..." autocomplete="off" ></textarea>
 
                         <div class="d-flex justify-content-end mt-3">
-                            <button
-                                type="button"
-                                class="btn btn-outline-secondary btn-sm btn-copiar"
-                                data-target="wasapp"
-                            >
-                                Copiar
-                            </button>
+                            <button type="button" class="btn btn-outline-secondary btn-sm btn-copiar"
+                                data-target="wasapp" > Copiar</button>
                         </div>
                     </div>
                 </div>
             </div>
+        <!-- bloque de mensajes solo si es lider, masivas o nocturno -->
+        {% endif %}
 
             <!-- Tabla de escalación -->
             <div class="col-12 col-lg-6">
